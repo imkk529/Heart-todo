@@ -318,6 +318,7 @@
     background:#f6f1ec; color:var(--ink-soft); transition:background .2s ease, color .2s ease;
   }
   .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:#ec4899; }
+  .goal-tab.active[data-cat="personal"]{ background:#f0edf7; color:#6b5ca5; }
   .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:#2f9e44; }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; }
   .goal-reminder:not(:empty){ margin-bottom:12px; padding:9px 12px; border-radius:14px; background:#fdf3f7; }
@@ -483,6 +484,7 @@
   <div class="head-block">
     <div class="goal-tabs" id="goalTabs">
       <button type="button" class="goal-tab active" data-cat="heart">하트</button>
+      <button type="button" class="goal-tab" data-cat="personal">개인</button>
       <button type="button" class="goal-tab" data-cat="work">회사</button>
     </div>
     <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
@@ -818,6 +820,7 @@
     renderCalendar();
     loadDay(key);
     renderWeekly();
+    renderRecurList();
   }
 
   const todayPanel = el('todayPanel');
@@ -864,8 +867,12 @@
     return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${timeStr}`;
   }
 
+  function goalModeFor(m){ return m === 'work' ? 'work' : 'heart'; }
+
   function visibleTodos(todos){
-    return state.mode === 'work' ? todos.filter(t => t.color === 'green') : todos;
+    if(state.mode === 'work') return todos.filter(t => t.color === 'green');
+    if(state.mode === 'personal') return todos.filter(t => t.color !== 'green');
+    return todos;
   }
 
   function updateDayCount(){
@@ -1227,10 +1234,10 @@
   }
 
   function renderGoalList(){
-    const filtered = state.goals.filter(g => (g.category || 'heart') === state.mode);
+    const filtered = state.goals.filter(g => (g.category || 'heart') === goalModeFor(state.mode));
     renderGoalReminder();
     if(filtered.length === 0){
-      const msg = state.mode === 'work' ? '아직 적어둔 회사 목표가 없어요.' : '아직 적어둔 하트 목표가 없어요.';
+      const msg = goalModeFor(state.mode) === 'work' ? '아직 적어둔 회사 목표가 없어요.' : '아직 적어둔 하트 목표가 없어요.';
       goalList.innerHTML = `<div class="empty-state">${msg}<br>위에 적고 하트를 눌러 추가해보세요 🩷</div>`;
       return;
     }
@@ -1238,9 +1245,9 @@
   }
 
   function renderGoalReminder(){
-    const active = state.goals.filter(g => (g.category || 'heart') === state.mode && !g.done);
+    const active = state.goals.filter(g => (g.category || 'heart') === goalModeFor(state.mode) && !g.done);
     const iconColor = state.mode === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
-    goalReminder.classList.toggle('mode-work', state.mode === 'work');
+    goalReminder.classList.toggle('mode-work', goalModeFor(state.mode) === 'work');
     goalReminder.innerHTML = active.map(g =>
       `<div class="goal-reminder-item"><svg viewBox="0 0 24 24" fill="${iconColor}"><path d="${HEART_PATH}"/></svg>${escapeHtml(g.text)}</div>`
     ).join('');
@@ -1257,6 +1264,9 @@
       const isActive = b.dataset.color === selectedColor;
       b.classList.toggle('active', isActive);
       b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      if(b.dataset.color === 'green'){
+        b.style.display = state.mode === 'personal' ? 'none' : '';
+      }
     });
     renderGoalList();
     renderTodoList();
@@ -1318,12 +1328,19 @@
     await setItem('recurring-templates', JSON.stringify(state.recurring));
   }
 
+  function isTemplateActiveOn(t, key){
+    const [y, m, d] = key.split('-').map(Number);
+    const dow = new Date(y, m - 1, d).getDay();
+    return t.days.includes(dow) && key >= t.startDate && (!t.endDate || key <= t.endDate);
+  }
+
   function renderRecurList(){
-    if(state.recurring.length === 0){
-      recurList.innerHTML = `<div class="empty-state">아직 등록한 반복 일정이 없어요.</div>`;
+    const visible = state.recurring.filter(t => isTemplateActiveOn(t, state.selectedKey));
+    if(visible.length === 0){
+      recurList.innerHTML = `<div class="empty-state">이 날짜에 해당하는 반복 일정이 없어요.</div>`;
       return;
     }
-    recurList.innerHTML = state.recurring.map(t => {
+    recurList.innerHTML = visible.map(t => {
       const daysLabel = t.days.length === 7 ? '매일' : t.days.slice().sort().map(d => WEEKDAY_NAMES[d]).join(',');
       const rangeLabel = t.endDate ? `${t.startDate} ~ ${t.endDate}` : `${t.startDate} ~ 계속`;
       return `<div class="recur-item" data-id="${t.id}">
@@ -1465,7 +1482,7 @@
   async function addGoalHandler(){
     const text = goalInput.value.trim();
     if(!text) return;
-    state.goals.push({ id: genId(), text, done:false, category: state.mode, createdAt: new Date().toISOString() });
+    state.goals.push({ id: genId(), text, done:false, category: goalModeFor(state.mode), createdAt: new Date().toISOString() });
     goalInput.value = '';
     await persistGoals();
     renderGoalList();
