@@ -993,6 +993,7 @@
     if(todos.length === 0){ delete state.index[key]; }
     else { state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length }; }
     await setItem('todo-index', JSON.stringify(state.index));
+    renderCalendar();
     renderWeekly();
   }
 
