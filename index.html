@@ -218,6 +218,7 @@
     padding:16px;
     min-width:0;
   }
+  .today-panel.memo-active{ border:none; background:transparent; padding:16px 0; }
 
   /* ---------- Calendar ---------- */
   .cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
@@ -1441,6 +1442,7 @@
     goalTabs.querySelectorAll('.goal-tab').forEach(b => b.classList.toggle('active', b === btn));
 
     if(state.mode === 'memo'){
+      todayPanel.classList.add('memo-active');
       colorRow.style.display = 'none';
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
@@ -1455,6 +1457,7 @@
       renderMemoList();
       return;
     }
+    todayPanel.classList.remove('memo-active');
     el('memoQuickAddBtn').style.display = 'none';
     el('memoQuickAddPinkBtn').style.display = 'none';
     el('todoAddRow').style.display = 'flex';
