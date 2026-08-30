@@ -1330,6 +1330,31 @@
     recurEndDate.disabled = true;
   }
 
+  async function propagateRecurUpdate(templateId, updatedFields){
+    const prefix = LOCAL_PREFIX + 'todos:';
+    const affectedDateKeys = [];
+    for(let i = 0; i < window.localStorage.length; i++){
+      const k = window.localStorage.key(i);
+      if(k && k.startsWith(prefix)) affectedDateKeys.push(k.slice(prefix.length));
+    }
+    for(const dk of affectedDateKeys){
+      let todos = state.todosCache[dk];
+      if(!todos){
+        const raw = window.localStorage.getItem(LOCAL_PREFIX + 'todos:' + dk);
+        todos = raw ? JSON.parse(raw) : [];
+      }
+      const idx = todos.findIndex(t => t.recurringId === templateId);
+      if(idx === -1) continue;
+      if(updatedFields){
+        todos[idx] = { ...todos[idx], text: updatedFields.text, color: updatedFields.color };
+      } else {
+        todos.splice(idx, 1);
+      }
+      state.todosCache[dk] = todos;
+      await persistDay(dk, todos);
+    }
+  }
+
   async function addRecurHandler(){
     const text = recurInput.value.trim();
     const days = [...recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active')].map(b => Number(b.dataset.day));
@@ -1341,7 +1366,10 @@
     const endDate = recurNoEnd.checked ? null : (recurEndDate.value || null);
     if(editingRecurId){
       const t = state.recurring.find(x => x.id === editingRecurId);
-      if(t){ t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate; }
+      if(t){
+        t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate;
+        await propagateRecurUpdate(t.id, { text: t.text, color: t.color });
+      }
     } else {
       state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate });
     }
@@ -1390,6 +1418,11 @@
       persistRecurring();
       if(editingRecurId === id) resetRecurForm();
       renderRecurList();
+      propagateRecurUpdate(id, null).then(() => {
+        renderTodoList();
+        renderWeekly();
+        renderCalendar();
+      });
     }
   });
 
