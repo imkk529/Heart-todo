@@ -158,9 +158,9 @@
     display:grid;
     grid-template-columns:320px 1fr;
     grid-template-areas:
+      "goals goals"
       "today cal"
-      "weekly weekly"
-      "goals goals";
+      "weekly weekly";
     gap:20px;
     padding:22px 32px 60px 32px;
   }
@@ -172,10 +172,10 @@
     .layout{
       grid-template-columns:1fr;
       grid-template-areas:
+        "goals"
         "today"
         "weekly"
-        "cal"
-        "goals";
+        "cal";
     }
     .hero{ height:200px; }
     .profile-wrap{ width:92px; height:92px; left:20px; bottom:-46px; }
@@ -457,8 +457,8 @@
 
   <div class="head-block">
     <div class="goal-tabs" id="goalTabs">
-      <button type="button" class="goal-tab active" data-cat="heart"> 개인</button>
-      <button type="button" class="goal-tab" data-cat="work"> 회사</button>
+      <button type="button" class="goal-tab active" data-cat="heart">🩷 하트</button>
+      <button type="button" class="goal-tab" data-cat="work">🌿 회사</button>
     </div>
     <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
     <div class="tips">
