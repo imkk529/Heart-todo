@@ -319,7 +319,7 @@
   .day-heading h2{ font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:20px; margin:0; }
   .goal-heart-icon{ width:18px; height:18px; vertical-align:-2px; }
   .goal-tabs{
-    display:flex; gap:6px; width:fit-content;
+    display:flex; gap:6px; width:fit-content; flex-wrap:wrap;
     margin:-46px 0 12px 126px;
   }
   .goal-tab{
@@ -330,6 +330,7 @@
   .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:#ec4899; }
   .goal-tab.active[data-cat="personal"]{ background:#f0edf7; color:#6b5ca5; }
   .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:#2f9e44; }
+  .goal-tab.active[data-cat="memo"]{ background:#fdf0d5; color:#b8752e; }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; }
   .goal-reminder:not(:empty){ margin-bottom:12px; padding:9px 12px; border-radius:14px; background:#fdf3f7; }
   .goal-reminder.mode-work:not(:empty){ background:#f0f8f2; }
@@ -496,6 +497,7 @@
       <button type="button" class="goal-tab active" data-cat="heart">하트</button>
       <button type="button" class="goal-tab" data-cat="personal">개인</button>
       <button type="button" class="goal-tab" data-cat="work">회사</button>
+      <button type="button" class="goal-tab" data-cat="memo">메모</button>
     </div>
     <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
     <div class="tips">
@@ -783,6 +785,7 @@
     todosCache: {},
     goals: [],
     mode: 'heart',
+    memos: [],
     recurring: []
   };
 
@@ -1109,7 +1112,89 @@
     if(datePickInput.value) selectDate(datePickInput.value);
   });
 
+  // ---- memos ----
+  async function loadMemos(){
+    const raw = await getItem('memos');
+    state.memos = raw ? JSON.parse(raw) : [];
+  }
+  async function persistMemos(){
+    await setItem('memos', JSON.stringify(state.memos));
+  }
+  function renderMemoCard(m){
+    return `<div class="todo-card" data-id="${m.id}" data-memo="1">
+      <button class="edit-btn" data-action="edit-memo" aria-label="수정">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="delete-btn" data-action="delete-memo" aria-label="삭제">×</button>
+      <div class="todo-top">
+        <button class="heart-btn" aria-hidden="true" tabindex="-1" style="pointer-events:none; color:#e6a94f;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg>
+        </button>
+        <span class="timestamp">${formatTimestamp(m.createdAt)}</span>
+      </div>
+      <div class="todo-body">
+        <span class="todo-text">${escapeHtml(m.text)}</span>
+      </div>
+    </div>`;
+  }
+  function renderMemoList(){
+    if(state.memos.length === 0){
+      todoList.innerHTML = `<div class="empty-state">아직 남긴 메모가 없어요.<br>위에 적고 하트를 눌러 추가해보세요 📝</div>`;
+      return;
+    }
+    todoList.innerHTML = state.memos.slice().reverse().map(renderMemoCard).join('');
+  }
+  async function addMemoHandler(){
+    const text = todoInput.value.trim();
+    if(!text) return;
+    state.memos.push({ id: genId(), text, createdAt: new Date().toISOString() });
+    todoInput.value = '';
+    await persistMemos();
+    renderMemoList();
+  }
+  async function deleteMemo(id, cardEl){
+    if(cardEl) cardEl.classList.add('removing');
+    const finish = async () => {
+      state.memos = state.memos.filter(m => m.id !== id);
+      await persistMemos();
+      renderMemoList();
+    };
+    if(cardEl){ setTimeout(finish, 180); } else { finish(); }
+  }
+  function startEditMemo(id, cardEl){
+    const m = state.memos.find(x => x.id === id);
+    const textEl = cardEl.querySelector('.todo-text');
+    if(!m || !textEl || textEl.getAttribute('contenteditable') === 'true') return;
+    textEl.setAttribute('contenteditable', 'true');
+    textEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(textEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    const onKeydown = ev => {
+      if(ev.key === 'Enter'){ ev.preventDefault(); textEl.blur(); }
+      else if(ev.key === 'Escape'){ textEl.textContent = m.text; textEl.blur(); }
+    };
+    const onBlur = async () => {
+      textEl.removeAttribute('contenteditable');
+      textEl.removeEventListener('keydown', onKeydown);
+      textEl.removeEventListener('blur', onBlur);
+      const newText = textEl.textContent.trim();
+      if(newText && newText !== m.text){
+        m.text = newText;
+        await persistMemos();
+        renderMemoList();
+      } else {
+        textEl.textContent = m.text;
+      }
+    };
+    textEl.addEventListener('keydown', onKeydown);
+    textEl.addEventListener('blur', onBlur);
+  }
+
   async function addTodoHandler(){
+    if(state.mode === 'memo') return addMemoHandler();
     try{
       const text = todoInput.value.trim();
       if(!text) return;
@@ -1173,6 +1258,11 @@
     const card = e.target.closest('.todo-card');
     if(!card) return;
     const id = card.dataset.id;
+    if(card.dataset.memo === '1'){
+      if(e.target.closest('[data-action="delete-memo"]')) deleteMemo(id, card);
+      else if(e.target.closest('[data-action="edit-memo"]')) startEditMemo(id, card);
+      return;
+    }
     if(e.target.closest('[data-action="toggle"]')) toggleTodo(id, card);
     else if(e.target.closest('[data-action="delete"]')) deleteTodo(id, card);
     else if(e.target.closest('[data-action="edit"]')) startEditTodo(id, card);
@@ -1287,6 +1377,21 @@
     if(!btn) return;
     state.mode = btn.dataset.cat;
     goalTabs.querySelectorAll('.goal-tab').forEach(b => b.classList.toggle('active', b === btn));
+
+    if(state.mode === 'memo'){
+      colorRow.style.display = 'none';
+      datePickInput.style.display = 'none';
+      dayCount.style.display = 'none';
+      dayHeading.textContent = '📝 메모';
+      todoInput.placeholder = '메모를 적어보세요';
+      renderMemoList();
+      renderGoalList();
+      return;
+    }
+    datePickInput.style.display = '';
+    dayCount.style.display = '';
+    todoInput.placeholder = '오늘 할 일을 적어보세요';
+    dayHeading.textContent = formatHeading(state.selectedKey);
     selectedColor = state.mode === 'work' ? 'green' : 'black';
     colorRow.style.display = 'flex';
     colorRow.querySelectorAll('.color-swatch').forEach(b => {
@@ -1697,6 +1802,7 @@
     loadDay(state.selectedKey);
     renderWeekly();
     loadGoals();
+    loadMemos();
   })();
 })();
 </script>
