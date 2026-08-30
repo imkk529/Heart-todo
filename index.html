@@ -352,6 +352,9 @@
   .memo-quick-add-btn:hover{ background:#c62d47; transform:scale(1.08); }
   .memo-quick-add-btn:active{ transform:scale(.92); }
   .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
+  .todo-card[data-memo="1"]{ padding:20px 68px 20px 18px; min-height:88px; }
+  .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
+  .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
 
   .color-row{ display:flex; align-items:center; gap:9px; margin-bottom:10px; }
@@ -556,7 +559,7 @@
         <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" title="회사 업무" aria-label="초록 (업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="orange" style="color:#e67e22" title="회사 마감일" aria-label="주황 (마감일)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
-      <div class="add-row">
+      <div class="add-row" id="todoAddRow">
         <input type="text" id="todoInput" placeholder="오늘 할 일을 적어보세요" maxlength="120">
         <button class="add-btn" id="addBtn" aria-label="할 일 추가">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -1408,7 +1411,7 @@
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
       dayHeading.textContent = '메모';
-      todoInput.placeholder = '메모를 적어보세요';
+      el('todoAddRow').style.display = 'none';
       weeklyPanelEl.style.display = 'none';
       calendarPanelEl.style.display = 'none';
       goalsPanelEl.style.display = 'none';
@@ -1418,6 +1421,7 @@
       return;
     }
     el('memoQuickAddBtn').style.display = 'none';
+    el('todoAddRow').style.display = 'flex';
     weeklyPanelEl.style.display = '';
     calendarPanelEl.style.display = '';
     goalsPanelEl.style.display = '';
