@@ -158,9 +158,9 @@
     display:grid;
     grid-template-columns:320px 1fr;
     grid-template-areas:
-      "goals goals"
       "today cal"
-      "weekly weekly";
+      "weekly weekly"
+      "goals goals";
     gap:20px;
     padding:22px 32px 60px 32px;
   }
@@ -172,9 +172,9 @@
     .layout{
       grid-template-columns:1fr;
       grid-template-areas:
-        "goals"
         "today"
         "weekly"
+        "goals"
         "cal";
     }
     .hero{ height:200px; }
@@ -462,23 +462,6 @@
     </div>
     <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
     <div class="tips">
-      <details class="tips-item">
-        <summary>사용법</summary>
-        <p>달력에서 날짜를 고르고, 아래에 할 일을 적은 뒤 하트를 눌러보세요. 완료한 항목은 하트가 채워지고 체크박스가 생겨요.</p>
-      </details>
-      <details class="tips-item">
-        <summary>프로필 사진</summary>
-        <p>왼쪽 위 사진 영역을 클릭하면 나만의 사진으로 바꿀 수 있어요.</p>
-      </details>
-      <details class="tips-item">
-        <summary>데이터 백업</summary>
-        <p>
-          기기/브라우저 저장 문제로 내용이 사라질 수 있어요. 중요한 내용은 가끔 "내보내기"로 백업해두세요.<br>
-          <button type="button" id="exportBtn" class="backup-btn">내보내기</button>
-          <button type="button" id="importBtn" class="backup-btn">가져오기</button>
-          <input type="file" id="importFile" accept="application/json" style="display:none">
-        </p>
-      </details>
       <details class="tips-item">
         <summary>기기 간 동기화</summary>
         <p>
@@ -1322,46 +1305,6 @@
   bgResetBtn.addEventListener('click', async () => {
     clearHeroBackground();
     await setItem('bg-image', '');
-  });
-
-  // ---- backup / restore ----
-  const exportBtn = el('exportBtn'), importBtn = el('importBtn'), importFile = el('importFile');
-  exportBtn.addEventListener('click', () => {
-    const data = {};
-    for(let i = 0; i < window.localStorage.length; i++){
-      const k = window.localStorage.key(i);
-      if(k && k.startsWith(LOCAL_PREFIX)){
-        data[k.slice(LOCAL_PREFIX.length)] = window.localStorage.getItem(k);
-      }
-    }
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `heart-todo-backup-${dateKey(new Date())}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  });
-  importBtn.addEventListener('click', () => importFile.click());
-  importFile.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = async () => {
-      try{
-        const data = JSON.parse(reader.result);
-        for(const [k, v] of Object.entries(data)){
-          await setItem(k, v);
-        }
-        alert('불러오기 완료! 화면을 새로고침할게요.');
-        window.location.reload();
-      } catch(err){
-        alert('파일을 읽는 데 실패했어요. 내보내기로 만든 파일인지 확인해주세요.');
-      }
-    };
-    reader.readAsText(file);
   });
 
   // ---- GitHub sync settings ----
