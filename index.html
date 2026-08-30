@@ -1341,7 +1341,7 @@
     recurEndDate.disabled = true;
   }
 
-  async function propagateRecurUpdate(templateId, updatedFields){
+  async function propagateRecurUpdate(templateId, template){
     const prefix = LOCAL_PREFIX + 'todos:';
     const affectedDateKeys = [];
     for(let i = 0; i < window.localStorage.length; i++){
@@ -1356,10 +1356,17 @@
       }
       const idx = todos.findIndex(t => t.recurringId === templateId);
       if(idx === -1) continue;
-      if(updatedFields){
-        todos[idx] = { ...todos[idx], text: updatedFields.text, color: updatedFields.color };
-      } else {
+      let shouldRemove = !template;
+      if(template){
+        const [y, m, d] = dk.split('-').map(Number);
+        const dow = new Date(y, m - 1, d).getDay();
+        const stillValid = template.days.includes(dow) && dk >= template.startDate && (!template.endDate || dk <= template.endDate);
+        if(!stillValid) shouldRemove = true;
+      }
+      if(shouldRemove){
         todos.splice(idx, 1);
+      } else {
+        todos[idx] = { ...todos[idx], text: template.text, color: template.color };
       }
       state.todosCache[dk] = todos;
       await persistDay(dk, todos);
@@ -1379,7 +1386,7 @@
       const t = state.recurring.find(x => x.id === editingRecurId);
       if(t){
         t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate;
-        await propagateRecurUpdate(t.id, { text: t.text, color: t.color });
+        await propagateRecurUpdate(t.id, t);
       }
     } else {
       state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate });
