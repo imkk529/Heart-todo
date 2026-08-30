@@ -177,6 +177,7 @@
     transition:background .15s ease, color .15s ease, border-color .15s ease;
   }
   .recur-weekday-btn.active{ background:var(--heart); border-color:var(--heart); color:#fff; }
+  .recur-daily-btn{ width:auto; padding:0 12px; border-radius:999px; font-weight:600; }
   .recur-date-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-soft); }
   .recur-date-row input[type="date"]{
     border:1.5px solid #f0dde2; border-radius:999px; padding:5px 10px; font-size:12px;
@@ -589,6 +590,7 @@
         <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" aria-label="초록" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
       <div class="recur-weekday-row" id="recurWeekdayRow">
+        <button type="button" class="recur-weekday-btn recur-daily-btn" id="recurDailyBtn">매일</button>
         <button type="button" class="recur-weekday-btn" data-day="0">일</button>
         <button type="button" class="recur-weekday-btn" data-day="1">월</button>
         <button type="button" class="recur-weekday-btn" data-day="2">화</button>
@@ -635,7 +637,7 @@
   const dayHeading = el('dayHeading'), dayCount = el('dayCount'), todoInput = el('todoInput'), addBtn = el('addBtn'), todoList = el('todoList');
   const datePickInput = el('datePickInput');
   const goalInput = el('goalInput'), goalAddBtn = el('goalAddBtn'), goalList = el('goalList');
-  const recurColorRow = el('recurColorRow'), recurWeekdayRow = el('recurWeekdayRow');
+  const recurColorRow = el('recurColorRow'), recurWeekdayRow = el('recurWeekdayRow'), recurDailyBtn = el('recurDailyBtn');
   const recurStartDate = el('recurStartDate'), recurEndDate = el('recurEndDate'), recurNoEnd = el('recurNoEnd');
   const recurInput = el('recurInput'), recurAddBtn = el('recurAddBtn'), recurList = el('recurList');
   const goalReminder = el('goalReminder');
@@ -1274,7 +1276,16 @@
   recurWeekdayRow.addEventListener('click', e => {
     const btn = e.target.closest('.recur-weekday-btn');
     if(!btn) return;
+    if(btn.id === 'recurDailyBtn'){
+      const dayBtns = [...recurWeekdayRow.querySelectorAll('.recur-weekday-btn[data-day]')];
+      const allActive = dayBtns.every(b => b.classList.contains('active'));
+      dayBtns.forEach(b => b.classList.toggle('active', !allActive));
+      btn.classList.toggle('active', !allActive);
+      return;
+    }
     btn.classList.toggle('active');
+    const dayBtns = [...recurWeekdayRow.querySelectorAll('.recur-weekday-btn[data-day]')];
+    recurDailyBtn.classList.toggle('active', dayBtns.every(b => b.classList.contains('active')));
   });
 
   recurNoEnd.addEventListener('change', () => {
@@ -1357,7 +1368,7 @@
 
   async function addRecurHandler(){
     const text = recurInput.value.trim();
-    const days = [...recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active')].map(b => Number(b.dataset.day));
+    const days = [...recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active[data-day]')].map(b => Number(b.dataset.day));
     if(!text || days.length === 0){
       alert('반복할 요일을 하나 이상 선택하고 내용을 적어주세요.');
       return;
@@ -1402,9 +1413,10 @@
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
-      recurWeekdayRow.querySelectorAll('.recur-weekday-btn').forEach(b => {
+      recurWeekdayRow.querySelectorAll('.recur-weekday-btn[data-day]').forEach(b => {
         b.classList.toggle('active', t.days.includes(Number(b.dataset.day)));
       });
+      recurDailyBtn.classList.toggle('active', t.days.length === 7);
       recurStartDate.value = t.startDate;
       if(t.endDate){ recurNoEnd.checked = false; recurEndDate.disabled = false; recurEndDate.value = t.endDate; }
       else { recurNoEnd.checked = true; recurEndDate.disabled = true; recurEndDate.value = ''; }
