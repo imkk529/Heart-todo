@@ -258,6 +258,11 @@
   .day-dot.dot-full{ color:var(--heart-soft); }
   .day-cell.is-selected .day-dot.dot-partial,
   .day-cell.is-selected .day-dot.dot-full{ color:#fff; }
+  .day-pink-label{
+    font-size:7.5px; line-height:1.1; color:#ec4899; font-weight:600;
+    max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .day-cell.is-selected .day-pink-label{ color:#fff; }
 
   /* ---------- Weekly ---------- */
   .weekly-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
@@ -804,9 +809,12 @@
         key === todayKey ? 'is-today' : '',
         key === state.selectedKey ? 'is-selected' : ''
       ].join(' ');
+      const indicator = idx && idx.pinkText
+        ? `<span class="day-pink-label">${escapeHtml(idx.pinkText)}</span>`
+        : `<span class="day-dot ${dotClass}">♥</span>`;
       return `<button type="button" class="day-cell ${classes}" data-key="${key}">
         <span class="day-num">${d.getDate()}</span>
-        <span class="day-dot ${dotClass}">♥</span>
+        ${indicator}
       </button>`;
     }).join('');
   }
@@ -998,7 +1006,10 @@
     state.todosCache[key] = todos;
     await setItem('todos:' + key, JSON.stringify(todos));
     if(todos.length === 0){ delete state.index[key]; }
-    else { state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length }; }
+    else {
+      const pinkItem = todos.find(t => t.color === 'pink');
+      state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length, pinkText: pinkItem ? pinkItem.text : null };
+    }
     await setItem('todo-index', JSON.stringify(state.index));
     renderCalendar();
     renderWeekly();
