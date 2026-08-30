@@ -345,15 +345,15 @@
   .date-pick-input:focus{ outline:none; border-color:var(--heart-soft); }
   .memo-new-btn{
     display:flex; align-items:center; gap:6px; flex:0 0 auto;
-    padding:6px 14px; border:1.5px solid var(--heart-soft); border-radius:999px;
+    padding:6px 14px; border:none; border-radius:999px;
     background:#fff; color:var(--ink); cursor:pointer;
     font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600;
-    transition:background .15s ease, border-color .15s ease;
+    transition:background .15s ease;
   }
   .memo-new-btn svg{ width:15px; height:15px; color:var(--heart); flex:0 0 auto; }
-  .memo-new-btn:hover{ background:#fdf1f4; border-color:var(--heart); }
+  .memo-new-btn:hover{ background:#fdf1f4; }
   .memo-new-btn:active{ transform:scale(.96); }
-  .todo-card[data-memo="1"]{ padding:20px 68px 20px 18px; min-height:88px; }
+  .todo-card[data-memo="1"]{ padding:20px 68px 20px 18px; min-height:88px; border-radius:0; }
   .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
@@ -1412,7 +1412,7 @@
       colorRow.style.display = 'none';
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
-      dayHeading.textContent = '메모';
+      dayHeading.textContent = '';
       el('todoAddRow').style.display = 'none';
       weeklyPanelEl.style.display = 'none';
       calendarPanelEl.style.display = 'none';
