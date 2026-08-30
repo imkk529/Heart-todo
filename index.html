@@ -19,9 +19,9 @@
     --blob-b:#ff7fb5;
     --blob-c:#ffe2f2;
     --bg:#fdfbfd;
-    --card:#f4eef3;
-    --card-done-1:#ffd9ec;
-    --card-done-2:#ffbde0;
+    --card:#f9f8f7;
+    --card-done-1:#fce9e7;
+    --card-done-2:#fbe0dd;
     --ink:#2d2a33;
     --ink-soft:#847e8c;
     --ink-faint:#c7bfc9;
@@ -353,15 +353,19 @@
   .memo-new-btn svg{ width:15px; height:15px; color:var(--heart); flex:0 0 auto; }
   .memo-new-btn:hover{ background:#fdf1f4; }
   .memo-heart-only-btn{
-    display:flex; align-items:center; justify-content:center; flex:0 0 auto;
-    padding:6px 12px; border:1.5px solid var(--heart-soft); border-radius:999px;
-    background:#fff; cursor:pointer; transition:background .15s ease, border-color .15s ease;
+    display:flex; align-items:center; gap:6px; justify-content:center; flex:0 0 auto;
+    padding:6px 14px; border:1.5px solid var(--heart-soft); border-radius:999px;
+    background:#fff; color:var(--ink); cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600;
+    transition:background .15s ease, border-color .15s ease;
   }
-  .memo-heart-only-btn svg{ width:15px; height:15px; color:var(--heart); }
+  .memo-heart-only-btn svg{ width:15px; height:15px; color:var(--heart); flex:0 0 auto; }
   .memo-heart-only-btn:hover{ background:#fdf1f4; border-color:var(--heart); }
   .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
   .memo-new-btn:active{ transform:scale(.96); }
-  .todo-card[data-memo="1"]{ padding:20px 68px 20px 18px; min-height:88px; border-radius:0; }
+  .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .memo-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+  .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:0; }
   .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
@@ -559,6 +563,7 @@
           </button>
           <button type="button" id="memoQuickAddPinkBtn" class="memo-heart-only-btn" style="display:none" aria-label="핑크 메모 추가">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            NEW
           </button>
         </div>
         <span class="day-count" id="dayCount"></span>
@@ -1174,7 +1179,14 @@
       todoList.innerHTML = `<div class="empty-state">아직 남긴 메모가 없어요.<br>위에 적고 하트를 눌러 추가해보세요</div>`;
       return;
     }
-    todoList.innerHTML = state.memos.slice().reverse().map(renderMemoCard).join('');
+    const defaults = state.memos.filter(m => m.color !== 'pink').slice().reverse();
+    const pinks = state.memos.filter(m => m.color === 'pink').slice().reverse();
+    const colDefault = defaults.length ? defaults.map(renderMemoCard).join('') : '';
+    const colPink = pinks.length ? pinks.map(renderMemoCard).join('') : '';
+    todoList.innerHTML = `<div class="memo-columns">
+      <div class="memo-col">${colDefault}</div>
+      <div class="memo-col">${colPink}</div>
+    </div>`;
   }
   async function addMemoHandler(){
     const text = todoInput.value.trim();
