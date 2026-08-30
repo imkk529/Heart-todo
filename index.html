@@ -946,11 +946,22 @@
   }
 
   async function materializeRecurring(key){
-    if(!state.recurring.length) return;
     const [y, m, d] = key.split('-').map(Number);
     const dow = new Date(y, m - 1, d).getDay();
-    const todos = state.todosCache[key] || [];
+    let todos = state.todosCache[key] || [];
     let changed = false;
+
+    // prune instances whose template was deleted, or no longer matches this date's days/range
+    const beforeCount = todos.length;
+    todos = todos.filter(x => {
+      if(!x.recurringId) return true;
+      const t = state.recurring.find(r => r.id === x.recurringId);
+      if(!t) return false;
+      return t.days.includes(dow) && key >= t.startDate && (!t.endDate || key <= t.endDate);
+    });
+    if(todos.length !== beforeCount) changed = true;
+
+    // add instances for templates that now apply but aren't materialized yet
     state.recurring.forEach(t => {
       if(!t.days.includes(dow)) return;
       if(key < t.startDate) return;
@@ -959,8 +970,9 @@
       todos.push({ id: genId(), text: t.text, done:false, color: t.color, recurringId: t.id, createdAt: new Date(y, m-1, d, 9, 0, 0).toISOString() });
       changed = true;
     });
+
+    state.todosCache[key] = todos;
     if(changed){
-      state.todosCache[key] = todos;
       await persistDay(key, todos);
     }
   }
