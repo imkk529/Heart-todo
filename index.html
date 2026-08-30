@@ -343,6 +343,15 @@
   }
   .date-pick-input:hover{ border-color:var(--heart-soft); }
   .date-pick-input:focus{ outline:none; border-color:var(--heart-soft); }
+  .memo-quick-add-btn{
+    width:28px; height:28px; border-radius:50%; border:none; cursor:pointer;
+    background:var(--heart); color:#fff; display:flex; align-items:center; justify-content:center;
+    flex:0 0 auto; transition:transform .15s ease, background .15s ease;
+  }
+  .memo-quick-add-btn svg{ width:13px; height:13px; }
+  .memo-quick-add-btn:hover{ background:#c62d47; transform:scale(1.08); }
+  .memo-quick-add-btn:active{ transform:scale(.92); }
+  .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
   .day-count{ font-size:12px; color:var(--ink-soft); }
 
   .color-row{ display:flex; align-items:center; gap:9px; margin-bottom:10px; }
@@ -532,6 +541,9 @@
         <div class="day-heading-left">
           <h2 id="dayHeading"></h2>
           <input type="date" id="datePickInput" class="date-pick-input" aria-label="날짜 선택">
+          <button type="button" id="memoQuickAddBtn" class="memo-quick-add-btn" style="display:none" aria-label="핑크 메모 추가">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
         </div>
         <span class="day-count" id="dayCount"></span>
       </div>
@@ -1125,7 +1137,7 @@
     await setItem('memos', JSON.stringify(state.memos));
   }
   function renderMemoCard(m){
-    return `<div class="todo-card" data-id="${m.id}" data-memo="1">
+    return `<div class="todo-card ${m.color === 'pink' ? 'memo-pink' : ''}" data-id="${m.id}" data-memo="1">
       <button class="edit-btn" data-action="edit-memo" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
       </button>
@@ -1156,6 +1168,15 @@
     await persistMemos();
     renderMemoList();
   }
+  async function quickAddPinkMemo(){
+    const memo = { id: genId(), text: '새 메모', color: 'pink', createdAt: new Date().toISOString() };
+    state.memos.push(memo);
+    await persistMemos();
+    renderMemoList();
+    const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
+    if(cardEl) startEditMemo(memo.id, cardEl);
+  }
+  el('memoQuickAddBtn').addEventListener('click', quickAddPinkMemo);
   async function deleteMemo(id, cardEl){
     if(cardEl) cardEl.classList.add('removing');
     const finish = async () => {
@@ -1392,9 +1413,11 @@
       calendarPanelEl.style.display = 'none';
       goalsPanelEl.style.display = 'none';
       recurPanelEl.style.display = 'none';
+      el('memoQuickAddBtn').style.display = 'flex';
       renderMemoList();
       return;
     }
+    el('memoQuickAddBtn').style.display = 'none';
     weeklyPanelEl.style.display = '';
     calendarPanelEl.style.display = '';
     goalsPanelEl.style.display = '';
