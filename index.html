@@ -343,15 +343,16 @@
   }
   .date-pick-input:hover{ border-color:var(--heart-soft); }
   .date-pick-input:focus{ outline:none; border-color:var(--heart-soft); }
-  .memo-quick-add-btn{
-    width:28px; height:28px; border-radius:50%; border:none; cursor:pointer;
-    background:var(--heart); color:#fff; display:flex; align-items:center; justify-content:center;
-    flex:0 0 auto; transition:transform .15s ease, background .15s ease;
+  .memo-new-btn{
+    display:flex; align-items:center; gap:6px; flex:0 0 auto;
+    padding:6px 14px; border:1.5px solid var(--heart-soft); border-radius:999px;
+    background:#fff; color:var(--ink); cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600;
+    transition:background .15s ease, border-color .15s ease;
   }
-  .memo-quick-add-btn svg{ width:13px; height:13px; }
-  .memo-quick-add-btn:hover{ background:#c62d47; transform:scale(1.08); }
-  .memo-quick-add-btn:active{ transform:scale(.92); }
-  .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
+  .memo-new-btn svg{ width:15px; height:15px; color:var(--heart); flex:0 0 auto; }
+  .memo-new-btn:hover{ background:#fdf1f4; border-color:var(--heart); }
+  .memo-new-btn:active{ transform:scale(.96); }
   .todo-card[data-memo="1"]{ padding:20px 68px 20px 18px; min-height:88px; }
   .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
@@ -544,8 +545,9 @@
         <div class="day-heading-left">
           <h2 id="dayHeading"></h2>
           <input type="date" id="datePickInput" class="date-pick-input" aria-label="날짜 선택">
-          <button type="button" id="memoQuickAddBtn" class="memo-quick-add-btn" style="display:none" aria-label="핑크 메모 추가">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          <button type="button" id="memoQuickAddBtn" class="memo-new-btn" style="display:none" aria-label="새 메모 추가">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            NEW
           </button>
         </div>
         <span class="day-count" id="dayCount"></span>
@@ -1146,7 +1148,7 @@
       </button>
       <button class="delete-btn" data-action="delete-memo" aria-label="삭제">×</button>
       <div class="todo-top">
-        <button class="heart-btn" aria-hidden="true" tabindex="-1" style="pointer-events:none; color:#e6a94f;">
+        <button class="heart-btn" aria-hidden="true" tabindex="-1" style="pointer-events:none; color:var(--heart);">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg>
         </button>
         <span class="timestamp">${formatTimestamp(m.createdAt)}</span>
@@ -1171,15 +1173,15 @@
     await persistMemos();
     renderMemoList();
   }
-  async function quickAddPinkMemo(){
-    const memo = { id: genId(), text: '새 메모', color: 'pink', createdAt: new Date().toISOString() };
+  async function quickAddMemo(){
+    const memo = { id: genId(), text: '', createdAt: new Date().toISOString() };
     state.memos.push(memo);
     await persistMemos();
     renderMemoList();
     const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
     if(cardEl) startEditMemo(memo.id, cardEl);
   }
-  el('memoQuickAddBtn').addEventListener('click', quickAddPinkMemo);
+  el('memoQuickAddBtn').addEventListener('click', quickAddMemo);
   async function deleteMemo(id, cardEl){
     if(cardEl) cardEl.classList.add('removing');
     const finish = async () => {
