@@ -660,6 +660,10 @@
   const recurInput = el('recurInput'), recurAddBtn = el('recurAddBtn'), recurList = el('recurList');
   const goalReminder = el('goalReminder');
   const goalTabs = el('goalTabs');
+  const weeklyPanelEl = document.querySelector('.weekly-panel');
+  const calendarPanelEl = document.querySelector('.calendar-panel');
+  const goalsPanelEl = document.querySelector('.goals-panel');
+  const recurPanelEl = document.querySelector('.recur-panel');
   const colorRow = el('colorRow');
   const weeklyGrid = el('weeklyGrid'), weeklyRange = el('weeklyRange');
   const weeklyReflect = el('weeklyReflect');
@@ -1382,12 +1386,19 @@
       colorRow.style.display = 'none';
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
-      dayHeading.textContent = '📝 메모';
+      dayHeading.textContent = '메모';
       todoInput.placeholder = '메모를 적어보세요';
+      weeklyPanelEl.style.display = 'none';
+      calendarPanelEl.style.display = 'none';
+      goalsPanelEl.style.display = 'none';
+      recurPanelEl.style.display = 'none';
       renderMemoList();
-      renderGoalList();
       return;
     }
+    weeklyPanelEl.style.display = '';
+    calendarPanelEl.style.display = '';
+    goalsPanelEl.style.display = '';
+    recurPanelEl.style.display = '';
     datePickInput.style.display = '';
     dayCount.style.display = '';
     todoInput.placeholder = '오늘 할 일을 적어보세요';
