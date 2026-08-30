@@ -579,7 +579,7 @@
 
     <div class="card-panel recur-panel">
       <div class="day-heading">
-        <h2>🔁 반복 일정</h2>
+        <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#ec4899"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 반복 일정</h2>
       </div>
       <div class="color-row" id="recurColorRow">
         <button type="button" class="color-swatch" data-color="pink" style="color:#ec4899" aria-label="핑크" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
@@ -601,6 +601,9 @@
         <label>시작 <input type="date" id="recurStartDate"></label>
         <label>종료 <input type="date" id="recurEndDate"></label>
         <label><input type="checkbox" id="recurNoEnd" checked> 종료일 없음</label>
+      </div>
+      <div id="recurEditingNote" style="display:none;font-size:12px;color:var(--heart);margin-bottom:8px;">
+        ✏️ 수정 중 · <button type="button" id="recurEditCancelBtn" style="background:none;border:none;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font-size:12px;padding:0;">취소</button>
       </div>
       <div class="add-row">
         <input type="text" id="recurInput" placeholder="반복할 일정을 적어보세요" maxlength="120">
@@ -1253,6 +1256,8 @@
 
   // ---- recurring schedule ----
   let recurSelectedColor = 'black';
+  let editingRecurId = null;
+  const recurEditingNote = el('recurEditingNote'), recurEditCancelBtn = el('recurEditCancelBtn');
   const WEEKDAY_NAMES = ['일','월','화','수','목','금','토'];
 
   recurColorRow.addEventListener('click', e => {
@@ -1300,9 +1305,29 @@
       return `<div class="recur-item" data-id="${t.id}">
         <span class="recur-item-dot" style="background:${COLOR_MAP[t.color] || COLOR_MAP.black}"></span>
         <div class="recur-item-text">${escapeHtml(t.text)}<div class="recur-item-days">${daysLabel} · ${rangeLabel}</div></div>
-        <button class="delete-btn" data-action="delete-recur" aria-label="삭제">×</button>
+        <button class="edit-btn" data-action="edit-recur" aria-label="수정" style="position:static;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+        </button>
+        <button class="delete-btn" data-action="delete-recur" aria-label="삭제" style="position:static;">×</button>
       </div>`;
     }).join('');
+  }
+
+  function resetRecurForm(){
+    editingRecurId = null;
+    recurEditingNote.style.display = 'none';
+    recurInput.value = '';
+    recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active').forEach(b => b.classList.remove('active'));
+    recurSelectedColor = 'black';
+    recurColorRow.querySelectorAll('.color-swatch').forEach(b => {
+      const isActive = b.dataset.color === 'black';
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    recurStartDate.value = state.selectedKey;
+    recurNoEnd.checked = true;
+    recurEndDate.value = '';
+    recurEndDate.disabled = true;
   }
 
   async function addRecurHandler(){
@@ -1314,10 +1339,14 @@
     }
     const startDate = recurStartDate.value || state.selectedKey;
     const endDate = recurNoEnd.checked ? null : (recurEndDate.value || null);
-    state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate });
+    if(editingRecurId){
+      const t = state.recurring.find(x => x.id === editingRecurId);
+      if(t){ t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate; }
+    } else {
+      state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate });
+    }
     await persistRecurring();
-    recurInput.value = '';
-    recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active').forEach(b => b.classList.remove('active'));
+    resetRecurForm();
     renderRecurList();
     // apply immediately to already-loaded dates
     await materializeRecurring(state.selectedKey);
@@ -1327,16 +1356,42 @@
   }
   recurAddBtn.addEventListener('click', addRecurHandler);
   recurInput.addEventListener('keydown', e => { if(e.key === 'Enter') addRecurHandler(); });
+  recurEditCancelBtn.addEventListener('click', resetRecurForm);
 
   recurList.addEventListener('click', e => {
-    const btn = e.target.closest('[data-action="delete-recur"]');
-    if(!btn) return;
-    const item = btn.closest('.recur-item');
-    const id = item.dataset.id;
-    if(!confirm('이 반복 일정을 삭제할까요? (이미 생성된 날짜별 항목은 그대로 남아요)')) return;
-    state.recurring = state.recurring.filter(t => t.id !== id);
-    persistRecurring();
-    renderRecurList();
+    const editBtn = e.target.closest('[data-action="edit-recur"]');
+    const deleteBtn = e.target.closest('[data-action="delete-recur"]');
+    if(editBtn){
+      const item = editBtn.closest('.recur-item');
+      const t = state.recurring.find(x => x.id === item.dataset.id);
+      if(!t) return;
+      editingRecurId = t.id;
+      recurEditingNote.style.display = 'block';
+      recurInput.value = t.text;
+      recurSelectedColor = t.color;
+      recurColorRow.querySelectorAll('.color-swatch').forEach(b => {
+        const isActive = b.dataset.color === t.color;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+      recurWeekdayRow.querySelectorAll('.recur-weekday-btn').forEach(b => {
+        b.classList.toggle('active', t.days.includes(Number(b.dataset.day)));
+      });
+      recurStartDate.value = t.startDate;
+      if(t.endDate){ recurNoEnd.checked = false; recurEndDate.disabled = false; recurEndDate.value = t.endDate; }
+      else { recurNoEnd.checked = true; recurEndDate.disabled = true; recurEndDate.value = ''; }
+      recurInput.focus();
+      return;
+    }
+    if(deleteBtn){
+      const item = deleteBtn.closest('.recur-item');
+      const id = item.dataset.id;
+      if(!confirm('이 반복 일정을 삭제할까요? (이미 생성된 날짜별 항목은 그대로 남아요)')) return;
+      state.recurring = state.recurring.filter(t => t.id !== id);
+      persistRecurring();
+      if(editingRecurId === id) resetRecurForm();
+      renderRecurList();
+    }
   });
 
   async function persistGoals(){
