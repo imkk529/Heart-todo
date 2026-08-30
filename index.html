@@ -345,13 +345,13 @@
   .date-pick-input:focus{ outline:none; border-color:var(--heart-soft); }
   .memo-new-btn{
     display:flex; align-items:center; gap:6px; flex:0 0 auto;
-    padding:6px 14px; border:none; border-radius:999px;
+    padding:6px 14px; border:1.5px solid var(--heart-soft); border-radius:999px;
     background:#fff; color:var(--ink); cursor:pointer;
     font-family:'Noto Sans KR',sans-serif; font-size:13px; font-weight:600;
-    transition:background .15s ease;
+    transition:background .15s ease, border-color .15s ease;
   }
   .memo-new-btn svg{ width:15px; height:15px; color:var(--heart); flex:0 0 auto; }
-  .memo-new-btn:hover{ background:#fdf1f4; }
+  .memo-new-btn:hover{ background:#fdf1f4; border-color:var(--heart); }
   .memo-heart-only-btn{
     display:flex; align-items:center; gap:6px; justify-content:center; flex:0 0 auto;
     padding:6px 14px; border:1.5px solid var(--heart-soft); border-radius:999px;
@@ -365,7 +365,7 @@
   .memo-new-btn:active{ transform:scale(.96); }
   .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
   .memo-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
-  .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:0; }
+  .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:8px; }
   .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
