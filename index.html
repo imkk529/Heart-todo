@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>일정 — 하트 투두리스트</title>
+<link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAFC0lEQVR4nL2XbYic1RXHf+feZ2ZnNm43qdrEqO2KiVWRINUPKkVrq8Til4JsBLU0Cgp+EgVFJLgk9UMV0aIgBYmt9Q1mEUGxrS9EISEQvyS+kEbbhoiS+CFgG915e+45xw93Nk52ZtcJif3DmWHm3nv+/3uec869jwD4dCPK7Ab1Lc/9lHrtbtyuM7czg3t0EE4AAm6CEeKhIOEtUudxuf+WD33Gg2wWE280omzYoOn3z94ex2qPEIvllF3c9ER4B4WECJUqltKcl+1Nxabf/dEbjSgAacuzt8WJH2ylOYdqUkSCnODOF8LBcbcQQpRTJtEjX95TPLjxcWnNPL2mEqvvS5CaaUKQcDKJhwixIMFd8OhyaVFYuC9Wi/Gy3dQgITr+ffIjEJSklbHxQjutTYVbup5O23EP7if3uQ9Db3vR2k03t/WFm68qrZS+wf8LFESEiQLT8J3EYUFauGfrh0i2fpgt6daBAl1iUs+fz7XBDSRkp5UCGauA9UQEwTtd6KYs1nP3kPpYdrJQbB+KRetdBJKBGuHitYQLz0HGa/jh/6K7P8b3H4TxHsFXLeTHK4mXnI/8aAXe7mL7DmC7P+mxxEVFSOuuxwZHhLy7GKhuvJ6wbu2x42akV7eT3toFDvGqn1G54epM1D/tnwcon3ktRycOFxEwY8Dc8WabyvSvMrnOj3n+FqH4zVWE86eQqTOo3HhNJte+OaqEC6Yobl6fBQzjMaNwXfAIRKBdImedTrzsoqOROCY85oBTXHc5XpY5m9z65snRSMWLzyOcsxr7z+dQq36bNz0UvjBTQ8A7XSpnr8xi3BjoyiH/DueemckFFm2gDvKTVdje/Ui1MlAZBQsj4I6b4ktkbr/Y70b246aI6qCAgQi4IyLYgYMjOB8BIuj+z0EEVx1IxOCqHGMp4ZWC9O/PSLs+zLtMgwuXhHteEwL6wb/QvfuhWmTfC/iKYd3K3aEItJ9+hfqyOvGiNb0BRjukRaCI6Cef0nqqgQughgzZhBy5+YHhWwsCpeaSu2IdtZt+jfxwstflFlHRI/CvmnRe+jvl9j14SkOTbx6DOTAP64kQ6L6+Azt0mGWb7zxaAQMinFxiQWg98SLljj3IqZMQA57ScA4guBqLWlK8VOTUSco9+2j95dWcEzYkaJb7QPulf9Dd+T5y2mQvp3Rx/2oUjHD3844ip4zTeflt4pqzqf7i0tz15htPj7x87yPaL/wNmRjP3W8EFL7Uabhwh7UqzSdfJE6tJk6t7jsNA/bFYZqP/RUqMZfbsCgNQXBTRjJVXMCbbeb+sBVvdebjA2Xi64efwb48gkfJ5Tai34DmI3ckKxPUKqSPDzD3xAs5IUNg7k8N0u59MF7Ld4IR/bkahZn6cV3BuwoT47Rfe5fKuvOQZTXajTeQ5RN4d7TnPg9BkMPr7zhUSFyZ3PJ/o63snZIRCYKXKUfjOJplEHFzbwZTfbMmIqZqi53ZAzbf08uyl+2e/xtxvalqHRFT3SYHf3nrhWMSdgcklq5yXC8m0vs4jnPCwQsRFYjqXBZWb/vz3m6Z7l0eK1HMg6mqmzGSqeXqGHG+qSlmrIjVopPSzGnbtr4nPj0dZXZWv7jyt/fUJT5USKi3LKHuJ+3l0IEgQj1E1L1sqT60asdzW3x6Or+cNqan44bZWT3485suqVPca9i16r6idxc6IR0OBPCI/C8GeaeDP7py+/M7fWYmyObN9g0WsK0go9x/JgAAAABJRU5ErkJggg==">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="일정">
+<meta name="theme-color" content="#ff8aa8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --blob-a:#ffc2d1;
+    --blob-b:#ff8aa8;
+    --blob-c:#ffe6ee;
+    --bg:#fffdfb;
+    --card:#f6f1ec;
+    --card-done-1:#ffd9e3;
+    --card-done-2:#ffc0d1;
+    --ink:#33282a;
+    --ink-soft:#8d8083;
+    --ink-faint:#c9bdbf;
+    --heart:#e13a56;
+    --heart-soft:#e9c7cd;
+    --gold:#eab54a;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:10px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;width:100%;max-width:100%;overflow-x:hidden;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Noto Sans KR', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{
+    max-width:780px;
+    width:100%;
+    margin:0 auto;
+    animation:fadeIn .5s ease both;
+  }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    height:230px;
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    transition:background-image .3s ease;
+  }
+  .hero-bg{
+    position:absolute; inset:0;
+    overflow:hidden;
+    z-index:0;
+  }
+  .blob{ position:absolute; border-radius:50%; filter:blur(45px); opacity:.85; transition:opacity .3s ease; }
+  .blob-1{ width:340px; height:340px; background:var(--blob-b); top:-160px; left:-90px; }
+  .blob-2{ width:420px; height:300px; background:var(--blob-a); top:-140px; right:-120px; }
+  .blob-3{ width:260px; height:260px; background:var(--blob-c); top:-40px; left:38%; opacity:.7;}
+  .sparkle{
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    animation:twinkle 2.6s ease-in-out infinite;
+    transition:opacity .3s ease;
+  }
+  @keyframes twinkle{ 0%,100%{opacity:.35; transform:translateX(-50%) scale(.85);} 50%{opacity:1; transform:translateX(-50%) scale(1);} }
+  .hero.has-bg .blob, .hero.has-bg .sparkle{ opacity:0; }
+
+  .hero-edit-btn{
+    position:absolute; top:12px; right:14px; z-index:2;
+    width:34px; height:34px; border-radius:50%;
+    background:rgba(255,255,255,.88); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--heart); box-shadow:0 4px 10px rgba(0,0,0,.14);
+  }
+  .hero-edit-btn:hover{ background:#fff; }
+  .hero-edit-btn svg{ width:16px; height:16px; }
+  .hero-reset-btn{
+    position:absolute; top:15px; right:56px; z-index:2;
+    background:rgba(255,255,255,.88); border:none; border-radius:999px;
+    padding:7px 12px; font-size:11px; color:var(--ink-soft); cursor:pointer;
+    font-family:'Noto Sans KR',sans-serif;
+  }
+  .hero-reset-btn:hover{ background:#fff; color:var(--heart); }
+  #profileResetBtn{ right:98px; color:var(--ink-soft); }
+  #bgResetBtn{ right:56px; color:var(--ink-soft); }
+
+  .profile-wrap{
+    position:absolute;
+    left:32px; bottom:-52px;
+    width:112px; height:112px;
+    border-radius:var(--radius-lg);
+    overflow:hidden;
+    background:#fff;
+    cursor:pointer;
+    border:3px solid #fff;
+  }
+  .profile-wrap img{ width:100%; height:100%; object-fit:cover; display:none; }
+  .profile-placeholder{
+    width:100%; height:100%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px;
+    background:linear-gradient(135deg,#fff0f4,#ffe1ea);
+    color:var(--heart);
+    font-size:11px;
+    text-align:center;
+    padding:4px;
+  }
+  .profile-placeholder svg{ width:26px; height:26px; }
+
+  /* ---------- Header text ---------- */
+  .head-block{ padding:66px 32px 0 32px; }
+  .title{
+    font-family:'Noto Sans KR', sans-serif;
+    font-weight:900;
+    letter-spacing:-0.5px;
+    font-size:34px;
+    margin:0 0 10px 0;
+    outline:none;
+    cursor:text;
+    display:inline-block;
+    border-bottom:2px dashed transparent;
+  }
+  .title:hover, .title:focus{ border-bottom:2px dashed var(--heart-soft); }
+
+  .tips{ display:flex; gap:18px; flex-wrap:wrap; margin-bottom:10px; }
+  .tips summary{
+    font-family:'Noto Serif KR', Georgia, serif;
+    font-style:italic;
+    font-size:14.5px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    list-style:none;
+  }
+  .tips summary::-webkit-details-marker{ display:none; }
+  .tips summary::before{ content:'▶ '; color:var(--heart); font-size:11px; }
+  .tips[open] summary::before{ content:'▼ '; }
+  .tips p{ font-size:13px; color:var(--ink-soft); margin:6px 2px 0 14px; line-height:1.7; max-width:300px; }
+  .backup-btn{
+    margin-top:6px; margin-right:6px;
+    background:#fbeef1; color:var(--heart); border:none; border-radius:999px;
+    padding:6px 12px; font-size:12px; font-family:'Noto Sans KR',sans-serif; cursor:pointer;
+  }
+  .backup-btn:hover{ background:var(--heart-soft); }
+
+  .divider{ border:none; border-top:1px solid #f1e6e9; margin:14px 32px 0 32px; }
+
+  /* ---------- Main grid ---------- */
+  .layout{
+    display:grid;
+    grid-template-columns:320px 1fr;
+    grid-template-areas:
+      "today cal"
+      "weekly weekly"
+      "goals goals";
+    gap:20px;
+    padding:22px 32px 60px 32px;
+  }
+  .today-panel{ grid-area:today; }
+  .calendar-panel{ grid-area:cal; }
+  .weekly-panel{ grid-area:weekly; }
+  .goals-panel{ grid-area:goals; }
+  @media (max-width:680px){
+    .layout{
+      grid-template-columns:1fr;
+      grid-template-areas:
+        "today"
+        "weekly"
+        "cal"
+        "goals";
+    }
+    .hero{ height:200px; }
+    .profile-wrap{ width:92px; height:92px; left:20px; bottom:-46px; }
+    .goal-tabs{ margin:-42px 0 12px 106px; }
+    .head-block{ padding:56px 20px 0 20px; }
+    .divider{ margin:14px 20px 0 20px; }
+    .layout{ padding:20px 20px 50px 20px; }
+    .title{ font-size:30px; }
+  }
+
+  .card-panel{
+    background:#fff;
+    border:1px solid #f3e8eb;
+    border-radius:var(--radius-lg);
+    padding:16px;
+    min-width:0;
+  }
+
+  /* ---------- Calendar ---------- */
+  .cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .cal-nav-btn{
+    background:none; border:none; cursor:pointer; color:var(--ink-soft);
+    font-size:16px; padding:4px 8px; border-radius:8px;
+  }
+  .cal-nav-btn:hover{ background:#fbeef1; color:var(--heart); }
+  .cal-month{ font-family:'Noto Sans KR',sans-serif; font-size:17px; font-weight:700; }
+  .today-btn{
+    display:block; margin:0 auto 12px auto;
+    background:#fbeef1; color:var(--heart); border:none;
+    font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:500;
+    padding:5px 12px; border-radius:999px; cursor:pointer;
+  }
+  .today-btn:hover{ background:var(--heart-soft); }
+
+  .weekday-row{ display:grid; grid-template-columns:repeat(7,1fr); margin-bottom:4px; }
+  .wd{ text-align:center; font-size:11px; color:var(--ink-faint); }
+  .wd-sun{ color:#e0748a; }
+  .wd-sat{ color:#7f9fd4; }
+
+  .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+  .day-cell{
+    aspect-ratio:1/1;
+    background:none; border:none; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px; border-radius:10px;
+    font-family:'Noto Sans KR',sans-serif; font-size:12px; color:var(--ink);
+  }
+  .day-cell:hover{ background:#fbeef1; }
+  .day-cell.other-month{ opacity:.32; }
+  .day-cell.is-today .day-num{ font-weight:700; color:var(--heart); }
+  .day-cell.is-selected{ background:var(--heart); color:#fff; }
+  .day-cell.is-selected .day-num{ color:#fff; }
+  .day-dot{ font-size:8px; line-height:1; color:transparent; }
+  .day-dot.dot-partial{ color:var(--heart); }
+  .day-dot.dot-full{ color:var(--heart-soft); }
+  .day-cell.is-selected .day-dot.dot-partial,
+  .day-cell.is-selected .day-dot.dot-full{ color:#fff; }
+
+  /* ---------- Weekly ---------- */
+  .weekly-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
+  .weekly-head h2{ font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:18px; margin:0; }
+  .weekly-sub{ font-size:12px; color:var(--ink-soft); }
+  .weekly-grid{ display:flex; flex-direction:column; gap:8px; }
+  .wk-day{
+    display:flex; align-items:flex-start; gap:12px;
+    width:100%; text-align:left; background:var(--card); border:none; border-radius:14px;
+    padding:10px 12px; cursor:pointer; font-family:inherit;
+  }
+  .wk-day:hover{ filter:brightness(.98); }
+  .wk-day.is-selected{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
+  .wk-day-head{ display:flex; flex-direction:column; align-items:center; width:32px; flex:0 0 auto; }
+  .wk-wd{ font-size:11px; color:var(--ink-faint); }
+  .wk-date{ font-size:13px; font-weight:600; color:var(--ink); }
+  .wk-date.wk-weekend{ color:#ec4899; }
+  .wk-day.is-today .wk-date{ color:var(--heart); }
+  .wk-items{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; padding-top:1px; }
+  .wk-item{ font-size:12.5px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wk-item.done{ text-decoration:line-through; opacity:.5; }
+  .wk-empty{ font-size:12px; color:var(--ink-faint); }
+  .wk-day-stats{ display:flex; flex-direction:column; align-items:flex-end; gap:3px; flex:0 0 auto; padding-top:1px; }
+  .wk-day-count{ display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:700; color:var(--ink-soft); }
+  .wk-day-count-dot{ width:7px; height:7px; border-radius:50%; flex:0 0 auto; }
+
+  .weekly-reflect{
+    margin-top:12px; background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2));
+    border-radius:16px; padding:12px 14px;
+  }
+  .weekly-reflect-label{ font-size:12.5px; font-weight:600; color:#9c4a5e; margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+  .heart-badge{
+    display:inline-flex; align-items:center; justify-content:center; flex:0 0 auto;
+    width:20px; height:20px; border-radius:50%; background:var(--heart); color:#fff;
+  }
+  .heart-badge svg{ width:11px; height:11px; }
+  .weekly-reflect-input{
+    width:100%; border:none; background:rgba(255,255,255,.55); border-radius:10px;
+    padding:9px 11px; font-family:'Noto Sans KR',sans-serif; font-size:13px; color:var(--ink);
+    resize:vertical; outline:none; line-height:1.5; min-height:64px; box-sizing:border-box;
+    transition:background .2s ease;
+  }
+  .weekly-reflect-input:focus{ background:rgba(255,255,255,.9); }
+  .weekly-reflect-input::placeholder{ color:#c98999; }
+
+  /* ---------- Day panel ---------- */
+  .day-heading{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
+  .day-heading-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .day-heading h2{ font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:20px; margin:0; }
+  .goal-heart-icon{ width:18px; height:18px; vertical-align:-2px; }
+  .goal-tabs{
+    display:flex; gap:6px; width:fit-content;
+    margin:-46px 0 12px 126px;
+  }
+  .goal-tab{
+    padding:6px 12px; border-radius:999px; border:none; cursor:pointer; white-space:nowrap;
+    font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:600;
+    background:#f6f1ec; color:var(--ink-soft); transition:background .2s ease, color .2s ease;
+  }
+  .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:#ec4899; }
+  .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:#2f9e44; }
+  .goal-reminder{ display:flex; flex-direction:column; gap:4px; }
+  .goal-reminder:not(:empty){ margin-bottom:12px; padding:9px 12px; border-radius:14px; background:#fdf3f7; }
+  .goal-reminder.mode-work:not(:empty){ background:#f0f8f2; }
+  .goal-reminder-item{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink); }
+  .goal-reminder-item svg{ width:11px; height:11px; flex:0 0 auto; }
+  .date-pick-input{
+    border:1.5px solid #f0dde2; border-radius:999px; padding:4px 10px;
+    font-size:12px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    background:#fff; cursor:pointer; accent-color:var(--heart);
+  }
+  .date-pick-input:hover{ border-color:var(--heart-soft); }
+  .date-pick-input:focus{ outline:none; border-color:var(--heart-soft); }
+  .day-count{ font-size:12px; color:var(--ink-soft); }
+
+  .color-row{ display:flex; align-items:center; gap:9px; margin-bottom:10px; }
+  .color-row-label{ font-size:12px; color:var(--ink-faint); margin-right:2px; }
+  .color-swatch{
+    width:26px; height:26px; border-radius:50%; border:none; background:none; cursor:pointer; padding:4px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 2px transparent;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .color-swatch svg{ width:100%; height:100%; }
+  .color-swatch:hover{ transform:scale(1.1); }
+  .color-swatch.active{ box-shadow:0 0 0 2px var(--ink-faint); }
+
+  .add-row{ display:flex; gap:8px; margin-bottom:16px; }
+  .add-row input{
+    flex:1; min-width:0; border:1.5px solid #f0dde2; border-radius:999px;
+    padding:10px 16px; font-size:14px; font-family:'Noto Sans KR',sans-serif;
+    outline:none; color:var(--ink);
+  }
+  .add-row input:focus{ border-color:var(--heart-soft); }
+  .add-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:42px; height:42px; flex:0 0 auto;
+    background:var(--heart); color:#fff; border:none;
+    border-radius:50%; cursor:pointer;
+  }
+  .add-btn:hover{ background:#c62d47; }
+  .add-btn svg{ width:18px; height:18px; }
+
+  .todo-list{ display:flex; flex-direction:column; gap:10px; }
+  .color-divider{ height:2px; background:var(--heart-soft); border:none; margin:0 6px; border-radius:2px; }
+  .todo-card{
+    position:relative;
+    background:var(--card);
+    border-radius:var(--radius-md);
+    padding:12px 68px 12px 14px;
+    transition:background .35s ease;
+  }
+  .todo-card.done{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
+  .todo-card.removing{ opacity:0; transform:scale(.92); transition:opacity .18s ease, transform .18s ease; }
+
+  .edit-btn{
+    position:absolute; top:8px; right:38px;
+    width:24px; height:24px; border-radius:50%;
+    background:#f2ecee; color:var(--ink-soft); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    opacity:.85; transition:background .15s ease, opacity .15s ease, transform .15s ease;
+  }
+  .edit-btn svg{ width:12px; height:12px; }
+  .edit-btn:hover{ background:#e7dfe2; opacity:1; transform:scale(1.08); }
+  .edit-btn:active{ transform:scale(.9); }
+
+  .delete-btn{
+    position:absolute; top:8px; right:8px;
+    width:24px; height:24px; border-radius:50%;
+    background:#fdecef; color:var(--heart); border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px; line-height:1; opacity:.85;
+    transition:background .15s ease, transform .15s ease, opacity .15s ease;
+  }
+  .delete-btn:hover{ background:#fbd6dd; opacity:1; transform:scale(1.08); }
+  .delete-btn:active{ transform:scale(.9); }
+
+  .todo-top{ display:flex; align-items:center; gap:8px; }
+  .heart-btn{
+    background:none; border:none; cursor:pointer; padding:2px;
+    color:var(--heart-soft); display:flex;
+  }
+  .heart-btn svg{ width:19px; height:19px; }
+  .todo-card.done .heart-btn{ color:var(--heart); }
+  .heart-btn.pop svg{ animation:pop .38s ease; }
+  @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.4); } 100%{ transform:scale(1); } }
+
+  .timestamp{ font-size:11.5px; color:var(--ink-faint); }
+
+  .todo-body{ display:flex; align-items:flex-start; gap:8px; margin-top:6px; padding-left:1px; }
+  .checkbox{
+    width:18px; height:18px; border-radius:5px; flex:0 0 auto; margin-top:1px;
+    border:2px solid var(--heart-soft); background:#fff; cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
+    transition:background .2s ease, border-color .2s ease;
+  }
+  .checkbox:hover{ border-color:var(--heart); }
+  .checkbox .check-icon{
+    width:11px; height:11px; display:flex; opacity:0; transform:scale(.4);
+    transition:opacity .2s ease, transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .todo-card.done .checkbox{ background:var(--heart); border-color:var(--heart); }
+  .todo-card.done .checkbox .check-icon{ opacity:1; transform:scale(1); }
+  .checkbox.pop{ animation:pop .35s ease; }
+  .todo-text{ font-size:14.5px; line-height:1.5; }
+  .todo-card.done .todo-text{ text-decoration:line-through; opacity:.55; }
+  .todo-text[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
+  .edit-color-row{ display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .edit-color-swatch{
+    width:18px; height:18px; border:none; background:none; padding:1px; border-radius:50%;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+    box-shadow:0 0 0 2px transparent; transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .edit-color-swatch svg{ width:100%; height:100%; }
+  .edit-color-swatch:hover{ transform:scale(1.1); }
+  .edit-color-swatch.active{ box-shadow:0 0 0 2px var(--ink-faint); }
+
+  .empty-state, .loading-text{
+    text-align:center; color:var(--ink-faint); font-size:13px; line-height:1.7;
+    padding:30px 10px;
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{ animation:none !important; transition:none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-bg">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+      <svg class="sparkle" width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+        <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z"/>
+      </svg>
+    </div>
+
+    <button class="hero-edit-btn" id="profileResetBtn" style="display:none" title="프로필 기본으로" aria-label="프로필 기본으로">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+    <button class="hero-edit-btn" id="bgResetBtn" style="display:none" title="기본 배경으로" aria-label="기본 배경으로">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </button>
+    <button class="hero-edit-btn" id="bgEditBtn" title="배경 사진 바꾸기" aria-label="배경 사진 바꾸기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10.5" r="1.5"/><path d="M21 15l-5-5-4 4-3-3-6 6"/>
+      </svg>
+    </button>
+    <input type="file" id="bgFileInput" accept="image/*" style="display:none">
+
+    <div class="profile-wrap" id="profileWrap" title="클릭해서 사진 바꾸기">
+      <img id="profileImg" alt="프로필 사진">
+      <div class="profile-placeholder" id="profilePlaceholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" style="display:none">
+    </div>
+  </div>
+
+  <div class="head-block">
+    <div class="goal-tabs" id="goalTabs">
+      <button type="button" class="goal-tab active" data-cat="heart">🩷 하트</button>
+      <button type="button" class="goal-tab" data-cat="work">🌿 회사</button>
+    </div>
+    <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
+    <div class="tips">
+      <details class="tips-item">
+        <summary>사용법</summary>
+        <p>달력에서 날짜를 고르고, 아래에 할 일을 적은 뒤 하트를 눌러보세요. 완료한 항목은 하트가 채워지고 체크박스가 생겨요.</p>
+      </details>
+      <details class="tips-item">
+        <summary>프로필 사진</summary>
+        <p>왼쪽 위 사진 영역을 클릭하면 나만의 사진으로 바꿀 수 있어요.</p>
+      </details>
+      <details class="tips-item">
+        <summary>데이터 백업</summary>
+        <p>
+          기기/브라우저 저장 문제로 내용이 사라질 수 있어요. 중요한 내용은 가끔 "내보내기"로 백업해두세요.<br>
+          <button type="button" id="exportBtn" class="backup-btn">내보내기</button>
+          <button type="button" id="importBtn" class="backup-btn">가져오기</button>
+          <input type="file" id="importFile" accept="application/json" style="display:none">
+        </p>
+      </details>
+      <details class="tips-item">
+        <summary>기기 간 동기화</summary>
+        <p>
+          개인 토큰을 넣으면 이 기기에 저장되고, 폰·PC 모두 같은 토큰을 넣으면 서로 동기화돼요. 토큰은 이 브라우저에만 저장되고 파일에는 저장되지 않아요.<br>
+          <span id="ghSyncStatus" style="display:block;margin:6px 0;font-weight:600;"></span>
+          <input type="password" id="ghTokenInput" placeholder="github_pat_로 시작하는 토큰 붙여넣기" style="width:100%;box-sizing:border-box;border:1.5px solid #f0dde2;border-radius:999px;padding:8px 14px;font-size:12.5px;margin-bottom:6px;">
+          <button type="button" id="ghTokenSaveBtn" class="backup-btn">저장</button>
+          <button type="button" id="ghTokenClearBtn" class="backup-btn">연결 해제</button>
+        </p>
+      </details>
+      <details class="tips-item">
+        <summary>색상 가이드</summary>
+        <p>
+          <strong style="color:#ec4899">핑크</strong> 진짜 중요한 약속<br>
+          <strong style="color:#e0334f">빨강</strong> 오늘·올해 가장 중요한 일 / 목표·커리어·버킷리스트 관련 / 급하지 않아도 중요한 일<br>
+          <strong style="color:#3b6fe0">파랑</strong> 매일 가져갈 습관 (운동, 독서, 일기, 명상 등) — 목표와 직접 관련 없어도 놓치면 안 되는 것들<br>
+          <strong style="color:#2b2b2b">검정</strong> 빨강·파랑 제외 나머지 / 가장 덜 중요한 일 / 내일로 미뤄도 괜찮은 일 (설거지, 빨래, 관공서 방문 등)<br>
+          <strong style="color:#2f9e44">초록</strong> 회사 업무
+        </p>
+      </details>
+    </div>
+  </div>
+  <hr class="divider">
+
+  <div class="layout">
+    <div class="card-panel today-panel" id="todayPanel">
+      <div class="day-heading">
+        <div class="day-heading-left">
+          <h2 id="dayHeading"></h2>
+          <input type="date" id="datePickInput" class="date-pick-input" aria-label="날짜 선택">
+        </div>
+        <span class="day-count" id="dayCount"></span>
+      </div>
+      <div class="goal-reminder" id="goalReminder"></div>
+      <div class="color-row" id="colorRow">
+        <button type="button" class="color-swatch" data-color="pink" style="color:#ec4899" title="중요한 약속" aria-label="핑크 (중요)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="red" style="color:#e0334f" aria-label="빨강" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="blue" style="color:#3b6fe0" aria-label="파랑" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch active" data-color="black" style="color:#2b2b2b" aria-label="검정" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" title="회사 업무" aria-label="초록 (업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+      </div>
+      <div class="add-row">
+        <input type="text" id="todoInput" placeholder="오늘 할 일을 적어보세요" maxlength="120">
+        <button class="add-btn" id="addBtn" aria-label="할 일 추가">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
+      <div class="todo-list" id="todoList"></div>
+    </div>
+
+    <div class="card-panel weekly-panel">
+      <div class="weekly-head">
+        <h2>위클리</h2>
+        <span class="weekly-sub" id="weeklyRange"></span>
+      </div>
+      <div class="weekly-grid" id="weeklyGrid"></div>
+      <div class="weekly-reflect">
+        <div class="weekly-reflect-label">
+          <span class="heart-badge"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></span>
+        </div>
+        <textarea id="weeklyReflect" class="weekly-reflect-input" placeholder="이번 한 주는 어땠나요?" rows="3"></textarea>
+      </div>
+    </div>
+
+    <div class="card-panel calendar-panel">
+      <div class="cal-head">
+        <button class="cal-nav-btn" id="prevMonthBtn" aria-label="이전 달">◀</button>
+        <span class="cal-month" id="monthLabel"></span>
+        <button class="cal-nav-btn" id="nextMonthBtn" aria-label="다음 달">▶</button>
+      </div>
+      <button class="today-btn" id="todayBtn">오늘로 이동</button>
+      <div class="weekday-row">
+        <span class="wd wd-sun">일</span><span class="wd">월</span><span class="wd">화</span>
+        <span class="wd">수</span><span class="wd">목</span><span class="wd">금</span><span class="wd wd-sat">토</span>
+      </div>
+      <div class="cal-grid" id="calendarGrid"></div>
+    </div>
+
+    <div class="card-panel goals-panel">
+      <div class="day-heading">
+        <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#ec4899"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 목표</h2>
+      </div>
+      <div class="add-row">
+        <input type="text" id="goalInput" placeholder="이루고 싶은 목표를 적어보세요" maxlength="120">
+        <button class="add-btn" id="goalAddBtn" aria-label="목표 추가">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
+      </div>
+      <div class="todo-list" id="goalList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
+  const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
+  const WEEKDAYS = ['일','월','화','수','목','금','토'];
+  const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ec4899', green:'#2f9e44' };
+  const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:4 };
+  let selectedColor = 'black';
+
+  const el = id => document.getElementById(id);
+  const hero = document.querySelector('.hero');
+  const bgEditBtn = el('bgEditBtn'), bgResetBtn = el('bgResetBtn'), bgFileInput = el('bgFileInput');
+  const profileResetBtn = el('profileResetBtn');
+  const profileWrap = el('profileWrap'), profileImg = el('profileImg'), profilePlaceholder = el('profilePlaceholder'), fileInput = el('fileInput');
+  const titleEl = el('titleEl');
+  const monthLabel = el('monthLabel'), calendarGrid = el('calendarGrid'), prevMonthBtn = el('prevMonthBtn'), nextMonthBtn = el('nextMonthBtn'), todayBtn = el('todayBtn');
+  const dayHeading = el('dayHeading'), dayCount = el('dayCount'), todoInput = el('todoInput'), addBtn = el('addBtn'), todoList = el('todoList');
+  const datePickInput = el('datePickInput');
+  const goalInput = el('goalInput'), goalAddBtn = el('goalAddBtn'), goalList = el('goalList');
+  const goalReminder = el('goalReminder');
+  const goalTabs = el('goalTabs');
+  const colorRow = el('colorRow');
+  const weeklyGrid = el('weeklyGrid'), weeklyRange = el('weeklyRange');
+  const weeklyReflect = el('weeklyReflect');
+
+  const pad = n => String(n).padStart(2,'0');
+  const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  const escapeHtml = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const LOCAL_PREFIX = 'heart-todo:';
+  const GH_TOKEN_KEY = 'heart-todo-gh-token'; // stored locally only, never synced or committed
+
+  // ---- GitHub sync (cross-device) ----
+  const GH_OWNER = 'imkk529';
+  const GH_REPO = 'Heart-todo';
+  const GH_PATH = 'data/store.json';
+  const GH_API = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+  let ghSha = null;
+  let ghSyncTimer = null;
+  let ghSyncing = false;
+  let ghPendingResync = false;
+
+  function getGhToken(){
+    try{ return window.localStorage.getItem(GH_TOKEN_KEY) || ''; }
+    catch(e){ return ''; }
+  }
+
+  function utf8ToB64(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function b64ToUtf8(str){ return decodeURIComponent(escape(atob(str))); }
+
+  async function githubPull(){
+    const token = getGhToken();
+    if(!token) return;
+    try{
+      const res = await fetch(GH_API, {
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
+      });
+      if(res.status === 404){ return; } // no data file yet, nothing to pull
+      if(!res.ok) return;
+      const json = await res.json();
+      ghSha = json.sha;
+      const decoded = b64ToUtf8(json.content.replace(/\n/g, ''));
+      const data = JSON.parse(decoded);
+      for(const [k, v] of Object.entries(data)){
+        if(k === '_updatedAt') continue;
+        try{ window.localStorage.setItem(LOCAL_PREFIX + k, v); } catch(e){}
+      }
+    } catch(e){ /* offline or blocked - app still works from localStorage */ }
+  }
+
+  async function githubPushNow(){
+    const token = getGhToken();
+    if(!token) return;
+    if(ghSyncing){ ghPendingResync = true; return; }
+    ghSyncing = true;
+    try{
+      const data = { _updatedAt: new Date().toISOString() };
+      for(let i = 0; i < window.localStorage.length; i++){
+        const k = window.localStorage.key(i);
+        if(k && k.startsWith(LOCAL_PREFIX)){
+          data[k.slice(LOCAL_PREFIX.length)] = window.localStorage.getItem(k);
+        }
+      }
+      const body = {
+        message: `sync ${new Date().toISOString()}`,
+        content: utf8ToB64(JSON.stringify(data)),
+        branch: 'main'
+      };
+      if(ghSha) body.sha = ghSha;
+      const res = await fetch(GH_API, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' },
+        body: JSON.stringify(body)
+      });
+      if(res.ok){
+        const json = await res.json();
+        ghSha = json.content.sha;
+      } else if(res.status === 409){
+        // sha conflict (another device wrote first) - repull sha then retry once
+        const r2 = await fetch(GH_API, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } });
+        if(r2.ok){ const j2 = await r2.json(); ghSha = j2.sha; }
+      }
+    } catch(e){ /* offline - will retry on next change */ }
+    ghSyncing = false;
+    if(ghPendingResync){ ghPendingResync = false; githubPushNow(); }
+  }
+
+  function githubPushDebounced(){
+    if(!getGhToken()) return;
+    clearTimeout(ghSyncTimer);
+    ghSyncTimer = setTimeout(githubPushNow, 1200);
+  }
+
+  async function getItem(key){
+    try{
+      const local = window.localStorage.getItem(LOCAL_PREFIX + key);
+      if(local !== null) return local;
+    } catch(e){ /* localStorage unavailable, fall through to window.storage below */ }
+    if(window.storage && typeof window.storage.get === 'function'){
+      try{
+        const r = await window.storage.get(key, false);
+        if(r && typeof r.value === 'string') return r.value;
+      } catch(e){ /* not found or failed - nothing saved anywhere yet */ }
+    }
+    return null;
+  }
+  async function setItem(key, value){
+    try{ window.localStorage.setItem(LOCAL_PREFIX + key, value); }
+    catch(e){ /* e.g. private browsing quota - ignore */ }
+    githubPushDebounced();
+    if(window.storage && typeof window.storage.set === 'function'){
+      try{ await window.storage.set(key, value, false); }
+      catch(e){ /* localStorage already has the data saved above, safe to ignore */ }
+    }
+  }
+
+  const today = new Date();
+  const state = {
+    viewYear: today.getFullYear(),
+    viewMonth: today.getMonth(),
+    selectedKey: dateKey(today),
+    index: {},
+    todosCache: {},
+    goals: [],
+    mode: 'heart'
+  };
+
+  function buildCalendarDays(year, month){
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const cells = [];
+    for(let i=firstWeekday-1;i>=0;i--){
+      cells.push(new Date(year, month, -i));
+    }
+    for(let d=1; d<=daysInMonth; d++){
+      cells.push(new Date(year, month, d));
+    }
+    while(cells.length % 7 !== 0){
+      const last = cells[cells.length-1];
+      cells.push(new Date(last.getFullYear(), last.getMonth(), last.getDate()+1));
+    }
+    return cells;
+  }
+
+  function renderCalendar(){
+    monthLabel.textContent = `${state.viewYear}년 ${state.viewMonth+1}월`;
+    const cells = buildCalendarDays(state.viewYear, state.viewMonth);
+    const todayKey = dateKey(new Date());
+    calendarGrid.innerHTML = cells.map(d => {
+      const key = dateKey(d);
+      const isOther = d.getMonth() !== state.viewMonth;
+      const idx = state.index[key];
+      let dotClass = 'dot-none';
+      if(idx && idx.total > 0){ dotClass = idx.done >= idx.total ? 'dot-full' : 'dot-partial'; }
+      const classes = [
+        isOther ? 'other-month' : '',
+        key === todayKey ? 'is-today' : '',
+        key === state.selectedKey ? 'is-selected' : ''
+      ].join(' ');
+      return `<button type="button" class="day-cell ${classes}" data-key="${key}">
+        <span class="day-num">${d.getDate()}</span>
+        <span class="day-dot ${dotClass}">♥</span>
+      </button>`;
+    }).join('');
+  }
+
+  function selectDate(key){
+    const [y,m] = key.split('-').map(Number);
+    state.selectedKey = key;
+    if(y !== state.viewYear || (m-1) !== state.viewMonth){
+      state.viewYear = y; state.viewMonth = m-1;
+    }
+    renderCalendar();
+    loadDay(key);
+    renderWeekly();
+  }
+
+  const todayPanel = el('todayPanel');
+  calendarGrid.addEventListener('click', e => {
+    const btn = e.target.closest('.day-cell');
+    if(!btn) return;
+    selectDate(btn.dataset.key);
+    todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  prevMonthBtn.addEventListener('click', () => {
+    state.viewMonth--;
+    if(state.viewMonth < 0){ state.viewMonth = 11; state.viewYear--; }
+    renderCalendar();
+  });
+  nextMonthBtn.addEventListener('click', () => {
+    state.viewMonth++;
+    if(state.viewMonth > 11){ state.viewMonth = 0; state.viewYear++; }
+    renderCalendar();
+  });
+  todayBtn.addEventListener('click', () => {
+    const t = new Date();
+    state.viewYear = t.getFullYear(); state.viewMonth = t.getMonth();
+    selectDate(dateKey(t));
+  });
+
+  function formatHeading(key){
+    const [y,m,d] = key.split('-').map(Number);
+    const date = new Date(y, m-1, d);
+    const wd = WEEKDAYS[date.getDay()];
+    const yearPrefix = y !== today.getFullYear() ? `${y}년 ` : '';
+    return `${yearPrefix}${m}월 ${d}일 ${wd}요일`;
+  }
+
+  function formatTimestamp(iso){
+    const d = new Date(iso);
+    const now = new Date();
+    const sameDay = d.toDateString() === now.toDateString();
+    const hours = d.getHours();
+    const ampm = hours < 12 ? '오전' : '오후';
+    const h12 = hours % 12 === 0 ? 12 : hours % 12;
+    const timeStr = `${ampm} ${h12}:${pad(d.getMinutes())}`;
+    if(sameDay) return `오늘 ${timeStr}`;
+    return `${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일 ${timeStr}`;
+  }
+
+  function visibleTodos(todos){
+    return state.mode === 'work' ? todos.filter(t => t.color === 'green') : todos;
+  }
+
+  function updateDayCount(){
+    const todos = visibleTodos(state.todosCache[state.selectedKey] || []);
+    const done = todos.filter(t => t.done).length;
+    dayCount.textContent = todos.length ? `완료 ${done}/${todos.length}` : '';
+  }
+
+  colorRow.addEventListener('click', e => {
+    const btn = e.target.closest('.color-swatch');
+    if(!btn) return;
+    selectedColor = btn.dataset.color;
+    colorRow.querySelectorAll('.color-swatch').forEach(b => {
+      const isActive = b === btn;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+  });
+
+  function renderTodoCard(t){
+    const colorHex = COLOR_MAP[t.color] || COLOR_MAP.black;
+    return `<div class="todo-card ${t.done ? 'done' : ''}" data-id="${t.id}">
+      <button class="edit-btn" data-action="edit" aria-label="수정">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="delete-btn" data-action="delete" aria-label="삭제">×</button>
+      <div class="todo-top">
+        <button class="heart-btn" data-action="toggle" aria-label="완료 표시">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg>
+        </button>
+        <span class="timestamp">${formatTimestamp(t.createdAt)}</span>
+      </div>
+      <div class="todo-body">
+        <button type="button" class="checkbox" data-action="toggle" aria-label="완료 체크"><span class="check-icon">${CHECK_SVG}</span></button>
+        <span class="todo-text" style="color:${colorHex}">${escapeHtml(t.text)}</span>
+      </div>
+    </div>`;
+  }
+
+  function sortByColorGroup(todos){
+    return todos.slice().sort((a, b) => {
+      const ca = COLOR_ORDER[a.color] ?? COLOR_ORDER.black;
+      const cb = COLOR_ORDER[b.color] ?? COLOR_ORDER.black;
+      if(ca !== cb) return ca - cb;
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+  }
+
+  function renderTodoList(){
+    const todos = visibleTodos(state.todosCache[state.selectedKey] || []);
+    updateDayCount();
+    if(todos.length === 0){
+      const msg = state.mode === 'work' ? '아직 남긴 회사 일정이 없어요.' : '아직 남긴 할 일이 없어요.';
+      todoList.innerHTML = `<div class="empty-state">${msg}<br>위에 적고 하트를 눌러 추가해보세요 🤍</div>`;
+      return;
+    }
+    const sorted = sortByColorGroup(todos);
+    let html = '';
+    let lastGroup = null;
+    sorted.forEach(t => {
+      const group = COLOR_ORDER[t.color] ?? COLOR_ORDER.black;
+      if(lastGroup !== null && group !== lastGroup){
+        html += `<div class="color-divider"></div>`;
+      }
+      html += renderTodoCard(t);
+      lastGroup = group;
+    });
+    todoList.innerHTML = html;
+  }
+
+  async function ensureLoaded(key){
+    if(!(key in state.todosCache)){
+      const raw = await getItem('todos:' + key);
+      state.todosCache[key] = raw ? JSON.parse(raw) : [];
+    }
+    return state.todosCache[key];
+  }
+
+  async function loadDay(key){
+    dayHeading.textContent = formatHeading(key);
+    datePickInput.value = key;
+    if(!(key in state.todosCache)){
+      todoList.innerHTML = `<p class="loading-text">불러오는 중...</p>`;
+    }
+    await ensureLoaded(key);
+    renderTodoList();
+  }
+
+  async function persistDay(key, todos){
+    state.todosCache[key] = todos;
+    await setItem('todos:' + key, JSON.stringify(todos));
+    if(todos.length === 0){ delete state.index[key]; }
+    else { state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length }; }
+    await setItem('todo-index', JSON.stringify(state.index));
+    renderWeekly();
+  }
+
+  function getWeekDates(key){
+    const [y,m,d] = key.split('-').map(Number);
+    const base = new Date(y, m-1, d);
+    const dow = base.getDay();
+    const dates = [];
+    for(let i=0;i<7;i++){
+      dates.push(new Date(y, m-1, d - dow + i));
+    }
+    return dates;
+  }
+
+  async function renderWeekly(){
+    const dates = getWeekDates(state.selectedKey);
+    const todayKey = dateKey(new Date());
+    const sundayKey = dateKey(dates[0]);
+    weeklyRange.textContent = `${dates[0].getMonth()+1}/${dates[0].getDate()} - ${dates[6].getMonth()+1}/${dates[6].getDate()}`;
+    const lists = await Promise.all(dates.map(d => ensureLoaded(dateKey(d))));
+    weeklyGrid.innerHTML = dates.map((d, i) => {
+      const key = dateKey(d);
+      const todos = visibleTodos(lists[i]);
+      const isToday = key === todayKey;
+      const isSelected = key === state.selectedKey;
+      const itemsHtml = todos.length
+        ? sortByColorGroup(todos).map(t => `<div class="wk-item ${t.done ? 'done' : ''}" style="color:${COLOR_MAP[t.color] || COLOR_MAP.black}">${escapeHtml(t.text)}</div>`).join('')
+        : `<div class="wk-empty">-</div>`;
+      const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
+      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+
+      const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0 };
+      todos.forEach(t => {
+        if(t.done){
+          const c = COLOR_MAP[t.color] ? t.color : 'black';
+          dayDoneCounts[c]++;
+        }
+      });
+      const statsHtml = ['pink','red','blue','black','green']
+        .filter(c => dayDoneCounts[c] > 0)
+        .map(c => `<span class="wk-day-count"><span class="wk-day-count-dot" style="background:${COLOR_MAP[c]}"></span>${dayDoneCounts[c]}</span>`)
+        .join('');
+
+      return `<button type="button" class="wk-day ${classes}" data-key="${key}">
+        <div class="wk-day-head"><span class="wk-wd">${WEEKDAYS[d.getDay()]}</span><span class="wk-date ${isWeekend ? 'wk-weekend' : ''}">${d.getDate()}</span></div>
+        <div class="wk-items">${itemsHtml}</div>
+        ${statsHtml ? `<div class="wk-day-stats">${statsHtml}</div>` : ''}
+      </button>`;
+    }).join('');
+
+    if(weeklyReflect.dataset.weekKey !== sundayKey){
+      weeklyReflect.dataset.weekKey = sundayKey;
+      const raw = await getItem('weekly-reflect:' + sundayKey);
+      weeklyReflect.value = raw || '';
+    }
+  }
+  weeklyGrid.addEventListener('click', e => {
+    const btn = e.target.closest('.wk-day');
+    if(!btn) return;
+    selectDate(btn.dataset.key);
+    todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  let reflectSaveTimer = null;
+  weeklyReflect.addEventListener('input', () => {
+    const key = weeklyReflect.dataset.weekKey;
+    clearTimeout(reflectSaveTimer);
+    reflectSaveTimer = setTimeout(() => { setItem('weekly-reflect:' + key, weeklyReflect.value); }, 500);
+  });
+  weeklyReflect.addEventListener('blur', () => {
+    clearTimeout(reflectSaveTimer);
+    const key = weeklyReflect.dataset.weekKey;
+    setItem('weekly-reflect:' + key, weeklyReflect.value);
+  });
+
+  datePickInput.addEventListener('change', () => {
+    if(datePickInput.value) selectDate(datePickInput.value);
+  });
+
+  async function addTodoHandler(){
+    try{
+      const text = todoInput.value.trim();
+      if(!text) return;
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      todos.push({ id: genId(), text, done:false, color: selectedColor, createdAt: new Date().toISOString() });
+      todoInput.value = '';
+      await persistDay(key, todos);
+      renderTodoList();
+      renderCalendar();
+    } catch(err){
+      console.error('add todo failed', err);
+    }
+  }
+  addBtn.addEventListener('click', addTodoHandler);
+  todoInput.addEventListener('keydown', e => { if(e.key === 'Enter') addTodoHandler(); });
+
+  async function toggleTodo(id, cardEl){
+    try{
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === id);
+      if(!item) return;
+      item.done = !item.done;
+      await persistDay(key, todos);
+      if(cardEl){
+        cardEl.classList.toggle('done', item.done);
+        const heartBtn = cardEl.querySelector('.heart-btn');
+        const checkboxBtn = cardEl.querySelector('.checkbox');
+        [heartBtn, checkboxBtn].forEach(b => {
+          if(!b) return;
+          b.classList.remove('pop');
+          void b.offsetWidth;
+          b.classList.add('pop');
+        });
+      }
+      updateDayCount();
+      renderCalendar();
+    } catch(err){
+      console.error('toggle todo failed', err);
+    }
+  }
+
+  async function deleteTodo(id, cardEl){
+    const key = state.selectedKey;
+    if(cardEl) cardEl.classList.add('removing');
+    const finish = async () => {
+      try{
+        const todos = (state.todosCache[key] || []).filter(t => t.id !== id);
+        await persistDay(key, todos);
+        renderTodoList();
+        renderCalendar();
+      } catch(err){
+        console.error('delete todo failed', err);
+      }
+    };
+    if(cardEl){ setTimeout(finish, 180); } else { finish(); }
+  }
+
+  todoList.addEventListener('click', e => {
+    const card = e.target.closest('.todo-card');
+    if(!card) return;
+    const id = card.dataset.id;
+    if(e.target.closest('[data-action="toggle"]')) toggleTodo(id, card);
+    else if(e.target.closest('[data-action="delete"]')) deleteTodo(id, card);
+    else if(e.target.closest('[data-action="edit"]')) startEditTodo(id, card);
+  });
+
+  function startEditTodo(id, cardEl){
+    const key = state.selectedKey;
+    const todos = state.todosCache[key] || [];
+    const item = todos.find(t => t.id === id);
+    const textEl = cardEl.querySelector('.todo-text');
+    const topEl = cardEl.querySelector('.todo-top');
+    const timestampEl = topEl.querySelector('.timestamp');
+    if(!item || !textEl || textEl.getAttribute('contenteditable') === 'true') return;
+
+    let currentColor = item.color || 'black';
+    timestampEl.style.display = 'none';
+
+    const picker = document.createElement('div');
+    picker.className = 'edit-color-row';
+    picker.innerHTML = ['pink','red','blue','black','green'].map(c =>
+      `<button type="button" class="edit-color-swatch ${c === currentColor ? 'active' : ''}" data-color="${c}" style="color:${COLOR_MAP[c]}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg></button>`
+    ).join('');
+    topEl.appendChild(picker);
+    picker.querySelectorAll('.edit-color-swatch').forEach(btn => {
+      btn.addEventListener('mousedown', ev => ev.preventDefault());
+      btn.addEventListener('click', () => {
+        currentColor = btn.dataset.color;
+        textEl.style.color = COLOR_MAP[currentColor];
+        picker.querySelectorAll('.edit-color-swatch').forEach(b => b.classList.toggle('active', b === btn));
+      });
+    });
+
+    textEl.setAttribute('contenteditable', 'true');
+    textEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(textEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const onKeydown = ev => {
+      if(ev.key === 'Enter'){ ev.preventDefault(); textEl.blur(); }
+      else if(ev.key === 'Escape'){ textEl.textContent = item.text; textEl.style.color = COLOR_MAP[item.color] || COLOR_MAP.black; textEl.blur(); }
+    };
+    const onBlur = async () => {
+      textEl.removeAttribute('contenteditable');
+      textEl.removeEventListener('keydown', onKeydown);
+      textEl.removeEventListener('blur', onBlur);
+      picker.remove();
+      timestampEl.style.display = '';
+      const newText = textEl.textContent.trim();
+      const textChanged = !!newText && newText !== item.text;
+      const colorChanged = currentColor !== (item.color || 'black');
+      if(textChanged) item.text = newText;
+      if(colorChanged) item.color = currentColor;
+      if(textChanged || colorChanged){
+        await persistDay(key, todos.slice());
+        renderTodoList();
+        renderCalendar();
+      } else {
+        textEl.textContent = item.text;
+        textEl.style.color = COLOR_MAP[item.color] || COLOR_MAP.black;
+      }
+    };
+    textEl.addEventListener('keydown', onKeydown);
+    textEl.addEventListener('blur', onBlur);
+  }
+
+  // ---- long-term goals ----
+  function renderGoalCard(g){
+    const goalColor = (g.category || 'heart') === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
+    return `<div class="todo-card ${g.done ? 'done' : ''}" data-id="${g.id}">
+      <button class="edit-btn" data-action="edit" aria-label="수정">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      </button>
+      <button class="delete-btn" data-action="delete" aria-label="삭제">×</button>
+      <div class="todo-top">
+        <button class="heart-btn" data-action="toggle" aria-label="달성 표시">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg>
+        </button>
+        <span class="timestamp">${formatTimestamp(g.createdAt)}</span>
+      </div>
+      <div class="todo-body">
+        <button type="button" class="checkbox" data-action="toggle" aria-label="달성 체크"><span class="check-icon">${CHECK_SVG}</span></button>
+        <span class="todo-text" style="color:${goalColor}">${escapeHtml(g.text)}</span>
+      </div>
+    </div>`;
+  }
+
+  function renderGoalList(){
+    const filtered = state.goals.filter(g => (g.category || 'heart') === state.mode);
+    renderGoalReminder();
+    if(filtered.length === 0){
+      const msg = state.mode === 'work' ? '아직 적어둔 회사 목표가 없어요.' : '아직 적어둔 하트 목표가 없어요.';
+      goalList.innerHTML = `<div class="empty-state">${msg}<br>위에 적고 하트를 눌러 추가해보세요 🩷</div>`;
+      return;
+    }
+    goalList.innerHTML = filtered.map(renderGoalCard).join('');
+  }
+
+  function renderGoalReminder(){
+    const active = state.goals.filter(g => (g.category || 'heart') === state.mode && !g.done);
+    const iconColor = state.mode === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
+    goalReminder.classList.toggle('mode-work', state.mode === 'work');
+    goalReminder.innerHTML = active.map(g =>
+      `<div class="goal-reminder-item"><svg viewBox="0 0 24 24" fill="${iconColor}"><path d="${HEART_PATH}"/></svg>${escapeHtml(g.text)}</div>`
+    ).join('');
+  }
+
+  goalTabs.addEventListener('click', e => {
+    const btn = e.target.closest('.goal-tab');
+    if(!btn) return;
+    state.mode = btn.dataset.cat;
+    goalTabs.querySelectorAll('.goal-tab').forEach(b => b.classList.toggle('active', b === btn));
+    selectedColor = state.mode === 'work' ? 'green' : 'black';
+    colorRow.style.display = state.mode === 'work' ? 'none' : 'flex';
+    colorRow.querySelectorAll('.color-swatch').forEach(b => {
+      const isActive = b.dataset.color === selectedColor;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    renderGoalList();
+    renderTodoList();
+    renderWeekly();
+  });
+
+  async function loadGoals(){
+    const raw = await getItem('long-term-goals');
+    state.goals = raw ? JSON.parse(raw) : [];
+    renderGoalList();
+  }
+
+  async function persistGoals(){
+    await setItem('long-term-goals', JSON.stringify(state.goals));
+  }
+
+  async function addGoalHandler(){
+    const text = goalInput.value.trim();
+    if(!text) return;
+    state.goals.push({ id: genId(), text, done:false, category: state.mode, createdAt: new Date().toISOString() });
+    goalInput.value = '';
+    await persistGoals();
+    renderGoalList();
+  }
+  goalAddBtn.addEventListener('click', addGoalHandler);
+  goalInput.addEventListener('keydown', e => { if(e.key === 'Enter') addGoalHandler(); });
+
+  async function toggleGoal(id, cardEl){
+    const g = state.goals.find(x => x.id === id);
+    if(!g) return;
+    g.done = !g.done;
+    await persistGoals();
+    renderGoalReminder();
+    if(cardEl){
+      cardEl.classList.toggle('done', g.done);
+      const heartBtn = cardEl.querySelector('.heart-btn');
+      const checkboxBtn = cardEl.querySelector('.checkbox');
+      [heartBtn, checkboxBtn].forEach(b => {
+        b.classList.remove('pop');
+        void b.offsetWidth;
+        b.classList.add('pop');
+      });
+    }
+  }
+
+  async function deleteGoal(id, cardEl){
+    if(cardEl) cardEl.classList.add('removing');
+    const finish = async () => {
+      state.goals = state.goals.filter(x => x.id !== id);
+      await persistGoals();
+      renderGoalList();
+    };
+    if(cardEl){ setTimeout(finish, 180); } else { finish(); }
+  }
+
+  function startEditGoal(id, cardEl){
+    const g = state.goals.find(x => x.id === id);
+    const textEl = cardEl.querySelector('.todo-text');
+    if(!g || !textEl || textEl.getAttribute('contenteditable') === 'true') return;
+
+    textEl.setAttribute('contenteditable', 'true');
+    textEl.focus();
+    const range = document.createRange();
+    range.selectNodeContents(textEl);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    const onKeydown = ev => {
+      if(ev.key === 'Enter'){ ev.preventDefault(); textEl.blur(); }
+      else if(ev.key === 'Escape'){ textEl.textContent = g.text; textEl.blur(); }
+    };
+    const onBlur = async () => {
+      textEl.removeAttribute('contenteditable');
+      textEl.removeEventListener('keydown', onKeydown);
+      textEl.removeEventListener('blur', onBlur);
+      const newText = textEl.textContent.trim();
+      if(newText && newText !== g.text){
+        g.text = newText;
+        await persistGoals();
+        renderGoalList();
+      } else {
+        textEl.textContent = g.text;
+      }
+    };
+    textEl.addEventListener('keydown', onKeydown);
+    textEl.addEventListener('blur', onBlur);
+  }
+
+  goalList.addEventListener('click', e => {
+    const card = e.target.closest('.todo-card');
+    if(!card) return;
+    const id = card.dataset.id;
+    if(e.target.closest('[data-action="toggle"]')) toggleGoal(id, card);
+    else if(e.target.closest('[data-action="delete"]')) deleteGoal(id, card);
+    else if(e.target.closest('[data-action="edit"]')) startEditGoal(id, card);
+  });
+
+  // ---- profile photo ----
+  profileWrap.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    if(file.size > 4.5 * 1024 * 1024){ alert('이미지 용량이 너무 커요. 4MB 이하로 올려주세요.'); return; }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      profileImg.src = reader.result;
+      profileImg.style.display = 'block';
+      profilePlaceholder.style.display = 'none';
+      profileResetBtn.style.display = 'flex';
+      await setItem('profile-image', reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+  profileResetBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    profileImg.removeAttribute('src');
+    profileImg.style.display = 'none';
+    profilePlaceholder.style.display = 'flex';
+    profileResetBtn.style.display = 'none';
+    await setItem('profile-image', '');
+  });
+
+  // ---- background photo ----
+  function applyHeroBackground(dataUrl){
+    hero.style.backgroundImage = `url(${dataUrl})`;
+    hero.classList.add('has-bg');
+    bgResetBtn.style.display = 'flex';
+  }
+  function clearHeroBackground(){
+    hero.style.backgroundImage = '';
+    hero.classList.remove('has-bg');
+    bgResetBtn.style.display = 'none';
+  }
+  bgEditBtn.addEventListener('click', () => bgFileInput.click());
+  bgFileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    if(file.size > 6 * 1024 * 1024){ alert('이미지 용량이 너무 커요. 6MB 이하로 올려주세요.'); return; }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      applyHeroBackground(reader.result);
+      await setItem('bg-image', reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+  bgResetBtn.addEventListener('click', async () => {
+    clearHeroBackground();
+    await setItem('bg-image', '');
+  });
+
+  // ---- backup / restore ----
+  const exportBtn = el('exportBtn'), importBtn = el('importBtn'), importFile = el('importFile');
+  exportBtn.addEventListener('click', () => {
+    const data = {};
+    for(let i = 0; i < window.localStorage.length; i++){
+      const k = window.localStorage.key(i);
+      if(k && k.startsWith(LOCAL_PREFIX)){
+        data[k.slice(LOCAL_PREFIX.length)] = window.localStorage.getItem(k);
+      }
+    }
+    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `heart-todo-backup-${dateKey(new Date())}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  });
+  importBtn.addEventListener('click', () => importFile.click());
+  importFile.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try{
+        const data = JSON.parse(reader.result);
+        for(const [k, v] of Object.entries(data)){
+          await setItem(k, v);
+        }
+        alert('불러오기 완료! 화면을 새로고침할게요.');
+        window.location.reload();
+      } catch(err){
+        alert('파일을 읽는 데 실패했어요. 내보내기로 만든 파일인지 확인해주세요.');
+      }
+    };
+    reader.readAsText(file);
+  });
+
+  // ---- GitHub sync settings ----
+  const ghTokenInput = el('ghTokenInput'), ghTokenSaveBtn = el('ghTokenSaveBtn'), ghTokenClearBtn = el('ghTokenClearBtn'), ghSyncStatus = el('ghSyncStatus');
+  function refreshGhStatus(){
+    const has = !!getGhToken();
+    ghSyncStatus.textContent = has ? '✅ 연결됨 - 이 기기는 동기화돼요' : '⚪ 연결 안 됨 (이 기기는 로컬에만 저장)';
+    ghSyncStatus.style.color = has ? '#2f9e44' : 'var(--ink-faint)';
+    ghTokenInput.value = '';
+    ghTokenInput.placeholder = has ? '토큰이 저장되어 있어요 (변경하려면 새로 입력)' : 'github_pat_로 시작하는 토큰 붙여넣기';
+  }
+  ghTokenSaveBtn.addEventListener('click', async () => {
+    const val = ghTokenInput.value.trim();
+    if(!val) return;
+    try{ window.localStorage.setItem(GH_TOKEN_KEY, val); } catch(e){ alert('이 브라우저에서는 저장할 수 없어요.'); return; }
+    refreshGhStatus();
+    await githubPull();
+    await githubPushNow();
+    alert('연결됐어요! 다른 기기에도 같은 토큰을 넣으면 서로 동기화돼요.');
+    window.location.reload();
+  });
+  ghTokenClearBtn.addEventListener('click', () => {
+    try{ window.localStorage.removeItem(GH_TOKEN_KEY); } catch(e){}
+    refreshGhStatus();
+  });
+  refreshGhStatus();
+
+  // ---- title editing ----
+  titleEl.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); titleEl.blur(); } });
+  titleEl.addEventListener('blur', async () => {
+    const text = titleEl.textContent.trim() || '일정';
+    titleEl.textContent = text;
+    await setItem('app-title', text);
+  });
+
+  // ---- init ----
+  (async function init(){
+    await githubPull();
+    const [savedTitle, savedImage, savedBg, savedIndex] = await Promise.all([
+      getItem('app-title'), getItem('profile-image'), getItem('bg-image'), getItem('todo-index')
+    ]);
+    if(savedTitle) titleEl.textContent = savedTitle;
+    if(savedImage){
+      profileImg.src = savedImage;
+      profileImg.style.display = 'block';
+      profilePlaceholder.style.display = 'none';
+      profileResetBtn.style.display = 'flex';
+    }
+    if(savedBg){ applyHeroBackground(savedBg); }
+    state.index = savedIndex ? JSON.parse(savedIndex) : {};
+    renderCalendar();
+    loadDay(state.selectedKey);
+    renderWeekly();
+    loadGoals();
+  })();
+})();
+</script>
+</body>
+</html>
