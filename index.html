@@ -242,10 +242,10 @@
 
   .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
   .day-cell{
-    aspect-ratio:1/1;
+    min-height:38px;
     background:none; border:none; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:2px; border-radius:10px;
+    gap:1px; border-radius:10px; padding:4px 2px;
     font-family:'Noto Sans KR',sans-serif; font-size:12px; color:var(--ink);
   }
   .day-cell:hover{ background:#fbeef1; }
@@ -809,8 +809,8 @@
         key === todayKey ? 'is-today' : '',
         key === state.selectedKey ? 'is-selected' : ''
       ].join(' ');
-      const indicator = idx && idx.pinkText
-        ? `<span class="day-pink-label">${escapeHtml(idx.pinkText)}</span>`
+      const indicator = idx && idx.pinkTexts && idx.pinkTexts.length
+        ? idx.pinkTexts.map(t => `<span class="day-pink-label">${escapeHtml(t)}</span>`).join('')
         : `<span class="day-dot ${dotClass}">♥</span>`;
       return `<button type="button" class="day-cell ${classes}" data-key="${key}">
         <span class="day-num">${d.getDate()}</span>
@@ -1007,8 +1007,8 @@
     await setItem('todos:' + key, JSON.stringify(todos));
     if(todos.length === 0){ delete state.index[key]; }
     else {
-      const pinkItem = todos.find(t => t.color === 'pink');
-      state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length, pinkText: pinkItem ? pinkItem.text : null };
+      const pinkItems = todos.filter(t => t.color === 'pink');
+      state.index[key] = { total: todos.length, done: todos.filter(t => t.done).length, pinkTexts: pinkItems.map(t => t.text) };
     }
     await setItem('todo-index', JSON.stringify(state.index));
     renderCalendar();
