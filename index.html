@@ -1155,7 +1155,7 @@
   }
   function renderMemoList(){
     if(state.memos.length === 0){
-      todoList.innerHTML = `<div class="empty-state">아직 남긴 메모가 없어요.<br>위에 적고 하트를 눌러 추가해보세요 📝</div>`;
+      todoList.innerHTML = `<div class="empty-state">아직 남긴 메모가 없어요.<br>위에 적고 하트를 눌러 추가해보세요</div>`;
       return;
     }
     todoList.innerHTML = state.memos.slice().reverse().map(renderMemoCard).join('');
