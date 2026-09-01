@@ -270,11 +270,10 @@
   .day-cell.other-month{ opacity:.32; }
   .day-cell.dow-sun .day-num{ color:#e0334f; }
   .day-cell.dow-sat .day-num{ color:#3b6fe0; }
-  .today-heart-icon{
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    width:28px; height:28px; color:#9b9b9b; pointer-events:none;
+  .day-cell.is-today .day-num{
+    font-weight:700; display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; border:1.5px solid #9b9b9b;
   }
-  .day-cell.is-today .day-num{ font-weight:700; position:relative; z-index:1; }
   .day-cell.is-selected{ background:var(--card-done-1); color:var(--ink); }
   .day-cell.is-selected .day-num{ color:var(--ink); }
   .day-dot{ font-size:8px; line-height:1; color:transparent; }
@@ -307,11 +306,13 @@
   .wk-day.is-selected{ background:#fff; }
   .wk-day-head{ display:flex; flex-direction:column; align-items:center; width:32px; flex:0 0 auto; }
   .wk-wd{ font-size:11px; color:var(--ink-faint); }
-  .wk-date-wrap{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; }
-  .wk-date{ font-size:13px; font-weight:600; color:var(--ink); position:relative; z-index:1; }
+  .wk-date{ font-size:13px; font-weight:600; color:var(--ink); }
   .wk-date.wk-sun{ color:#e0334f; }
   .wk-date.wk-sat{ color:#3b6fe0; }
-  .wk-today-heart{ width:24px; height:24px; }
+  .wk-day.is-today .wk-date{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; border:1.5px solid #9b9b9b; font-weight:700;
+  }
   .wk-items{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; padding-top:1px; }
   .wk-item{ font-size:12.5px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .wk-item.done{ text-decoration:line-through; opacity:.5; }
@@ -920,14 +921,10 @@
         ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
         ...((idx && idx.orangeTexts) || []).map(t => ({ text: t, cls: 'day-orange-label' }))
       ];
-      const todayHeart = key === todayKey
-        ? `<svg class="today-heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="${HEART_PATH}"/></svg>`
-        : '';
       const indicator = labelTexts.length
         ? labelTexts.map(l => `<span class="${l.cls}">${escapeHtml(l.text)}</span>`).join('')
         : `<span class="day-dot ${dotClass}">♥</span>`;
       return `<button type="button" class="day-cell ${classes}" data-key="${key}">
-        ${todayHeart}
         <span class="day-num">${d.getDate()}</span>
         ${indicator}
       </button>`;
@@ -1176,7 +1173,7 @@
         .join('');
 
       return `<button type="button" class="wk-day ${classes}" data-key="${key}">
-        <div class="wk-day-head"><span class="wk-wd">${WEEKDAYS[d.getDay()]}</span><span class="wk-date-wrap">${key === todayKey ? `<svg class="today-heart-icon wk-today-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="${HEART_PATH}"/></svg>` : ''}<span class="wk-date ${weekendClass}">${d.getDate()}</span></span></div>
+        <div class="wk-day-head"><span class="wk-wd">${WEEKDAYS[d.getDay()]}</span><span class="wk-date ${weekendClass}">${d.getDate()}</span></div>
         <div class="wk-items">${itemsHtml}</div>
         ${statsHtml ? `<div class="wk-day-stats">${statsHtml}</div>` : ''}
       </button>`;
