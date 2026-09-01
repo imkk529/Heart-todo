@@ -323,11 +323,8 @@
   .day-heading{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap; }
   .day-heading-left{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
   .day-heading h2{ font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:20px; margin:0; }
-  .goal-heading-badge{
-    display:inline-flex; align-items:center; gap:6px;
-    background:#fce4e1; padding:6px 14px; border-radius:999px;
-  }
   .goal-heart-icon{ width:18px; height:18px; vertical-align:-2px; }
+  #goalList .todo-card{ background:#fce4e1; }
   .goal-tabs{
     display:flex; gap:6px; width:fit-content; flex-wrap:wrap;
     margin:-46px 0 12px 126px;
@@ -620,7 +617,7 @@
 
     <div class="card-panel goals-panel">
       <div class="day-heading">
-        <h2 class="goal-heading-badge"><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span id="goalHeadingText">목표</span></h2>
+        <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span id="goalHeadingText">목표</span></h2>
       </div>
       <div class="add-row">
         <input type="text" id="goalInput" placeholder="이루고 싶은 목표를 적어보세요" maxlength="120">
