@@ -613,7 +613,7 @@
 
     <div class="card-panel goals-panel">
       <div class="day-heading">
-        <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 목표</h2>
+        <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span id="goalHeadingText">목표</span></h2>
       </div>
       <div class="add-row">
         <input type="text" id="goalInput" placeholder="이루고 싶은 목표를 적어보세요" maxlength="120">
@@ -690,6 +690,7 @@
   const recurInput = el('recurInput'), recurAddBtn = el('recurAddBtn'), recurList = el('recurList');
   const goalReminder = el('goalReminder');
   const goalTabs = el('goalTabs');
+  const goalHeadingText = el('goalHeadingText');
   const weeklyPanelEl = document.querySelector('.weekly-panel');
   const calendarPanelEl = document.querySelector('.calendar-panel');
   const goalsPanelEl = document.querySelector('.goals-panel');
@@ -1424,6 +1425,7 @@
 
   function renderGoalList(){
     const filtered = state.goals.filter(g => (g.category || 'heart') === goalModeFor(state.mode));
+    goalHeadingText.textContent = goalModeFor(state.mode) === 'work' ? '중요' : '목표';
     renderGoalReminder();
     if(filtered.length === 0){
       const msg = goalModeFor(state.mode) === 'work' ? '아직 적어둔 회사 목표가 없어요.' : '아직 적어둔 하트 목표가 없어요.';
