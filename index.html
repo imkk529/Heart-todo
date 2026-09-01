@@ -192,6 +192,7 @@
   .recur-item-days{ font-size:11px; color:var(--ink-faint); }
   .recur-item .delete-btn{ position:static; opacity:.85; }
   @media (max-width:680px){
+    .day-cell{ min-height:40px; }
     .layout{
       grid-template-columns:1fr;
       grid-template-areas:
@@ -244,7 +245,7 @@
 
   .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
   .day-cell{
-    min-height:38px;
+    min-height:72px;
     background:none; border:none; cursor:pointer;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:1px; border-radius:10px; padding:4px 2px;
