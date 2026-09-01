@@ -351,10 +351,12 @@
     font-family:'Noto Sans KR',sans-serif; font-size:12px; font-weight:600;
     background:#f6f1ec; color:var(--ink-soft); transition:background .2s ease, color .2s ease;
   }
-  .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:#ef5da8; }
-  .goal-tab.active[data-cat="personal"]{ background:#f8e5e1; color:var(--heart); }
-  .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:#2f9e44; }
-  .goal-tab.active[data-cat="memo"]{ background:#fdf0d5; color:#b8752e; }
+  .goal-tab-icon{ display:flex; align-items:center; justify-content:center; }
+  .goal-tab-icon svg{ width:16px; height:16px; }
+  .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="personal"]{ background:#f8e5e1; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="memo"]{ background:#fdf0d5; color:var(--ink-soft); }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; grid-area:reminder; }
   .goal-reminder:not(:empty){ margin-bottom:0; padding:9px 12px; border-radius:12px; background:#fdf3f7; }
   .goal-reminder.mode-work:not(:empty){ background:#f0f8f2; }
@@ -546,7 +548,9 @@
 
   <div class="head-block">
     <div class="goal-tabs" id="goalTabs">
-      <button type="button" class="goal-tab active" data-cat="heart">하트</button>
+      <button type="button" class="goal-tab goal-tab-icon active" data-cat="heart" aria-label="하트">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </button>
       <button type="button" class="goal-tab" data-cat="personal">개인</button>
       <button type="button" class="goal-tab" data-cat="work">회사</button>
       <button type="button" class="goal-tab" data-cat="memo">메모</button>
