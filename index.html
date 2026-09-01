@@ -548,6 +548,18 @@
   .todo-text{ font-size:14.5px; line-height:1.5; }
   .todo-card.done .todo-text{ text-decoration:line-through; opacity:.55; }
   .todo-text[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
+  .goal-dday-badge{
+    font-size:10.5px; font-weight:700; color:var(--heart); background:#fce4ee;
+    padding:2px 8px; border-radius:999px; margin-left:auto;
+  }
+  .goal-dday-badge.overdue{ color:#fff; background:#c62d47; }
+  .goal-due-row{ display:flex; align-items:center; gap:6px; margin-top:8px; padding-left:26px; }
+  .goal-due-label{ font-size:11.5px; color:var(--ink-faint); flex:0 0 auto; }
+  .goal-due-input{
+    border:1px solid #e8e2e5; border-radius:6px; padding:3px 8px; font-size:11.5px;
+    font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft); outline:none; background:#fff;
+  }
+  .goal-due-input:focus{ border-color:var(--heart-soft); }
   .goal-progress-row{ display:flex; align-items:center; gap:8px; margin-top:8px; padding-left:26px; }
   .goal-progress-bar{ flex:1; height:5px; border-radius:3px; background:#e8e2e5; overflow:hidden; }
   .goal-progress-fill{ height:100%; border-radius:3px; transition:width .25s ease; }
@@ -1661,6 +1673,17 @@
   }
 
   // ---- long-term goals ----
+  function computeDday(dueDate){
+    if(!dueDate) return null;
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const [y,m,d] = dueDate.split('-').map(Number);
+    const due = new Date(y, m - 1, d);
+    const diffDays = Math.round((due - today) / (1000 * 60 * 60 * 24));
+    if(diffDays === 0) return { label: 'D-DAY', overdue: false };
+    if(diffDays > 0) return { label: `D-${diffDays}`, overdue: false };
+    return { label: `D+${Math.abs(diffDays)}`, overdue: true };
+  }
   function renderGoalCard(g){
     const goalColor = (g.category || 'heart') === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
     const subtasks = g.subtasks || [];
@@ -1677,6 +1700,8 @@
         <span class="goal-subtask-text ${s.done ? 'done' : ''}">${escapeHtml(s.text)}</span>
         <button type="button" class="goal-subtask-del" data-action="delete-sub" aria-label="하위 항목 삭제">×</button>
       </div>`).join('')}</div>` : '';
+    const dday = computeDday(g.dueDate);
+    const ddayBadgeHtml = dday ? `<span class="goal-dday-badge ${dday.overdue ? 'overdue' : ''}">${dday.label}</span>` : '';
     return `<div class="todo-card ${g.done ? 'done' : ''}" data-id="${g.id}">
       <button class="edit-btn" data-action="edit" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
@@ -1687,10 +1712,15 @@
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg>
         </button>
         <span class="timestamp">${formatTimestamp(g.createdAt)}</span>
+        ${ddayBadgeHtml}
       </div>
       <div class="todo-body">
         <button type="button" class="checkbox" data-action="toggle" aria-label="달성 체크"><span class="check-icon">${CHECK_SVG}</span></button>
         <span class="todo-text" style="color:${goalColor}">${escapeHtml(g.text)}</span>
+      </div>
+      <div class="goal-due-row">
+        <label class="goal-due-label">기한</label>
+        <input type="date" class="goal-due-input" value="${g.dueDate || ''}">
       </div>
       ${progressHtml}
       ${subtaskListHtml}
@@ -2111,6 +2141,16 @@
     const card = input.closest('.todo-card');
     addSubtask(card.dataset.id, input.value, card);
     input.value = '';
+  });
+  goalList.addEventListener('change', async e => {
+    const input = e.target.closest('.goal-due-input');
+    if(!input) return;
+    const card = input.closest('.todo-card');
+    const g = state.goals.find(x => x.id === card.dataset.id);
+    if(!g) return;
+    g.dueDate = input.value || null;
+    await persistGoals();
+    renderGoalList();
   });
 
   // ---- profile photo ----
