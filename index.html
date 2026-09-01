@@ -254,23 +254,23 @@
   .day-cell:hover{ background:#fbeef1; }
   .day-cell.other-month{ opacity:.32; }
   .day-cell.is-today .day-num{ font-weight:700; color:var(--heart); }
-  .day-cell.is-selected{ background:var(--heart); color:#fff; }
-  .day-cell.is-selected .day-num{ color:#fff; }
+  .day-cell.is-selected{ background:var(--card-done-1); color:var(--ink); }
+  .day-cell.is-selected .day-num{ color:var(--ink); }
   .day-dot{ font-size:8px; line-height:1; color:transparent; }
   .day-dot.dot-partial{ color:var(--heart); }
   .day-dot.dot-full{ color:var(--heart-soft); }
   .day-cell.is-selected .day-dot.dot-partial,
-  .day-cell.is-selected .day-dot.dot-full{ color:#fff; }
+  .day-cell.is-selected .day-dot.dot-full{ color:var(--heart); }
   .day-pink-label{
     font-size:7.5px; line-height:1.1; color:#ef5da8; font-weight:600;
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .day-cell.is-selected .day-pink-label{ color:#fff; }
+  .day-cell.is-selected .day-pink-label{ color:var(--heart); }
   .day-orange-label{
     font-size:7.5px; line-height:1.1; color:#e67e22; font-weight:600;
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .day-cell.is-selected .day-orange-label{ color:#fff; }
+  .day-cell.is-selected .day-orange-label{ color:#c9660f; }
 
   /* ---------- Weekly ---------- */
   .weekly-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
