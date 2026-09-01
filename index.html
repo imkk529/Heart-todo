@@ -287,7 +287,8 @@
   .wk-day-head{ display:flex; flex-direction:column; align-items:center; width:32px; flex:0 0 auto; }
   .wk-wd{ font-size:11px; color:var(--ink-faint); }
   .wk-date{ font-size:13px; font-weight:600; color:var(--ink); }
-  .wk-date.wk-weekend{ color:#ef5da8; }
+  .wk-date.wk-sun{ color:#e0334f; }
+  .wk-date.wk-sat{ color:#3b6fe0; }
   .wk-day.is-today .wk-date{ color:var(--heart); }
   .wk-items{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; padding-top:1px; }
   .wk-item{ font-size:12.5px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -1101,7 +1102,7 @@
         ? sortByColorGroup(todos).map(t => `<div class="wk-item ${t.done ? 'done' : ''}" style="color:${COLOR_MAP[t.color] || COLOR_MAP.black}">${escapeHtml(t.text)}</div>`).join('')
         : `<div class="wk-empty">-</div>`;
       const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
-      const isWeekend = d.getDay() === 0 || d.getDay() === 6;
+      const weekendClass = d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
 
       const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0 };
       todos.forEach(t => {
@@ -1116,7 +1117,7 @@
         .join('');
 
       return `<button type="button" class="wk-day ${classes}" data-key="${key}">
-        <div class="wk-day-head"><span class="wk-wd">${WEEKDAYS[d.getDay()]}</span><span class="wk-date ${isWeekend ? 'wk-weekend' : ''}">${d.getDate()}</span></div>
+        <div class="wk-day-head"><span class="wk-wd">${WEEKDAYS[d.getDay()]}</span><span class="wk-date ${weekendClass}">${d.getDate()}</span></div>
         <div class="wk-items">${itemsHtml}</div>
         ${statsHtml ? `<div class="wk-day-stats">${statsHtml}</div>` : ''}
       </button>`;
