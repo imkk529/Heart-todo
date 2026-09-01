@@ -254,6 +254,8 @@
   .day-cell:hover{ background:#fbeef1; }
   .day-cell.other-month{ opacity:.32; }
   .day-cell.is-today .day-num{ font-weight:700; color:var(--heart); }
+  .day-cell.is-holiday .day-num{ color:#e0334f; }
+  .day-cell.is-selected.is-holiday .day-num{ color:var(--ink); }
   .day-cell.is-selected{ background:var(--card-done-1); color:var(--ink); }
   .day-cell.is-selected .day-num{ color:var(--ink); }
   .day-dot{ font-size:8px; line-height:1; color:transparent; }
@@ -675,6 +677,15 @@
   const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
   const WEEKDAYS = ['일','월','화','수','목','금','토'];
+  const KR_HOLIDAYS_2026 = {
+    '2026-01-01':'신정', '2026-02-16':'설날 연휴', '2026-02-17':'설날', '2026-02-18':'설날 연휴',
+    '2026-03-01':'삼일절', '2026-03-02':'대체공휴일', '2026-05-05':'어린이날',
+    '2026-05-24':'부처님오신날', '2026-05-25':'대체공휴일', '2026-06-06':'현충일',
+    '2026-07-17':'제헌절', '2026-08-15':'광복절', '2026-08-17':'대체공휴일',
+    '2026-09-24':'추석 연휴', '2026-09-25':'추석', '2026-09-26':'추석 연휴',
+    '2026-10-03':'개천절', '2026-10-05':'대체공휴일', '2026-10-09':'한글날', '2026-12-25':'크리스마스'
+  };
+  const isHoliday = key => !!KR_HOLIDAYS_2026[key];
   const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', orange:'#e67e22' };
   const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:4, orange:5 };
   const COMPANY_COLORS = ['green', 'orange'];
@@ -859,7 +870,8 @@
       const classes = [
         isOther ? 'other-month' : '',
         key === todayKey ? 'is-today' : '',
-        key === state.selectedKey ? 'is-selected' : ''
+        key === state.selectedKey ? 'is-selected' : '',
+        isHoliday(key) ? 'is-holiday' : ''
       ].join(' ');
       const labelTexts = [
         ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
@@ -1102,7 +1114,7 @@
         ? sortByColorGroup(todos).map(t => `<div class="wk-item ${t.done ? 'done' : ''}" style="color:${COLOR_MAP[t.color] || COLOR_MAP.black}">${escapeHtml(t.text)}</div>`).join('')
         : `<div class="wk-empty">-</div>`;
       const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
-      const weekendClass = d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
+      const weekendClass = isHoliday(key) ? 'wk-sun' : d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
 
       const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0 };
       todos.forEach(t => {
