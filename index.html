@@ -561,6 +561,7 @@
 
   <div class="layout">
     <div class="card-panel today-panel" id="todayPanel">
+      <div class="goal-reminder" id="goalReminder"></div>
       <div class="day-heading">
         <div class="day-heading-left">
           <h2 id="dayHeading"></h2>
@@ -568,7 +569,6 @@
         </div>
         <span class="day-count" id="dayCount"></span>
       </div>
-      <div class="goal-reminder" id="goalReminder"></div>
       <div class="color-row" id="colorRow">
         <button type="button" class="color-swatch" data-color="pink" style="color:#ef5da8" title="중요한 약속" aria-label="핑크 (중요)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="red" style="color:#e0334f" aria-label="빨강" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
@@ -601,6 +601,7 @@
     </div>
 
     <div class="card-panel calendar-panel">
+      <div class="goal-reminder" id="goalReminderCal"></div>
       <div class="cal-head">
         <button class="cal-nav-btn" id="prevMonthBtn" aria-label="이전 달">◀</button>
         <span class="cal-month" id="monthLabel"></span>
@@ -701,6 +702,7 @@
   const recurStartDate = el('recurStartDate'), recurEndDate = el('recurEndDate'), recurNoEnd = el('recurNoEnd');
   const recurInput = el('recurInput'), recurAddBtn = el('recurAddBtn'), recurList = el('recurList');
   const goalReminder = el('goalReminder');
+  const goalReminderCal = el('goalReminderCal');
   const goalTabs = el('goalTabs');
   const goalHeadingText = el('goalHeadingText');
   const weeklyPanelEl = document.querySelector('.weekly-panel');
@@ -1451,10 +1453,13 @@
   function renderGoalReminder(){
     const active = state.goals.filter(g => (g.category || 'heart') === goalModeFor(state.mode) && !g.done);
     const iconColor = state.mode === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
-    goalReminder.classList.toggle('mode-work', goalModeFor(state.mode) === 'work');
-    goalReminder.innerHTML = active.map(g =>
+    const html = active.map(g =>
       `<div class="goal-reminder-item"><svg viewBox="0 0 24 24" fill="${iconColor}"><path d="${HEART_PATH}"/></svg>${escapeHtml(g.text)}</div>`
     ).join('');
+    [goalReminder, goalReminderCal].forEach(el => {
+      el.classList.toggle('mode-work', goalModeFor(state.mode) === 'work');
+      el.innerHTML = html;
+    });
   }
 
   goalTabs.addEventListener('click', e => {
