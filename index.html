@@ -131,6 +131,45 @@
   }
   .title:hover, .title:focus{ border-bottom:2px dashed var(--heart-soft); }
 
+  .title-row{ display:flex; align-items:center; gap:10px; }
+  .search-open-btn{
+    display:flex; align-items:center; justify-content:center;
+    width:32px; height:32px; margin-bottom:10px; flex:0 0 auto;
+    background:none; border:none; cursor:pointer; color:var(--ink-soft);
+  }
+  .search-open-btn svg{ width:19px; height:19px; }
+  .search-open-btn:hover{ color:var(--heart); }
+
+  .search-overlay{
+    position:fixed; inset:0; z-index:50; background:rgba(43,40,42,.35);
+    display:flex; align-items:flex-start; justify-content:center; padding:60px 16px;
+  }
+  .search-panel{
+    width:100%; max-width:520px; background:#fff; border-radius:16px;
+    box-shadow:0 12px 40px rgba(0,0,0,.18); max-height:80vh; display:flex; flex-direction:column; overflow:hidden;
+  }
+  .search-panel-head{ display:flex; align-items:center; gap:8px; padding:14px; border-bottom:1px solid #f0eeee; }
+  .search-input{
+    flex:1; min-width:0; border:none; outline:none; font-size:15px;
+    font-family:'Noto Sans KR',sans-serif; color:var(--ink);
+  }
+  .search-close-btn{
+    background:none; border:none; cursor:pointer; font-size:20px; color:var(--ink-faint);
+    width:28px; height:28px; flex:0 0 auto; line-height:1;
+  }
+  .search-results{ overflow-y:auto; padding:8px 14px 16px 14px; }
+  .search-result-group-label{
+    font-size:11px; font-weight:700; color:var(--ink-faint); margin:14px 0 6px 0; letter-spacing:.3px;
+  }
+  .search-result-item{
+    display:flex; flex-direction:column; gap:2px; width:100%; text-align:left;
+    background:var(--card); border:none; border-radius:10px; padding:10px 12px;
+    margin-bottom:6px; cursor:pointer; font-family:'Noto Sans KR',sans-serif;
+  }
+  .search-result-item:hover{ background:#f0ebe8; }
+  .search-result-text{ font-size:13.5px; line-height:1.4; }
+  .search-result-meta{ font-size:11px; color:var(--ink-faint); }
+
   .tips{ display:flex; gap:18px; flex-wrap:wrap; margin-bottom:10px; }
   .tips summary{
     font-family:'Noto Sans KR', sans-serif;
@@ -159,6 +198,7 @@
     grid-template-areas:
       "reminder reminder"
       "today cal"
+      "stats stats"
       "weekly weekly"
       "recur recur"
       "goals goals";
@@ -168,6 +208,7 @@
   .today-panel{ grid-area:today; }
   .calendar-panel{ grid-area:cal; }
   .weekly-panel{ grid-area:weekly; }
+  .stats-panel{ grid-area:stats; }
   .goals-panel{ grid-area:goals; }
   .recur-panel{ grid-area:recur; }
   .recur-weekday-row{ display:flex; gap:6px; margin-bottom:10px; }
@@ -200,6 +241,7 @@
         "reminder"
         "today"
         "cal"
+        "stats"
         "weekly"
         "recur"
         "goals";
@@ -321,6 +363,18 @@
   .wk-day-count{ display:inline-flex; align-items:center; gap:4px; font-size:10.5px; font-weight:700; color:var(--ink-soft); }
   .wk-day-count-dot{ width:7px; height:7px; border-radius:50%; flex:0 0 auto; }
 
+  .stats-streak{
+    display:flex; align-items:center; gap:4px; font-size:14px; font-weight:700; color:var(--ink);
+    background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); border-radius:12px;
+    padding:10px 14px; margin-bottom:14px;
+  }
+  .stats-streak-num{ font-size:18px; color:var(--heart); }
+  .stats-color-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .stats-color-dot{ width:9px; height:9px; border-radius:50%; flex:0 0 auto; }
+  .stats-color-label{ font-size:12.5px; color:var(--ink-soft); width:32px; flex:0 0 auto; }
+  .stats-color-bar{ flex:1; height:8px; border-radius:4px; background:#e8e2e5; overflow:hidden; }
+  .stats-color-fill{ height:100%; border-radius:4px; transition:width .3s ease; }
+  .stats-color-pct{ font-size:11px; color:var(--ink-faint); flex:0 0 auto; white-space:nowrap; }
   .weekly-reflect{
     margin-top:12px; background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2));
     border-radius:12px; padding:12px 14px;
@@ -494,6 +548,37 @@
   .todo-text{ font-size:14.5px; line-height:1.5; }
   .todo-card.done .todo-text{ text-decoration:line-through; opacity:.55; }
   .todo-text[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
+  .goal-progress-row{ display:flex; align-items:center; gap:8px; margin-top:8px; padding-left:26px; }
+  .goal-progress-bar{ flex:1; height:5px; border-radius:3px; background:#e8e2e5; overflow:hidden; }
+  .goal-progress-fill{ height:100%; border-radius:3px; transition:width .25s ease; }
+  .goal-progress-label{ font-size:11px; color:var(--ink-faint); flex:0 0 auto; }
+  .goal-subtask-list{ display:flex; flex-direction:column; gap:4px; margin-top:8px; padding-left:26px; }
+  .goal-subtask-item{ display:flex; align-items:center; gap:6px; }
+  .goal-subtask-check{
+    width:16px; height:16px; border-radius:4px; flex:0 0 auto; padding:0;
+    border:1.5px solid var(--heart-soft); background:#fff; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:#fff;
+  }
+  .goal-subtask-check.done{ background:var(--heart); border-color:var(--heart); }
+  .goal-subtask-check svg{ width:10px; height:10px; }
+  .goal-subtask-text{ font-size:12.5px; color:var(--ink); flex:1; min-width:0; }
+  .goal-subtask-text.done{ text-decoration:line-through; opacity:.5; }
+  .goal-subtask-del{
+    background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:14px;
+    padding:0 4px; flex:0 0 auto; line-height:1;
+  }
+  .goal-subtask-del:hover{ color:var(--heart); }
+  .goal-subtask-add-row{ display:flex; align-items:center; gap:6px; margin-top:8px; padding-left:26px; }
+  .goal-subtask-input{
+    flex:1; min-width:0; border:1px solid #e8e2e5; border-radius:6px;
+    padding:5px 9px; font-size:12px; font-family:'Noto Sans KR',sans-serif; outline:none; color:var(--ink);
+  }
+  .goal-subtask-input:focus{ border-color:var(--heart-soft); }
+  .goal-subtask-add-btn{
+    width:20px; height:20px; flex:0 0 auto; background:none; border:none; cursor:pointer;
+    color:var(--heart); display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .goal-subtask-add-btn svg{ width:100%; height:100%; }
   .edit-color-row{ display:flex; align-items:center; gap:6px; margin-left:auto; }
   .edit-color-swatch{
     width:18px; height:18px; border:none; background:none; padding:1px; border-radius:50%;
@@ -504,6 +589,14 @@
   .edit-color-swatch:hover{ transform:scale(1.1); }
   .edit-color-swatch.active{ box-shadow:0 0 0 2px var(--ink-faint); }
 
+  .archive-toggle-btn{
+    display:flex; align-items:center; gap:6px; width:100%; margin-top:8px;
+    background:none; border:none; cursor:pointer; padding:8px 4px;
+    font-family:'Noto Sans KR',sans-serif; font-size:12.5px; font-weight:600; color:var(--ink-soft);
+  }
+  .archive-chevron{ width:14px; height:14px; transition:transform .2s ease; }
+  .archive-toggle-btn.is-open .archive-chevron{ transform:rotate(180deg); }
+  .todo-archive-list{ display:flex; flex-direction:column; gap:10px; }
   .empty-state, .loading-text{
     text-align:center; color:var(--ink-faint); font-size:13px; line-height:1.7;
     padding:30px 10px;
@@ -558,7 +651,21 @@
       <button type="button" class="goal-tab" data-cat="work">회사</button>
       <button type="button" class="goal-tab" data-cat="memo">메모</button>
     </div>
-    <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
+    <div class="title-row">
+      <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
+      <button type="button" id="searchOpenBtn" class="search-open-btn" aria-label="검색">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      </button>
+    </div>
+    <div class="search-overlay" id="searchOverlay" style="display:none;">
+      <div class="search-panel">
+        <div class="search-panel-head">
+          <input type="text" id="searchInput" class="search-input" placeholder="할 일 · 메모 · 목표 검색" autocomplete="off">
+          <button type="button" id="searchCloseBtn" class="search-close-btn" aria-label="닫기">×</button>
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
     <div class="tips">
       <details class="tips-item">
         <summary>기기 간 동기화</summary>
@@ -617,6 +724,17 @@
       </div>
       <div class="todo-list" id="todoList"></div>
       </div>
+    </div>
+
+    <div class="card-panel stats-panel" id="statsPanel">
+      <div class="weekly-head">
+        <h2>통계</h2>
+        <span class="weekly-sub" id="statsMonthLabel"></span>
+        <button type="button" class="panel-toggle-btn" data-target="statsBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+      </div>
+      <div class="panel-body" id="statsBody"></div>
     </div>
 
     <div class="card-panel weekly-panel">
@@ -740,6 +858,7 @@
   const profileResetBtn = el('profileResetBtn');
   const profileWrap = el('profileWrap'), profileImg = el('profileImg'), profilePlaceholder = el('profilePlaceholder'), fileInput = el('fileInput');
   const titleEl = el('titleEl');
+  const searchOpenBtn = el('searchOpenBtn'), searchOverlay = el('searchOverlay'), searchInput = el('searchInput'), searchCloseBtn = el('searchCloseBtn'), searchResults = el('searchResults');
   const monthLabel = el('monthLabel'), calendarGrid = el('calendarGrid'), prevMonthBtn = el('prevMonthBtn'), nextMonthBtn = el('nextMonthBtn'), todayBtn = el('todayBtn');
   const dayHeading = el('dayHeading'), dayCount = el('dayCount'), todoInput = el('todoInput'), addBtn = el('addBtn'), todoList = el('todoList');
   const todayDayHeading = el('todayDayHeading');
@@ -752,6 +871,7 @@
   const goalTabs = el('goalTabs');
   const goalHeadingText = el('goalHeadingText');
   const weeklyPanelEl = document.querySelector('.weekly-panel');
+  const statsPanelEl = document.querySelector('.stats-panel');
   const calendarPanelEl = document.querySelector('.calendar-panel');
   const goalsPanelEl = document.querySelector('.goals-panel');
   const recurPanelEl = document.querySelector('.recur-panel');
@@ -951,20 +1071,74 @@
     todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
+  const COLOR_LABELS = { pink:'핑크', red:'빨강', blue:'파랑', black:'검정', green:'초록', orange:'주황', gray:'회색' };
+  async function computeMonthlyStats(){
+    const year = state.viewYear, month = state.viewMonth;
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const colorTotals = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0 };
+    const colorDones = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0 };
+    for(let d = 1; d <= daysInMonth; d++){
+      const key = `${year}-${pad(month + 1)}-${pad(d)}`;
+      const todos = await ensureLoaded(key);
+      todos.forEach(t => {
+        const c = COLOR_MAP[t.color] ? t.color : 'black';
+        colorTotals[c]++;
+        if(t.done) colorDones[c]++;
+      });
+    }
+    return { colorTotals, colorDones };
+  }
+  function computeStreak(){
+    let streak = 0;
+    const cursor = new Date();
+    while(true){
+      const key = dateKey(cursor);
+      const idx = state.index[key];
+      if(idx && idx.done > 0){
+        streak++;
+        cursor.setDate(cursor.getDate() - 1);
+      } else break;
+    }
+    return streak;
+  }
+  async function renderStats(){
+    const statsBody = el('statsBody');
+    if(!statsBody) return;
+    el('statsMonthLabel').textContent = `${state.viewYear}년 ${state.viewMonth + 1}월`;
+    const { colorTotals, colorDones } = await computeMonthlyStats();
+    const streak = computeStreak();
+    const rows = Object.keys(colorTotals).filter(c => colorTotals[c] > 0).map(c => {
+      const pct = colorTotals[c] ? Math.round((colorDones[c] / colorTotals[c]) * 100) : 0;
+      return `<div class="stats-color-row">
+        <span class="stats-color-dot" style="background:${COLOR_MAP[c]};"></span>
+        <span class="stats-color-label">${COLOR_LABELS[c]}</span>
+        <div class="stats-color-bar"><div class="stats-color-fill" style="width:${pct}%;background:${COLOR_MAP[c]};"></div></div>
+        <span class="stats-color-pct">${pct}% (${colorDones[c]}/${colorTotals[c]})</span>
+      </div>`;
+    }).join('');
+    statsBody.innerHTML = `
+      <div class="stats-streak">🔥 <span class="stats-streak-num">${streak}</span>일 연속 완료 중</div>
+      ${rows || '<div class="empty-state" style="padding:14px 4px;">이번 달 기록이 없어요.</div>'}
+    `;
+  }
+
   prevMonthBtn.addEventListener('click', () => {
     state.viewMonth--;
     if(state.viewMonth < 0){ state.viewMonth = 11; state.viewYear--; }
     renderCalendar();
+    renderStats();
   });
   nextMonthBtn.addEventListener('click', () => {
     state.viewMonth++;
     if(state.viewMonth > 11){ state.viewMonth = 0; state.viewYear++; }
     renderCalendar();
+    renderStats();
   });
   todayBtn.addEventListener('click', () => {
     const t = new Date();
     state.viewYear = t.getFullYear(); state.viewMonth = t.getMonth();
     selectDate(dateKey(t));
+    renderStats();
   });
 
   function formatHeading(key){
@@ -1049,17 +1223,33 @@
       todoList.innerHTML = `<div class="empty-state">${msg}<br>위에 적고 하트를 눌러 추가해보세요 🤍</div>`;
       return;
     }
-    const sorted = sortByColorGroup(todos);
+    const active = todos.filter(t => !t.done);
+    const done = todos.filter(t => t.done);
     let html = '';
-    let lastGroup = null;
-    sorted.forEach(t => {
-      const group = COLOR_ORDER[t.color] ?? COLOR_ORDER.black;
-      if(lastGroup !== null && group !== lastGroup){
-        html += `<div class="color-divider"></div>`;
-      }
-      html += renderTodoCard(t);
-      lastGroup = group;
-    });
+    if(active.length === 0 && done.length > 0){
+      html += `<div class="empty-state" style="padding:14px 6px;">활성화된 할 일이 없어요.</div>`;
+    } else {
+      const sortedActive = sortByColorGroup(active);
+      let lastGroup = null;
+      sortedActive.forEach(t => {
+        const group = COLOR_ORDER[t.color] ?? COLOR_ORDER.black;
+        if(lastGroup !== null && group !== lastGroup){
+          html += `<div class="color-divider"></div>`;
+        }
+        html += renderTodoCard(t);
+        lastGroup = group;
+      });
+    }
+    if(done.length > 0){
+      const sortedDone = sortByColorGroup(done);
+      html += `<button type="button" class="archive-toggle-btn" data-action="toggle-archive">
+        완료 보관함 (${done.length})
+        <svg class="archive-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="todo-archive-list" id="todoArchiveList" style="display:none;">
+        ${sortedDone.map(renderTodoCard).join('')}
+      </div>`;
+    }
     todoList.innerHTML = html;
   }
 
@@ -1130,6 +1320,7 @@
     await setItem('todo-index', JSON.stringify(state.index));
     renderCalendar();
     renderWeekly();
+    renderStats();
   }
 
   function getWeekDates(key){
@@ -1358,17 +1549,7 @@
       if(!item) return;
       item.done = !item.done;
       await persistDay(key, todos);
-      if(cardEl){
-        cardEl.classList.toggle('done', item.done);
-        const heartBtn = cardEl.querySelector('.heart-btn');
-        const checkboxBtn = cardEl.querySelector('.checkbox');
-        [heartBtn, checkboxBtn].forEach(b => {
-          if(!b) return;
-          b.classList.remove('pop');
-          void b.offsetWidth;
-          b.classList.add('pop');
-        });
-      }
+      renderTodoList();
       updateDayCount();
       renderCalendar();
     } catch(err){
@@ -1395,6 +1576,14 @@
   todoList.addEventListener('click', e => {
     if(e.target.closest('[data-action="new-default"]')){ quickAddMemo(); return; }
     if(e.target.closest('[data-action="new-pink"]')){ quickAddPinkMemo(); return; }
+    if(e.target.closest('[data-action="toggle-archive"]')){
+      const btn = e.target.closest('.archive-toggle-btn');
+      const list = document.getElementById('todoArchiveList');
+      const isHidden = list.style.display === 'none';
+      list.style.display = isHidden ? 'flex' : 'none';
+      btn.classList.toggle('is-open', isHidden);
+      return;
+    }
     const card = e.target.closest('.todo-card');
     if(!card) return;
     const id = card.dataset.id;
@@ -1474,6 +1663,20 @@
   // ---- long-term goals ----
   function renderGoalCard(g){
     const goalColor = (g.category || 'heart') === 'work' ? COLOR_MAP.green : COLOR_MAP.pink;
+    const subtasks = g.subtasks || [];
+    const subDone = subtasks.filter(s => s.done).length;
+    const pct = subtasks.length ? Math.round((subDone / subtasks.length) * 100) : 0;
+    const progressHtml = subtasks.length ? `
+      <div class="goal-progress-row">
+        <div class="goal-progress-bar"><div class="goal-progress-fill" style="width:${pct}%;background:${goalColor};"></div></div>
+        <span class="goal-progress-label">${subDone}/${subtasks.length}</span>
+      </div>` : '';
+    const subtaskListHtml = subtasks.length ? `<div class="goal-subtask-list">${subtasks.map(s => `
+      <div class="goal-subtask-item" data-sub-id="${s.id}">
+        <button type="button" class="goal-subtask-check ${s.done ? 'done' : ''}" data-action="toggle-sub" aria-label="하위 항목 체크">${s.done ? CHECK_SVG : ''}</button>
+        <span class="goal-subtask-text ${s.done ? 'done' : ''}">${escapeHtml(s.text)}</span>
+        <button type="button" class="goal-subtask-del" data-action="delete-sub" aria-label="하위 항목 삭제">×</button>
+      </div>`).join('')}</div>` : '';
     return `<div class="todo-card ${g.done ? 'done' : ''}" data-id="${g.id}">
       <button class="edit-btn" data-action="edit" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
@@ -1488,6 +1691,14 @@
       <div class="todo-body">
         <button type="button" class="checkbox" data-action="toggle" aria-label="달성 체크"><span class="check-icon">${CHECK_SVG}</span></button>
         <span class="todo-text" style="color:${goalColor}">${escapeHtml(g.text)}</span>
+      </div>
+      ${progressHtml}
+      ${subtaskListHtml}
+      <div class="goal-subtask-add-row">
+        <input type="text" class="goal-subtask-input" placeholder="하위 항목 추가" maxlength="60">
+        <button type="button" class="goal-subtask-add-btn" data-action="add-sub" aria-label="하위 항목 추가">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </button>
       </div>
     </div>`;
   }
@@ -1529,6 +1740,7 @@
       goalReminder.style.display = 'none';
       el('todoAddRow').style.display = 'none';
       weeklyPanelEl.style.display = 'none';
+      statsPanelEl.style.display = 'none';
       calendarPanelEl.style.display = 'none';
       goalsPanelEl.style.display = 'none';
       recurPanelEl.style.display = 'none';
@@ -1540,6 +1752,7 @@
     goalReminder.style.display = '';
     el('todoAddRow').style.display = 'flex';
     weeklyPanelEl.style.display = '';
+    statsPanelEl.style.display = '';
     calendarPanelEl.style.display = '';
     goalsPanelEl.style.display = '';
     recurPanelEl.style.display = '';
@@ -1769,6 +1982,31 @@
     await setItem('long-term-goals', JSON.stringify(state.goals));
   }
 
+  async function addSubtask(goalId, text, cardEl){
+    const g = state.goals.find(x => x.id === goalId);
+    if(!g || !text.trim()) return;
+    if(!g.subtasks) g.subtasks = [];
+    g.subtasks.push({ id: genId(), text: text.trim(), done: false });
+    await persistGoals();
+    renderGoalList();
+  }
+  async function toggleSubtask(goalId, subId){
+    const g = state.goals.find(x => x.id === goalId);
+    if(!g || !g.subtasks) return;
+    const s = g.subtasks.find(x => x.id === subId);
+    if(!s) return;
+    s.done = !s.done;
+    await persistGoals();
+    renderGoalList();
+  }
+  async function deleteSubtask(goalId, subId){
+    const g = state.goals.find(x => x.id === goalId);
+    if(!g || !g.subtasks) return;
+    g.subtasks = g.subtasks.filter(x => x.id !== subId);
+    await persistGoals();
+    renderGoalList();
+  }
+
   async function addGoalHandler(){
     const text = goalInput.value.trim();
     if(!text) return;
@@ -1846,9 +2084,33 @@
     const card = e.target.closest('.todo-card');
     if(!card) return;
     const id = card.dataset.id;
+    if(e.target.closest('[data-action="toggle-sub"]')){
+      const subId = e.target.closest('[data-sub-id]').dataset.subId;
+      toggleSubtask(id, subId);
+      return;
+    }
+    if(e.target.closest('[data-action="delete-sub"]')){
+      const subId = e.target.closest('[data-sub-id]').dataset.subId;
+      deleteSubtask(id, subId);
+      return;
+    }
+    if(e.target.closest('[data-action="add-sub"]')){
+      const input = card.querySelector('.goal-subtask-input');
+      addSubtask(id, input.value, card);
+      input.value = '';
+      return;
+    }
     if(e.target.closest('[data-action="toggle"]')) toggleGoal(id, card);
     else if(e.target.closest('[data-action="delete"]')) deleteGoal(id, card);
     else if(e.target.closest('[data-action="edit"]')) startEditGoal(id, card);
+  });
+  goalList.addEventListener('keydown', e => {
+    if(e.key !== 'Enter') return;
+    const input = e.target.closest('.goal-subtask-input');
+    if(!input) return;
+    const card = input.closest('.todo-card');
+    addSubtask(card.dataset.id, input.value, card);
+    input.value = '';
   });
 
   // ---- profile photo ----
@@ -1949,6 +2211,94 @@
     });
   });
 
+  // ---- search ----
+  function openSearch(){
+    searchOverlay.style.display = 'flex';
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    setTimeout(() => searchInput.focus(), 50);
+  }
+  function closeSearch(){
+    searchOverlay.style.display = 'none';
+  }
+  searchOpenBtn.addEventListener('click', openSearch);
+  searchCloseBtn.addEventListener('click', closeSearch);
+  searchOverlay.addEventListener('click', e => { if(e.target === searchOverlay) closeSearch(); });
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && searchOverlay.style.display !== 'none') closeSearch();
+  });
+
+  async function runSearch(query){
+    const q = query.trim().toLowerCase();
+    if(!q){ searchResults.innerHTML = ''; return; }
+    searchResults.innerHTML = `<div class="empty-state" style="padding:20px 4px;">검색 중...</div>`;
+
+    const todoMatches = [];
+    const dateKeys = Object.keys(state.index).sort().reverse();
+    for(const key of dateKeys){
+      const todos = await ensureLoaded(key);
+      todos.forEach(t => {
+        if(t.text.toLowerCase().includes(q)) todoMatches.push({ ...t, dateKey: key });
+      });
+    }
+    const memoMatches = state.memos.filter(m => m.text.toLowerCase().includes(q));
+    const goalMatches = state.goals.filter(g => g.text.toLowerCase().includes(q));
+
+    if(todoMatches.length === 0 && memoMatches.length === 0 && goalMatches.length === 0){
+      searchResults.innerHTML = `<div class="empty-state" style="padding:20px 4px;">검색 결과가 없어요.</div>`;
+      return;
+    }
+
+    let html = '';
+    if(todoMatches.length){
+      html += `<div class="search-result-group-label">할 일 (${todoMatches.length})</div>`;
+      html += todoMatches.map(t => `<button type="button" class="search-result-item" data-type="todo" data-key="${t.dateKey}">
+        <span class="search-result-text" style="color:${COLOR_MAP[t.color] || COLOR_MAP.black}">${t.done ? '✓ ' : ''}${escapeHtml(t.text)}</span>
+        <span class="search-result-meta">${t.dateKey}</span>
+      </button>`).join('');
+    }
+    if(memoMatches.length){
+      html += `<div class="search-result-group-label">메모 (${memoMatches.length})</div>`;
+      html += memoMatches.map(m => `<button type="button" class="search-result-item" data-type="memo" data-id="${m.id}">
+        <span class="search-result-text">${escapeHtml(m.text)}</span>
+        <span class="search-result-meta">${formatTimestamp(m.createdAt)}</span>
+      </button>`).join('');
+    }
+    if(goalMatches.length){
+      html += `<div class="search-result-group-label">목표 (${goalMatches.length})</div>`;
+      html += goalMatches.map(g => `<button type="button" class="search-result-item" data-type="goal" data-id="${g.id}" data-cat="${g.category || 'heart'}">
+        <span class="search-result-text">${g.done ? '✓ ' : ''}${escapeHtml(g.text)}</span>
+        <span class="search-result-meta">${g.category === 'work' ? '회사' : '하트'} 목표</span>
+      </button>`).join('');
+    }
+    searchResults.innerHTML = html;
+  }
+
+  let searchDebounce = null;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => runSearch(searchInput.value), 250);
+  });
+
+  searchResults.addEventListener('click', e => {
+    const item = e.target.closest('.search-result-item');
+    if(!item) return;
+    const type = item.dataset.type;
+    closeSearch();
+    if(type === 'todo'){
+      goalTabs.querySelector('.goal-tab[data-cat="heart"]').click();
+      selectDate(item.dataset.key);
+      todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if(type === 'memo'){
+      goalTabs.querySelector('.goal-tab[data-cat="memo"]').click();
+      todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if(type === 'goal'){
+      const cat = item.dataset.cat === 'work' ? 'work' : 'heart';
+      goalTabs.querySelector(`.goal-tab[data-cat="${cat}"]`).click();
+      document.querySelector('.goals-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
   // ---- init ----
   (async function init(){
     await githubPull();
@@ -1968,6 +2318,7 @@
     renderCalendar();
     loadDay(state.selectedKey);
     renderWeekly();
+    renderStats();
     loadGoals();
     loadMemos();
   })();
