@@ -589,7 +589,7 @@
   <div class="layout">
     <div class="goal-reminder" id="goalReminder"></div>
     <div class="card-panel today-panel" id="todayPanel">
-      <div class="day-heading">
+      <div class="day-heading" id="todayDayHeading">
         <div class="day-heading-left">
           <h2 id="dayHeading"></h2>
           <input type="date" id="datePickInput" class="date-pick-input" aria-label="날짜 선택">
@@ -742,6 +742,7 @@
   const titleEl = el('titleEl');
   const monthLabel = el('monthLabel'), calendarGrid = el('calendarGrid'), prevMonthBtn = el('prevMonthBtn'), nextMonthBtn = el('nextMonthBtn'), todayBtn = el('todayBtn');
   const dayHeading = el('dayHeading'), dayCount = el('dayCount'), todoInput = el('todoInput'), addBtn = el('addBtn'), todoList = el('todoList');
+  const todayDayHeading = el('todayDayHeading');
   const datePickInput = el('datePickInput');
   const goalInput = el('goalInput'), goalAddBtn = el('goalAddBtn'), goalList = el('goalList');
   const recurColorRow = el('recurColorRow'), recurWeekdayRow = el('recurWeekdayRow'), recurDailyBtn = el('recurDailyBtn');
@@ -1524,6 +1525,7 @@
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
       dayHeading.textContent = '';
+      todayDayHeading.style.marginBottom = '0';
       goalReminder.style.display = 'none';
       el('todoAddRow').style.display = 'none';
       weeklyPanelEl.style.display = 'none';
@@ -1534,6 +1536,7 @@
       return;
     }
     todayPanel.classList.remove('memo-active');
+    todayDayHeading.style.marginBottom = '';
     goalReminder.style.display = '';
     el('todoAddRow').style.display = 'flex';
     weeklyPanelEl.style.display = '';
