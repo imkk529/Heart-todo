@@ -309,7 +309,10 @@
   .wk-date{ font-size:13px; font-weight:600; color:var(--ink); }
   .wk-date.wk-sun{ color:#e0334f; }
   .wk-date.wk-sat{ color:#3b6fe0; }
-  .wk-day.is-today .wk-date{ color:var(--heart); }
+  .wk-day.is-today .wk-date{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:50%; border:1.5px solid #9b9b9b; font-weight:700;
+  }
   .wk-items{ flex:1; display:flex; flex-direction:column; gap:2px; min-width:0; padding-top:1px; }
   .wk-item{ font-size:12.5px; line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .wk-item.done{ text-decoration:line-through; opacity:.5; }
