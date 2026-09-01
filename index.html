@@ -206,7 +206,7 @@
     }
     .hero{ height:200px; }
     .profile-wrap{ width:92px; height:92px; left:20px; bottom:-46px; }
-    .goal-tabs{ margin:-82px 0 12px 106px; }
+    .goal-tabs{ margin:-42px 0 12px 106px; }
     .head-block{ padding:56px 20px 0 20px; }
     .divider{ margin:14px 20px 0 20px; }
     .layout{ padding:20px 20px 50px 20px; }
@@ -344,8 +344,7 @@
   .goal-heart-icon{ width:18px; height:18px; vertical-align:-2px; }
   .goal-tabs{
     display:flex; gap:6px; width:fit-content; flex-wrap:wrap;
-    margin:-95px 0 12px 126px;
-    position:relative; z-index:2;
+    margin:-46px 0 12px 126px;
   }
   .goal-tab{
     padding:6px 12px; border-radius:999px; border:none; cursor:pointer; white-space:nowrap;
@@ -389,6 +388,7 @@
   .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
   .memo-new-btn:active{ transform:scale(.96); }
   .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .memo-new-btns-row{ display:flex; gap:8px; margin-bottom:10px; }
   .memo-columns.is-narrow{ gap:12px; }
   .memo-columns.is-narrow .todo-card[data-memo="1"]{ padding:18px 60px 18px 16px; min-height:70px; }
   .memo-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
@@ -1239,10 +1239,18 @@
     </button>`;
     const colDefault = defaults.length ? defaults.map(renderMemoCard).join('') : '';
     const colPink = pinks.length ? pinks.map(renderMemoCard).join('') : '';
-    todoList.innerHTML = `<div class="memo-columns ${isNarrow ? 'is-narrow' : ''}" style="grid-template-columns:${isNarrow ? '1fr' : '1fr 1fr'};">
-      <div class="memo-col">${newBtnDefault}${colDefault}</div>
-      <div class="memo-col">${newBtnPink}${colPink}</div>
-    </div>`;
+    if(isNarrow){
+      todoList.innerHTML = `<div class="memo-new-btns-row">${newBtnDefault}${newBtnPink}</div>
+      <div class="memo-columns is-narrow" style="grid-template-columns:1fr;">
+        <div class="memo-col">${colDefault}</div>
+        <div class="memo-col">${colPink}</div>
+      </div>`;
+    } else {
+      todoList.innerHTML = `<div class="memo-columns" style="grid-template-columns:1fr 1fr;">
+        <div class="memo-col">${newBtnDefault}${colDefault}</div>
+        <div class="memo-col">${newBtnPink}${colPink}</div>
+      </div>`;
+    }
   }
   async function addMemoHandler(){
     const text = todoInput.value.trim();
