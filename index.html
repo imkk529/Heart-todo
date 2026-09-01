@@ -230,6 +230,10 @@
   .panel-toggle-btn svg{ width:16px; height:16px; transition:transform .2s ease; }
   .panel-toggle-btn.is-collapsed svg{ transform:rotate(-90deg); }
   .panel-body.is-collapsed{ display:none; }
+  .card-panel.is-collapsed-panel{ min-height:0; display:flex; flex-direction:column; justify-content:center; }
+  .card-panel.is-collapsed-panel .day-heading,
+  .card-panel.is-collapsed-panel .weekly-head,
+  .card-panel.is-collapsed-panel .cal-head{ margin-bottom:0; }
   .today-panel.memo-active{ border:none; background:transparent; padding:16px 0; grid-column:1 / -1; }
 
   /* ---------- Calendar ---------- */
@@ -1914,6 +1918,8 @@
       if(!target) return;
       const collapsed = target.classList.toggle('is-collapsed');
       btn.classList.toggle('is-collapsed', collapsed);
+      const panel = btn.closest('.card-panel');
+      if(panel) panel.classList.toggle('is-collapsed-panel', collapsed);
     });
   });
 
