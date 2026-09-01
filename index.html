@@ -133,15 +133,14 @@
 
   .tips{ display:flex; gap:18px; flex-wrap:wrap; margin-bottom:10px; }
   .tips summary{
-    font-family:'Noto Serif KR', Georgia, serif;
-    font-style:italic;
-    font-size:14.5px;
+    font-family:'Noto Sans KR', sans-serif;
+    font-size:13.5px;
     color:var(--ink-soft);
     cursor:pointer;
     list-style:none;
   }
   .tips summary::-webkit-details-marker{ display:none; }
-  .tips summary::before{ content:'▶ '; color:var(--heart); font-size:11px; }
+  .tips summary::before{ content:'▶ '; color:var(--ink-soft); font-size:11px; }
   .tips[open] summary::before{ content:'▼ '; }
   .tips p{ font-size:13px; color:var(--ink-soft); margin:6px 2px 0 14px; line-height:1.7; max-width:300px; }
   .backup-btn{
