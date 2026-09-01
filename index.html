@@ -222,10 +222,19 @@
     padding:16px;
     min-width:0;
   }
+  .panel-toggle-btn{
+    background:none; border:none; cursor:pointer; padding:4px;
+    display:flex; align-items:center; justify-content:center; color:var(--ink-soft);
+    margin-left:auto; flex:0 0 auto;
+  }
+  .panel-toggle-btn svg{ width:16px; height:16px; transition:transform .2s ease; }
+  .panel-toggle-btn.is-collapsed svg{ transform:rotate(-90deg); }
+  .panel-body.is-collapsed{ display:none; }
   .today-panel.memo-active{ border:none; background:transparent; padding:16px 0; grid-column:1 / -1; }
 
   /* ---------- Calendar ---------- */
   .cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .cal-head-nav{ display:flex; align-items:center; justify-content:space-between; flex:1; }
   .cal-nav-btn{
     background:none; border:none; cursor:pointer; color:var(--ink-soft);
     font-size:16px; padding:4px 8px; border-radius:8px;
@@ -570,7 +579,11 @@
           <input type="date" id="datePickInput" class="date-pick-input" aria-label="날짜 선택">
         </div>
         <span class="day-count" id="dayCount"></span>
+        <button type="button" class="panel-toggle-btn" data-target="todayBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
+      <div class="panel-body" id="todayBody">
       <div class="color-row" id="colorRow">
         <button type="button" class="color-swatch" data-color="pink" style="color:#ef5da8" title="중요한 약속" aria-label="핑크 (중요)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="red" style="color:#e0334f" aria-label="빨강" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
@@ -586,13 +599,18 @@
         </button>
       </div>
       <div class="todo-list" id="todoList"></div>
+      </div>
     </div>
 
     <div class="card-panel weekly-panel">
       <div class="weekly-head">
         <h2>위클리</h2>
         <span class="weekly-sub" id="weeklyRange"></span>
+        <button type="button" class="panel-toggle-btn" data-target="weeklyBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
+      <div class="panel-body" id="weeklyBody">
       <div class="weekly-grid" id="weeklyGrid"></div>
       <div class="weekly-reflect">
         <div class="weekly-reflect-label">
@@ -600,26 +618,38 @@
         </div>
         <textarea id="weeklyReflect" class="weekly-reflect-input" placeholder="이번 한 주는 어땠나요?" rows="3"></textarea>
       </div>
+      </div>
     </div>
 
     <div class="card-panel calendar-panel">
       <div class="cal-head">
-        <button class="cal-nav-btn" id="prevMonthBtn" aria-label="이전 달">◀</button>
-        <span class="cal-month" id="monthLabel"></span>
-        <button class="cal-nav-btn" id="nextMonthBtn" aria-label="다음 달">▶</button>
+        <div class="cal-head-nav">
+          <button class="cal-nav-btn" id="prevMonthBtn" aria-label="이전 달">◀</button>
+          <span class="cal-month" id="monthLabel"></span>
+          <button class="cal-nav-btn" id="nextMonthBtn" aria-label="다음 달">▶</button>
+        </div>
+        <button type="button" class="panel-toggle-btn" data-target="calBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
+      <div class="panel-body" id="calBody">
       <button class="today-btn" id="todayBtn">오늘로 이동</button>
       <div class="weekday-row">
         <span class="wd wd-sun">일</span><span class="wd">월</span><span class="wd">화</span>
         <span class="wd">수</span><span class="wd">목</span><span class="wd">금</span><span class="wd wd-sat">토</span>
       </div>
       <div class="cal-grid" id="calendarGrid"></div>
+      </div>
     </div>
 
     <div class="card-panel goals-panel">
       <div class="day-heading">
         <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> <span id="goalHeadingText">목표</span></h2>
+        <button type="button" class="panel-toggle-btn" data-target="goalsBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
+      <div class="panel-body" id="goalsBody">
       <div class="add-row">
         <input type="text" id="goalInput" placeholder="이루고 싶은 목표를 적어보세요" maxlength="120">
         <button class="add-btn" id="goalAddBtn" aria-label="목표 추가">
@@ -627,12 +657,17 @@
         </button>
       </div>
       <div class="todo-list" id="goalList"></div>
+      </div>
     </div>
 
     <div class="card-panel recur-panel">
       <div class="day-heading">
         <h2><svg class="goal-heart-icon" viewBox="0 0 24 24" fill="#e0334f"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 반복 일정</h2>
+        <button type="button" class="panel-toggle-btn" data-target="recurBody" aria-label="접기/펼치기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
       </div>
+      <div class="panel-body" id="recurBody">
       <div class="color-row" id="recurColorRow">
         <button type="button" class="color-swatch" data-color="pink" style="color:#ef5da8" aria-label="핑크" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="red" style="color:#e0334f" aria-label="빨강" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
@@ -666,6 +701,7 @@
         </button>
       </div>
       <div id="recurList"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -675,15 +711,6 @@
   const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
   const WEEKDAYS = ['일','월','화','수','목','금','토'];
-  const KR_HOLIDAYS_2026 = {
-    '2026-01-01':'신정', '2026-02-16':'설날 연휴', '2026-02-17':'설날', '2026-02-18':'설날 연휴',
-    '2026-03-01':'삼일절', '2026-03-02':'대체공휴일', '2026-05-05':'어린이날',
-    '2026-05-24':'부처님오신날', '2026-05-25':'대체공휴일', '2026-06-06':'현충일',
-    '2026-07-17':'제헌절', '2026-08-15':'광복절', '2026-08-17':'대체공휴일',
-    '2026-09-24':'추석 연휴', '2026-09-25':'추석', '2026-09-26':'추석 연휴',
-    '2026-10-03':'개천절', '2026-10-05':'대체공휴일', '2026-10-09':'한글날', '2026-12-25':'크리스마스'
-  };
-  const isHoliday = key => !!KR_HOLIDAYS_2026[key];
   const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', orange:'#e67e22' };
   const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:4, orange:5 };
   const COMPANY_COLORS = ['green', 'orange'];
@@ -868,8 +895,7 @@
       const classes = [
         isOther ? 'other-month' : '',
         key === todayKey ? 'is-today' : '',
-        key === state.selectedKey ? 'is-selected' : '',
-        isHoliday(key) ? 'is-holiday' : ''
+        key === state.selectedKey ? 'is-selected' : ''
       ].join(' ');
       const labelTexts = [
         ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
@@ -1112,7 +1138,7 @@
         ? sortByColorGroup(todos).map(t => `<div class="wk-item ${t.done ? 'done' : ''}" style="color:${COLOR_MAP[t.color] || COLOR_MAP.black}">${escapeHtml(t.text)}</div>`).join('')
         : `<div class="wk-empty">-</div>`;
       const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
-      const weekendClass = isHoliday(key) ? 'wk-sun' : d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
+      const weekendClass = d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
 
       const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0 };
       todos.forEach(t => {
@@ -1879,6 +1905,16 @@
     const text = titleEl.textContent.trim() || '일정';
     titleEl.textContent = text;
     await setItem('app-title', text);
+  });
+
+  // ---- collapsible panels ----
+  document.querySelectorAll('.panel-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.getElementById(btn.dataset.target);
+      if(!target) return;
+      const collapsed = target.classList.toggle('is-collapsed');
+      btn.classList.toggle('is-collapsed', collapsed);
+    });
   });
 
   // ---- init ----
