@@ -366,6 +366,8 @@
   .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
   .memo-new-btn:active{ transform:scale(.96); }
   .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .memo-columns.is-narrow{ gap:12px; }
+  .memo-columns.is-narrow .todo-card[data-memo="1"]{ padding:18px 60px 18px 16px; min-height:70px; }
   .memo-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
   .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:8px; }
   .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
@@ -1185,7 +1187,8 @@
     const pinks = state.memos.filter(m => m.color === 'pink').slice().reverse();
     const colDefault = defaults.length ? defaults.map(renderMemoCard).join('') : '';
     const colPink = pinks.length ? pinks.map(renderMemoCard).join('') : '';
-    todoList.innerHTML = `<div class="memo-columns">
+    const isNarrow = window.innerWidth <= 680;
+    todoList.innerHTML = `<div class="memo-columns ${isNarrow ? 'is-narrow' : ''}" style="grid-template-columns:${isNarrow ? '1fr' : '1fr 1fr'};">
       <div class="memo-col">${colDefault}</div>
       <div class="memo-col">${colPink}</div>
     </div>`;
@@ -1216,6 +1219,12 @@
     if(cardEl) startEditMemo(memo.id, cardEl);
   }
   el('memoQuickAddPinkBtn').addEventListener('click', quickAddPinkMemo);
+  let memoResizeTimer = null;
+  window.addEventListener('resize', () => {
+    if(state.mode !== 'memo') return;
+    clearTimeout(memoResizeTimer);
+    memoResizeTimer = setTimeout(renderMemoList, 150);
+  });
   async function deleteMemo(id, cardEl){
     if(cardEl) cardEl.classList.add('removing');
     const finish = async () => {
