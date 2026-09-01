@@ -567,7 +567,8 @@
           <strong style="color:#3b6fe0">파랑</strong> 매일 가져갈 습관 (운동, 독서, 일기, 명상 등) — 목표와 직접 관련 없어도 놓치면 안 되는 것들<br>
           <strong style="color:#2b2b2b">검정</strong> 빨강·파랑 제외 나머지 / 가장 덜 중요한 일 / 내일로 미뤄도 괜찮은 일 (설거지, 빨래, 관공서 방문 등)<br>
           <strong style="color:#2f9e44">초록</strong> 회사 업무<br>
-          <strong style="color:#e67e22">주황</strong> 회사 마감일 체크용
+          <strong style="color:#e67e22">주황</strong> 회사 마감일 체크용<br>
+          <strong style="color:#9b9b9b">회색</strong> 회사 서브업무
         </p>
       </details>
     </div>
@@ -595,6 +596,7 @@
         <button type="button" class="color-swatch active" data-color="black" style="color:#2b2b2b" aria-label="검정" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" title="회사 업무" aria-label="초록 (업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="orange" style="color:#e67e22" title="회사 마감일" aria-label="주황 (마감일)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="gray" style="color:#9b9b9b" title="회사 서브업무" aria-label="회색 (서브업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
       <div class="add-row" id="todoAddRow">
         <input type="text" id="todoInput" placeholder="오늘 할 일을 적어보세요" maxlength="120">
@@ -679,6 +681,7 @@
         <button type="button" class="color-swatch active" data-color="black" style="color:#2b2b2b" aria-label="검정" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" aria-label="초록" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="orange" style="color:#e67e22" aria-label="주황" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="gray" style="color:#9b9b9b" aria-label="회색" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
       <div class="recur-weekday-row" id="recurWeekdayRow">
         <button type="button" class="recur-weekday-btn recur-daily-btn" id="recurDailyBtn">매일</button>
@@ -715,9 +718,9 @@
   const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
   const WEEKDAYS = ['일','월','화','수','목','금','토'];
-  const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', orange:'#e67e22' };
-  const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:4, orange:5 };
-  const COMPANY_COLORS = ['green', 'orange'];
+  const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', orange:'#e67e22', gray:'#9b9b9b' };
+  const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:4, orange:5, gray:6 };
+  const COMPANY_COLORS = ['green', 'orange', 'gray'];
   let selectedColor = 'black';
 
   const el = id => document.getElementById(id);
@@ -1145,14 +1148,14 @@
       const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
       const weekendClass = d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
 
-      const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0 };
+      const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0 };
       todos.forEach(t => {
         if(t.done){
           const c = COLOR_MAP[t.color] ? t.color : 'black';
           dayDoneCounts[c]++;
         }
       });
-      const statsHtml = ['pink','red','blue','black','green','orange']
+      const statsHtml = ['pink','red','blue','black','green','orange','gray']
         .filter(c => dayDoneCounts[c] > 0)
         .map(c => `<span class="wk-day-count"><span class="wk-day-count-dot" style="background:${COLOR_MAP[c]}"></span>${dayDoneCounts[c]}</span>`)
         .join('');
@@ -1399,7 +1402,7 @@
 
     const picker = document.createElement('div');
     picker.className = 'edit-color-row';
-    picker.innerHTML = ['pink','red','blue','black','green','orange'].map(c =>
+    picker.innerHTML = ['pink','red','blue','black','green','orange','gray'].map(c =>
       `<button type="button" class="edit-color-swatch ${c === currentColor ? 'active' : ''}" data-color="${c}" style="color:${COLOR_MAP[c]}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg></button>`
     ).join('');
     topEl.appendChild(picker);
