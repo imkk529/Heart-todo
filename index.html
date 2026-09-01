@@ -268,9 +268,9 @@
   }
   .day-cell:hover{ background:#fbeef1; }
   .day-cell.other-month{ opacity:.32; }
+  .day-cell.dow-sun .day-num{ color:#e0334f; }
+  .day-cell.dow-sat .day-num{ color:#3b6fe0; }
   .day-cell.is-today .day-num{ font-weight:700; color:var(--heart); }
-  .day-cell.is-holiday .day-num{ color:#e0334f; }
-  .day-cell.is-selected.is-holiday .day-num{ color:var(--ink); }
   .day-cell.is-selected{ background:var(--card-done-1); color:var(--ink); }
   .day-cell.is-selected .day-num{ color:var(--ink); }
   .day-dot{ font-size:8px; line-height:1; color:transparent; }
@@ -899,7 +899,8 @@
       const classes = [
         isOther ? 'other-month' : '',
         key === todayKey ? 'is-today' : '',
-        key === state.selectedKey ? 'is-selected' : ''
+        key === state.selectedKey ? 'is-selected' : '',
+        d.getDay() === 0 ? 'dow-sun' : d.getDay() === 6 ? 'dow-sat' : ''
       ].join(' ');
       const labelTexts = [
         ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
