@@ -1453,6 +1453,7 @@
       datePickInput.style.display = 'none';
       dayCount.style.display = 'none';
       dayHeading.textContent = '';
+      goalReminder.style.display = 'none';
       el('todoAddRow').style.display = 'none';
       weeklyPanelEl.style.display = 'none';
       calendarPanelEl.style.display = 'none';
@@ -1462,6 +1463,7 @@
       return;
     }
     todayPanel.classList.remove('memo-active');
+    goalReminder.style.display = '';
     el('todoAddRow').style.display = 'flex';
     weeklyPanelEl.style.display = '';
     calendarPanelEl.style.display = '';
