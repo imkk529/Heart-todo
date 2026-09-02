@@ -1694,6 +1694,16 @@
     }
   });
 
+  async function autoCheckHabitForBlueTodo(text, dateKeyStr){
+    const match = state.habits.find(h => h.name.trim().toLowerCase() === text.trim().toLowerCase());
+    if(!match) return;
+    if(!state.habitLogs[match.id]) state.habitLogs[match.id] = {};
+    if(!state.habitLogs[match.id][dateKeyStr]){
+      state.habitLogs[match.id][dateKeyStr] = true;
+      await persistHabitLogs();
+      if(state.mode === 'habit') renderHabitList();
+    }
+  }
   async function addTodoHandler(){
     if(state.mode === 'memo') return addMemoHandler();
     if(state.mode === 'habit') return addHabitHandler();
@@ -1707,6 +1717,7 @@
       await persistDay(key, todos);
       renderTodoList();
       renderCalendar();
+      if(selectedColor === 'blue') await autoCheckHabitForBlueTodo(text, key);
     } catch(err){
       console.error('add todo failed', err);
     }
