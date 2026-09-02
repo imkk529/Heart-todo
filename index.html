@@ -476,8 +476,14 @@
   .memo-columns.is-narrow{ gap:12px; }
   .memo-columns.is-narrow .todo-card[data-memo="1"]{ padding:18px 60px 18px 16px; min-height:70px; }
   .memo-col{ display:flex; flex-direction:column; gap:10px; min-width:0; }
-  .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:8px; }
-  .todo-card[data-memo="1"] .todo-text{ font-size:17px; line-height:1.6; }
+  .todo-card[data-memo="1"]{ padding:16px 54px 16px 14px; min-height:80px; border-radius:8px; cursor:grab; }
+  .todo-card[data-memo="1"].dragging{ opacity:.4; }
+  .todo-card[data-memo="1"] .todo-text{ font-size:14px; line-height:1.55; white-space:pre-wrap; word-break:break-word; }
+  .memo-edit-textarea{
+    width:100%; border:1px dashed var(--heart-soft); border-radius:4px; outline:none;
+    background:rgba(255,255,255,.6); resize:vertical; min-height:44px;
+    font-family:'Noto Sans KR',sans-serif; font-size:14px; line-height:1.55; color:var(--ink); padding:2px 4px;
+  }
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
 
@@ -1448,7 +1454,7 @@
     await setItem('memos', JSON.stringify(state.memos));
   }
   function renderMemoCard(m){
-    return `<div class="todo-card ${m.color === 'pink' ? 'memo-pink' : ''}" data-id="${m.id}" data-memo="1">
+    return `<div class="todo-card ${m.color === 'pink' ? 'memo-pink' : ''}" data-id="${m.id}" data-memo="1" draggable="true">
       <button class="edit-btn" data-action="edit-memo" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
       </button>
@@ -1465,8 +1471,8 @@
     </div>`;
   }
   function renderMemoList(){
-    const defaults = state.memos.filter(m => m.color !== 'pink').slice().reverse();
-    const pinks = state.memos.filter(m => m.color === 'pink').slice().reverse();
+    const defaults = state.memos.filter(m => m.color !== 'pink');
+    const pinks = state.memos.filter(m => m.color === 'pink');
     const isNarrow = window.innerWidth <= 680;
     const newBtnDefault = `<button type="button" class="memo-new-btn" data-action="new-default" aria-label="새 메모 추가">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -1494,14 +1500,14 @@
   async function addMemoHandler(){
     const text = todoInput.value.trim();
     if(!text) return;
-    state.memos.push({ id: genId(), text, createdAt: new Date().toISOString() });
+    state.memos.unshift({ id: genId(), text, createdAt: new Date().toISOString() });
     todoInput.value = '';
     await persistMemos();
     renderMemoList();
   }
   async function quickAddMemo(){
     const memo = { id: genId(), text: '', createdAt: new Date().toISOString() };
-    state.memos.push(memo);
+    state.memos.unshift(memo);
     await persistMemos();
     renderMemoList();
     const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
@@ -1509,7 +1515,7 @@
   }
   async function quickAddPinkMemo(){
     const memo = { id: genId(), text: '', color: 'pink', createdAt: new Date().toISOString() };
-    state.memos.push(memo);
+    state.memos.unshift(memo);
     await persistMemos();
     renderMemoList();
     const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
@@ -1533,33 +1539,30 @@
   function startEditMemo(id, cardEl){
     const m = state.memos.find(x => x.id === id);
     const textEl = cardEl.querySelector('.todo-text');
-    if(!m || !textEl || textEl.getAttribute('contenteditable') === 'true') return;
-    textEl.setAttribute('contenteditable', 'true');
-    textEl.focus();
-    const range = document.createRange();
-    range.selectNodeContents(textEl);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    const onKeydown = ev => {
-      if(ev.key === 'Enter'){ ev.preventDefault(); textEl.blur(); }
-      else if(ev.key === 'Escape'){ textEl.textContent = m.text; textEl.blur(); }
+    if(!m || !textEl || cardEl.querySelector('.memo-edit-textarea')) return;
+    const textarea = document.createElement('textarea');
+    textarea.className = 'memo-edit-textarea';
+    textarea.value = m.text;
+    textEl.replaceWith(textarea);
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+    let finished = false;
+    const finish = async () => {
+      if(finished) return;
+      finished = true;
+      const newText = textarea.value.trim();
+      if(newText) m.text = newText;
+      await persistMemos();
+      renderMemoList();
     };
-    const onBlur = async () => {
-      textEl.removeAttribute('contenteditable');
-      textEl.removeEventListener('keydown', onKeydown);
-      textEl.removeEventListener('blur', onBlur);
-      const newText = textEl.textContent.trim();
-      if(newText && newText !== m.text){
-        m.text = newText;
-        await persistMemos();
-        renderMemoList();
-      } else {
-        textEl.textContent = m.text;
-      }
+    const cancel = () => {
+      finished = true;
+      renderMemoList();
     };
-    textEl.addEventListener('keydown', onKeydown);
-    textEl.addEventListener('blur', onBlur);
+    textarea.addEventListener('blur', finish);
+    textarea.addEventListener('keydown', ev => {
+      if(ev.key === 'Escape'){ ev.preventDefault(); cancel(); }
+    });
   }
 
   // ---- habits ----
@@ -1679,6 +1682,43 @@
     nameEl.addEventListener('keydown', onKeydown);
     nameEl.addEventListener('blur', onBlur);
   }
+
+  // ---- memo drag-and-drop reordering ----
+  let dragMemoId = null;
+  todoList.addEventListener('dragstart', e => {
+    const card = e.target.closest('.todo-card[data-memo="1"]');
+    if(!card) return;
+    dragMemoId = card.dataset.id;
+    card.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  todoList.addEventListener('dragend', e => {
+    const card = e.target.closest('.todo-card[data-memo="1"]');
+    if(card) card.classList.remove('dragging');
+    dragMemoId = null;
+  });
+  todoList.addEventListener('dragover', e => {
+    const card = e.target.closest('.todo-card[data-memo="1"]');
+    if(!card || !dragMemoId || card.dataset.id === dragMemoId) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  });
+  todoList.addEventListener('drop', async e => {
+    const card = e.target.closest('.todo-card[data-memo="1"]');
+    if(!card || !dragMemoId || card.dataset.id === dragMemoId) return;
+    e.preventDefault();
+    const targetId = card.dataset.id;
+    const fromIdx = state.memos.findIndex(m => m.id === dragMemoId);
+    const toIdx = state.memos.findIndex(m => m.id === targetId);
+    if(fromIdx === -1 || toIdx === -1) return;
+    const [moved] = state.memos.splice(fromIdx, 1);
+    const newToIdx = state.memos.findIndex(m => m.id === targetId);
+    state.memos.splice(newToIdx, 0, moved);
+    dragMemoId = null;
+    await persistMemos();
+    renderMemoList();
+  });
+
   todoList.addEventListener('click', e => {
     const cell = e.target.closest('.habit-cell');
     if(cell){ toggleHabitDay(cell.dataset.habitId, cell.dataset.date); return; }
