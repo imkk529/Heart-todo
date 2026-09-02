@@ -413,6 +413,7 @@
   .goal-tab.active[data-cat="heart"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-tab.active[data-cat="personal"]{ background:#f8e5e1; color:var(--ink-soft); }
   .goal-tab.active[data-cat="work"]{ background:#e3f3e8; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="habit"]{ background:#e3ecf7; color:var(--ink-soft); }
   .goal-tab.active[data-cat="memo"]{ background:#fdf0d5; color:var(--ink-soft); }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; grid-area:reminder; }
   .goal-reminder:not(:empty){ margin-bottom:0; padding:9px 12px; border-radius:12px; background:#fdf3f7; }
@@ -447,6 +448,23 @@
   .todo-card.memo-pink{ background:linear-gradient(135deg,var(--card-done-1),var(--card-done-2)); }
   .memo-new-btn:active{ transform:scale(.96); }
   .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .habit-list{ display:flex; flex-direction:column; gap:14px; }
+  .habit-card{ background:var(--card); border-radius:12px; padding:14px; }
+  .habit-card-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .habit-color-dot{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
+  .habit-name{ font-size:14px; font-weight:700; color:var(--ink); }
+  .habit-streak{ font-size:12px; color:var(--ink-soft); margin-left:auto; }
+  .habit-delete-btn{
+    background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:16px;
+    line-height:1; padding:0 2px; flex:0 0 auto;
+  }
+  .habit-delete-btn:hover{ color:var(--heart); }
+  .habit-grid{ display:grid; grid-template-columns:repeat(14, 1fr); gap:4px; }
+  .habit-cell{
+    aspect-ratio:1/1; border-radius:3px; background:#e8e2e5; border:none; cursor:pointer; padding:0;
+  }
+  .habit-cell.is-today{ box-shadow:0 0 0 1.5px #9b9b9b; }
+  .habit-cell:hover{ opacity:.8; }
   .memo-new-btns-row{ display:flex; gap:8px; margin-bottom:10px; }
   .memo-columns.is-narrow{ gap:12px; }
   .memo-columns.is-narrow .todo-card[data-memo="1"]{ padding:18px 60px 18px 16px; min-height:70px; }
@@ -661,6 +679,7 @@
       </button>
       <button type="button" class="goal-tab" data-cat="personal">개인</button>
       <button type="button" class="goal-tab" data-cat="work">회사</button>
+      <button type="button" class="goal-tab" data-cat="habit">습관</button>
       <button type="button" class="goal-tab" data-cat="memo">메모</button>
     </div>
     <div class="title-row">
@@ -1013,6 +1032,8 @@
     goals: [],
     mode: 'heart',
     memos: [],
+    habits: [],
+    habitLogs: {},
     recurring: []
   };
 
@@ -1534,8 +1555,102 @@
     textEl.addEventListener('blur', onBlur);
   }
 
+  // ---- habits ----
+  const HABIT_COLORS = ['#ef5da8', '#e0334f', '#3b6fe0', '#2f9e44', '#e67e22', '#9b9b9b'];
+  async function loadHabits(){
+    const raw = await getItem('habits');
+    state.habits = raw ? JSON.parse(raw) : [];
+    const rawLogs = await getItem('habit-logs');
+    state.habitLogs = rawLogs ? JSON.parse(rawLogs) : {};
+  }
+  async function persistHabits(){
+    await setItem('habits', JSON.stringify(state.habits));
+  }
+  async function persistHabitLogs(){
+    await setItem('habit-logs', JSON.stringify(state.habitLogs));
+  }
+  function habitLast28Days(){
+    const days = [];
+    const today = new Date();
+    for(let i = 27; i >= 0; i--){
+      const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
+      days.push(dateKey(d));
+    }
+    return days;
+  }
+  function computeHabitStreak(habitId){
+    const log = state.habitLogs[habitId] || {};
+    let streak = 0;
+    const cursor = new Date();
+    while(log[dateKey(cursor)]){
+      streak++;
+      cursor.setDate(cursor.getDate() - 1);
+    }
+    return streak;
+  }
+  function renderHabitCard(h){
+    const days = habitLast28Days();
+    const log = state.habitLogs[h.id] || {};
+    const todayKeyStr = dateKey(new Date());
+    const streak = computeHabitStreak(h.id);
+    const cellsHtml = days.map(key => {
+      const done = !!log[key];
+      const isToday = key === todayKeyStr;
+      return `<button type="button" class="habit-cell ${done ? 'done' : ''} ${isToday ? 'is-today' : ''}" data-habit-id="${h.id}" data-date="${key}" style="${done ? `background:${h.color};` : ''}" aria-label="${key}"></button>`;
+    }).join('');
+    return `<div class="habit-card" data-id="${h.id}">
+      <div class="habit-card-head">
+        <span class="habit-color-dot" style="background:${h.color};"></span>
+        <span class="habit-name">${escapeHtml(h.name)}</span>
+        <span class="habit-streak">${streak > 0 ? `🔥${streak}` : ''}</span>
+        <button type="button" class="habit-delete-btn" data-action="delete-habit" aria-label="습관 삭제">×</button>
+      </div>
+      <div class="habit-grid">${cellsHtml}</div>
+    </div>`;
+  }
+  function renderHabitList(){
+    if(state.habits.length === 0){
+      todoList.innerHTML = `<div class="empty-state">아직 만든 습관이 없어요.<br>위에 적고 하트를 눌러 추가해보세요</div>`;
+      return;
+    }
+    todoList.innerHTML = `<div class="habit-list">${state.habits.map(renderHabitCard).join('')}</div>`;
+  }
+  async function addHabitHandler(){
+    const text = todoInput.value.trim();
+    if(!text) return;
+    const color = HABIT_COLORS[state.habits.length % HABIT_COLORS.length];
+    state.habits.push({ id: genId(), name: text, color, createdAt: new Date().toISOString() });
+    todoInput.value = '';
+    await persistHabits();
+    renderHabitList();
+  }
+  async function toggleHabitDay(habitId, dateStr){
+    if(!state.habitLogs[habitId]) state.habitLogs[habitId] = {};
+    if(state.habitLogs[habitId][dateStr]) delete state.habitLogs[habitId][dateStr];
+    else state.habitLogs[habitId][dateStr] = true;
+    await persistHabitLogs();
+    renderHabitList();
+  }
+  async function deleteHabit(habitId){
+    state.habits = state.habits.filter(h => h.id !== habitId);
+    delete state.habitLogs[habitId];
+    await persistHabits();
+    await persistHabitLogs();
+    renderHabitList();
+  }
+  todoList.addEventListener('click', e => {
+    const cell = e.target.closest('.habit-cell');
+    if(cell){ toggleHabitDay(cell.dataset.habitId, cell.dataset.date); return; }
+    if(e.target.closest('[data-action="delete-habit"]')){
+      const card = e.target.closest('.habit-card');
+      deleteHabit(card.dataset.id);
+      return;
+    }
+  });
+
   async function addTodoHandler(){
     if(state.mode === 'memo') return addMemoHandler();
+    if(state.mode === 'habit') return addHabitHandler();
     try{
       const text = todoInput.value.trim();
       if(!text) return;
@@ -1792,6 +1907,24 @@
       goalsPanelEl.style.display = 'none';
       recurPanelEl.style.display = 'none';
       renderMemoList();
+      return;
+    }
+    if(state.mode === 'habit'){
+      todayPanel.classList.add('memo-active');
+      colorRow.style.display = 'none';
+      datePickInput.style.display = 'none';
+      dayCount.style.display = 'none';
+      dayHeading.textContent = '';
+      todayDayHeading.style.marginBottom = '0';
+      goalReminder.style.display = 'none';
+      todoInput.placeholder = '습관 이름을 적어보세요';
+      el('todoAddRow').style.display = 'flex';
+      weeklyPanelEl.style.display = 'none';
+      statsPanelEl.style.display = 'none';
+      calendarPanelEl.style.display = 'none';
+      goalsPanelEl.style.display = 'none';
+      recurPanelEl.style.display = 'none';
+      renderHabitList();
       return;
     }
     todayPanel.classList.remove('memo-active');
@@ -2376,6 +2509,7 @@
     renderStats();
     loadGoals();
     loadMemos();
+    loadHabits();
   })();
 })();
 </script>
