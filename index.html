@@ -1556,7 +1556,7 @@
   }
 
   // ---- habits ----
-  const HABIT_COLORS = ['#ef5da8', '#e0334f', '#3b6fe0', '#2f9e44', '#e67e22', '#9b9b9b'];
+  const HABIT_COLOR = '#3b6fe0';
   async function loadHabits(){
     const raw = await getItem('habits');
     state.habits = raw ? JSON.parse(raw) : [];
@@ -1602,7 +1602,7 @@
       <div class="habit-card-head">
         <span class="habit-color-dot" style="background:${h.color};"></span>
         <span class="habit-name">${escapeHtml(h.name)}</span>
-        <span class="habit-streak">${streak > 0 ? `🔥${streak}` : ''}</span>
+        <span class="habit-streak">${streak > 0 ? `${streak}일 연속` : ''}</span>
         <button type="button" class="habit-delete-btn" data-action="delete-habit" aria-label="습관 삭제">×</button>
       </div>
       <div class="habit-grid">${cellsHtml}</div>
@@ -1618,7 +1618,7 @@
   async function addHabitHandler(){
     const text = todoInput.value.trim();
     if(!text) return;
-    const color = HABIT_COLORS[state.habits.length % HABIT_COLORS.length];
+    const color = HABIT_COLOR;
     state.habits.push({ id: genId(), name: text, color, createdAt: new Date().toISOString() });
     todoInput.value = '';
     await persistHabits();
