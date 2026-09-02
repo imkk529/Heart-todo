@@ -1742,7 +1742,24 @@
       goalList.innerHTML = `<div class="empty-state">${msg}<br>위에 적고 하트를 눌러 추가해보세요 🩷</div>`;
       return;
     }
-    goalList.innerHTML = filtered.map(renderGoalCard).join('');
+    const active = filtered.filter(g => !g.done);
+    const done = filtered.filter(g => g.done);
+    let html = '';
+    if(active.length === 0 && done.length > 0){
+      html += `<div class="empty-state" style="padding:14px 6px;">진행 중인 목표가 없어요.</div>`;
+    } else {
+      html += active.map(renderGoalCard).join('');
+    }
+    if(done.length > 0){
+      html += `<button type="button" class="archive-toggle-btn" data-action="toggle-goal-archive">
+        완료한 목표 (${done.length})
+        <svg class="archive-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="todo-archive-list" id="goalArchiveList" style="display:none;">
+        ${done.map(renderGoalCard).join('')}
+      </div>`;
+    }
+    goalList.innerHTML = html;
   }
 
   function renderGoalReminder(){
@@ -2053,17 +2070,7 @@
     if(!g) return;
     g.done = !g.done;
     await persistGoals();
-    renderGoalReminder();
-    if(cardEl){
-      cardEl.classList.toggle('done', g.done);
-      const heartBtn = cardEl.querySelector('.heart-btn');
-      const checkboxBtn = cardEl.querySelector('.checkbox');
-      [heartBtn, checkboxBtn].forEach(b => {
-        b.classList.remove('pop');
-        void b.offsetWidth;
-        b.classList.add('pop');
-      });
-    }
+    renderGoalList();
   }
 
   async function deleteGoal(id, cardEl){
@@ -2111,6 +2118,14 @@
   }
 
   goalList.addEventListener('click', e => {
+    if(e.target.closest('[data-action="toggle-goal-archive"]')){
+      const btn = e.target.closest('.archive-toggle-btn');
+      const list = document.getElementById('goalArchiveList');
+      const isHidden = list.style.display === 'none';
+      list.style.display = isHidden ? 'flex' : 'none';
+      btn.classList.toggle('is-open', isHidden);
+      return;
+    }
     const card = e.target.closest('.todo-card');
     if(!card) return;
     const id = card.dataset.id;
