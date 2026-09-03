@@ -333,6 +333,11 @@
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .day-cell.is-selected .day-orange-label{ color:#c9660f; }
+  .day-purple-label{
+    font-size:7.5px; line-height:1.1; color:#9b6bd1; font-weight:600;
+    max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .day-cell.is-selected .day-purple-label{ color:#6b3fa0; }
 
   /* ---------- Weekly ---------- */
   .weekly-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
@@ -1131,7 +1136,8 @@
       ].join(' ');
       const labelTexts = [
         ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
-        ...((idx && idx.orangeTexts) || []).map(t => ({ text: t, cls: 'day-orange-label' }))
+        ...((idx && idx.orangeTexts) || []).map(t => ({ text: t, cls: 'day-orange-label' })),
+        ...((idx && idx.purpleTexts) || []).map(t => ({ text: t, cls: 'day-purple-label' }))
       ];
       const indicator = labelTexts.length
         ? labelTexts.map(l => `<span class="${l.cls}">${escapeHtml(l.text)}</span>`).join('')
@@ -1411,10 +1417,12 @@
     else {
       const pinkItems = todos.filter(t => t.color === 'pink');
       const orangeItems = todos.filter(t => t.color === 'orange');
+      const purpleItems = todos.filter(t => t.color === 'purple');
       state.index[key] = {
         total: todos.length, done: todos.filter(t => t.done).length,
         pinkTexts: pinkItems.map(t => t.text),
-        orangeTexts: orangeItems.map(t => t.text)
+        orangeTexts: orangeItems.map(t => t.text),
+        purpleTexts: purpleItems.map(t => t.text)
       };
     }
     await setItem('todo-index', JSON.stringify(state.index));
