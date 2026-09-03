@@ -1122,12 +1122,20 @@
     monthLabel.textContent = `${state.viewYear}년 ${state.viewMonth+1}월`;
     const cells = buildCalendarDays(state.viewYear, state.viewMonth);
     const todayKey = dateKey(new Date());
+    const showPersonalLabels = state.mode !== 'work';
+    const showCompanyLabels = state.mode !== 'personal';
     calendarGrid.innerHTML = cells.map(d => {
       const key = dateKey(d);
       const isOther = d.getMonth() !== state.viewMonth;
       const idx = state.index[key];
+      let dotTotal = 0, dotDone = 0;
+      if(idx){
+        if(state.mode === 'work'){ dotTotal = idx.companyTotal || 0; dotDone = idx.companyDone || 0; }
+        else if(state.mode === 'personal'){ dotTotal = idx.personalTotal || 0; dotDone = idx.personalDone || 0; }
+        else { dotTotal = idx.total || 0; dotDone = idx.done || 0; }
+      }
       let dotClass = 'dot-none';
-      if(idx && idx.total > 0){ dotClass = idx.done >= idx.total ? 'dot-full' : 'dot-partial'; }
+      if(dotTotal > 0){ dotClass = dotDone >= dotTotal ? 'dot-full' : 'dot-partial'; }
       const classes = [
         isOther ? 'other-month' : '',
         key === todayKey ? 'is-today' : '',
@@ -1135,9 +1143,9 @@
         d.getDay() === 0 ? 'dow-sun' : d.getDay() === 6 ? 'dow-sat' : ''
       ].join(' ');
       const labelTexts = [
-        ...((idx && idx.pinkTexts) || []).map(t => ({ text: t, cls: 'day-pink-label' })),
-        ...((idx && idx.orangeTexts) || []).map(t => ({ text: t, cls: 'day-orange-label' })),
-        ...((idx && idx.purpleTexts) || []).map(t => ({ text: t, cls: 'day-purple-label' }))
+        ...(showPersonalLabels ? ((idx && idx.pinkTexts) || []) : []).map(t => ({ text: t, cls: 'day-pink-label' })),
+        ...(showCompanyLabels ? ((idx && idx.orangeTexts) || []) : []).map(t => ({ text: t, cls: 'day-orange-label' })),
+        ...(showCompanyLabels ? ((idx && idx.purpleTexts) || []) : []).map(t => ({ text: t, cls: 'day-purple-label' }))
       ];
       const indicator = labelTexts.length
         ? labelTexts.map(l => `<span class="${l.cls}">${escapeHtml(l.text)}</span>`).join('')
@@ -1418,8 +1426,12 @@
       const pinkItems = todos.filter(t => t.color === 'pink');
       const orangeItems = todos.filter(t => t.color === 'orange');
       const purpleItems = todos.filter(t => t.color === 'purple');
+      const companyItems = todos.filter(t => COMPANY_COLORS.includes(t.color));
+      const personalItems = todos.filter(t => !COMPANY_COLORS.includes(t.color));
       state.index[key] = {
         total: todos.length, done: todos.filter(t => t.done).length,
+        companyTotal: companyItems.length, companyDone: companyItems.filter(t => t.done).length,
+        personalTotal: personalItems.length, personalDone: personalItems.filter(t => t.done).length,
         pinkTexts: pinkItems.map(t => t.text),
         orangeTexts: orangeItems.map(t => t.text),
         purpleTexts: purpleItems.map(t => t.text)
@@ -2146,6 +2158,7 @@
     renderGoalList();
     renderTodoList();
     renderWeekly();
+    renderCalendar();
   });
 
   async function loadGoals(){
