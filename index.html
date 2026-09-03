@@ -234,7 +234,7 @@
   .recur-item-days{ font-size:11px; color:var(--ink-faint); }
   .recur-item .delete-btn{ position:static; opacity:.85; }
   @media (max-width:680px){
-    .day-cell{ min-height:40px; }
+    .day-cell{ min-height:48px; }
     .layout{
       grid-template-columns:1fr;
       grid-template-areas:
@@ -302,7 +302,7 @@
 
   .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
   .day-cell{
-    min-height:72px;
+    min-height:96px;
     background:none; border:none; cursor:pointer; position:relative;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
     gap:1px; border-radius:10px; padding:4px 2px;
@@ -324,17 +324,17 @@
   .day-cell.is-selected .day-dot.dot-partial,
   .day-cell.is-selected .day-dot.dot-full{ color:var(--heart); }
   .day-pink-label{
-    font-size:7.5px; line-height:1.1; color:#ef5da8; font-weight:600;
+    font-size:9px; line-height:1.15; color:#ef5da8; font-weight:600;
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .day-cell.is-selected .day-pink-label{ color:var(--heart); }
   .day-orange-label{
-    font-size:7.5px; line-height:1.1; color:#e67e22; font-weight:600;
+    font-size:9px; line-height:1.15; color:#e67e22; font-weight:600;
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .day-cell.is-selected .day-orange-label{ color:#c9660f; }
   .day-purple-label{
-    font-size:7.5px; line-height:1.1; color:#9b6bd1; font-weight:600;
+    font-size:9px; line-height:1.15; color:#9b6bd1; font-weight:600;
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .day-cell.is-selected .day-purple-label{ color:#6b3fa0; }
