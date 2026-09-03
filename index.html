@@ -957,6 +957,35 @@
   const profileResetBtn = el('profileResetBtn');
   const profileWrap = el('profileWrap'), profileImg = el('profileImg'), profilePlaceholder = el('profilePlaceholder'), fileInput = el('fileInput');
   const titleEl = el('titleEl');
+  const iconLinkEl = document.querySelector('link[rel="icon"]');
+  const appleIconLinkEl = document.querySelector('link[rel="apple-touch-icon"]');
+  const manifestLinkEl = document.querySelector('link[rel="manifest"]');
+  const DEFAULT_ICON_HREF = iconLinkEl ? iconLinkEl.href : '';
+  const DEFAULT_APPLE_HREF = appleIconLinkEl ? appleIconLinkEl.href : '';
+  const DEFAULT_MANIFEST_HREF = manifestLinkEl ? manifestLinkEl.href : '';
+  function updateAppIcon(dataUrl){
+    if(dataUrl){
+      if(iconLinkEl) iconLinkEl.href = dataUrl;
+      if(appleIconLinkEl) appleIconLinkEl.href = dataUrl;
+      if(manifestLinkEl){
+        const mimeMatch = dataUrl.match(/^data:(image\/[a-zA-Z0-9.+-]+);/);
+        const mime = mimeMatch ? mimeMatch[1] : 'image/png';
+        const manifest = {
+          name: '일정', short_name: '일정', start_url: '.', display: 'standalone',
+          background_color: '#fce4ee', theme_color: '#fce4ee',
+          icons: [
+            { src: dataUrl, sizes: '192x192', type: mime },
+            { src: dataUrl, sizes: '512x512', type: mime }
+          ]
+        };
+        manifestLinkEl.href = 'data:application/manifest+json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(manifest))));
+      }
+    } else {
+      if(iconLinkEl) iconLinkEl.href = DEFAULT_ICON_HREF;
+      if(appleIconLinkEl) appleIconLinkEl.href = DEFAULT_APPLE_HREF;
+      if(manifestLinkEl) manifestLinkEl.href = DEFAULT_MANIFEST_HREF;
+    }
+  }
   const searchOpenBtn = el('searchOpenBtn'), searchOverlay = el('searchOverlay'), searchInput = el('searchInput'), searchCloseBtn = el('searchCloseBtn'), searchResults = el('searchResults');
   const monthLabel = el('monthLabel'), calendarGrid = el('calendarGrid'), prevMonthBtn = el('prevMonthBtn'), nextMonthBtn = el('nextMonthBtn'), todayBtn = el('todayBtn');
   const dayHeading = el('dayHeading'), dayCount = el('dayCount'), todoInput = el('todoInput'), addBtn = el('addBtn'), todoList = el('todoList');
@@ -2526,6 +2555,7 @@
       profilePlaceholder.style.display = 'none';
       profileResetBtn.style.display = 'flex';
       await setItem('profile-image', reader.result);
+      updateAppIcon(reader.result);
     };
     reader.readAsDataURL(file);
   });
@@ -2536,6 +2566,7 @@
     profilePlaceholder.style.display = 'flex';
     profileResetBtn.style.display = 'none';
     await setItem('profile-image', '');
+    updateAppIcon(null);
   });
 
   // ---- background photo ----
@@ -2715,6 +2746,7 @@
       profileImg.style.display = 'block';
       profilePlaceholder.style.display = 'none';
       profileResetBtn.style.display = 'flex';
+      updateAppIcon(savedImage);
     }
     if(savedBg){ applyHeroBackground(savedBg); }
     state.index = savedIndex ? JSON.parse(savedIndex) : {};
