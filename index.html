@@ -579,6 +579,21 @@
   .todo-text{ font-size:14.5px; line-height:1.5; }
   .todo-card.done .todo-text{ text-decoration:line-through; opacity:.55; }
   .todo-text[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
+  .todo-notes-toggle{
+    display:flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer;
+    color:var(--ink-faint); font-size:11px; font-family:'Noto Sans KR',sans-serif;
+    padding:6px 0 0 26px; margin-top:2px;
+  }
+  .todo-notes-toggle svg{ width:12px; height:12px; flex:0 0 auto; }
+  .todo-notes-toggle.has-notes{ color:var(--ink-soft); font-weight:600; }
+  .todo-notes-toggle:hover{ color:var(--heart); }
+  .todo-notes-body{ padding:6px 0 0 26px; }
+  .todo-notes-input{
+    width:100%; min-height:56px; border:1px solid #e8e2e5; border-radius:8px;
+    padding:8px 10px; font-size:12.5px; font-family:'Noto Sans KR',sans-serif; color:var(--ink);
+    outline:none; resize:vertical; box-sizing:border-box;
+  }
+  .todo-notes-input:focus{ border-color:var(--heart-soft); }
   .goal-dday-badge{
     font-size:10.5px; font-weight:700; color:var(--heart); background:#fce4ee;
     padding:2px 8px; border-radius:999px; margin-left:auto;
@@ -1236,6 +1251,7 @@
 
   function renderTodoCard(t){
     const colorHex = COLOR_MAP[t.color] || COLOR_MAP.black;
+    const hasNotes = !!(t.notes && t.notes.trim());
     return `<div class="todo-card ${t.done ? 'done' : ''}" data-id="${t.id}">
       <button class="edit-btn" data-action="edit" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
@@ -1250,6 +1266,13 @@
       <div class="todo-body">
         <button type="button" class="checkbox" data-action="toggle" aria-label="완료 체크"><span class="check-icon">${CHECK_SVG}</span></button>
         <span class="todo-text" style="color:${colorHex}">${escapeHtml(t.text)}</span>
+      </div>
+      <button type="button" class="todo-notes-toggle ${hasNotes ? 'has-notes' : ''}" data-action="toggle-notes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        ${hasNotes ? '메모 보기' : '메모 추가 (회의 내용 등)'}
+      </button>
+      <div class="todo-notes-body" style="display:${hasNotes ? 'block' : 'none'};">
+        <textarea class="todo-notes-input" placeholder="회의 내용, 메모를 적어보세요">${escapeHtml(t.notes || '')}</textarea>
       </div>
     </div>`;
   }
@@ -1822,6 +1845,27 @@
     if(e.target.closest('[data-action="toggle"]')) toggleTodo(id, card);
     else if(e.target.closest('[data-action="delete"]')) deleteTodo(id, card);
     else if(e.target.closest('[data-action="edit"]')) startEditTodo(id, card);
+    else if(e.target.closest('[data-action="toggle-notes"]')){
+      const body = card.querySelector('.todo-notes-body');
+      const isHidden = body.style.display === 'none';
+      body.style.display = isHidden ? 'block' : 'none';
+      if(isHidden) body.querySelector('.todo-notes-input').focus();
+    }
+  });
+  todoList.addEventListener('focusout', async e => {
+    const input = e.target.closest('.todo-notes-input');
+    if(!input) return;
+    const card = input.closest('.todo-card');
+    const key = state.selectedKey;
+    const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+    const item = todos.find(t => t.id === card.dataset.id);
+    if(!item) return;
+    const newNotes = input.value.trim();
+    if(newNotes !== (item.notes || '')){
+      item.notes = newNotes;
+      await persistDay(key, todos);
+      renderTodoList();
+    }
   });
 
   function startEditTodo(id, cardEl){
