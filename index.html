@@ -415,6 +415,7 @@
   .goal-tab.active[data-cat="work"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-tab.active[data-cat="habit"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-tab.active[data-cat="memo"]{ background:#fce4ee; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="memo2"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; grid-area:reminder; }
   .goal-reminder:not(:empty){ margin-bottom:0; padding:9px 12px; border-radius:12px; background:#fdf3f7; }
   .goal-reminder.mode-work:not(:empty){ background:#f0f8f2; }
@@ -714,6 +715,7 @@
       <button type="button" class="goal-tab" data-cat="work">회사</button>
       <button type="button" class="goal-tab" data-cat="habit">습관</button>
       <button type="button" class="goal-tab" data-cat="memo">메모</button>
+      <button type="button" class="goal-tab" data-cat="memo2">메모2</button>
     </div>
     <div class="title-row">
       <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
@@ -1088,6 +1090,7 @@
     goals: [],
     mode: 'heart',
     memos: [],
+    memos2: [],
     habits: [],
     habitLogs: {},
     recurring: []
@@ -1500,9 +1503,21 @@
   async function loadMemos(){
     const raw = await getItem('memos');
     state.memos = raw ? JSON.parse(raw) : [];
+    const raw2 = await getItem('memos2');
+    state.memos2 = raw2 ? JSON.parse(raw2) : [];
   }
   async function persistMemos(){
     await setItem('memos', JSON.stringify(state.memos));
+  }
+  function activeMemos(){
+    return state.mode === 'memo2' ? state.memos2 : state.memos;
+  }
+  function setActiveMemos(arr){
+    if(state.mode === 'memo2') state.memos2 = arr;
+    else state.memos = arr;
+  }
+  async function persistActiveMemos(){
+    await setItem(state.mode === 'memo2' ? 'memos2' : 'memos', JSON.stringify(activeMemos()));
   }
   function renderMemoCard(m){
     return `<div class="todo-card ${m.color === 'pink' ? 'memo-pink' : ''}" data-id="${m.id}" data-memo="1" draggable="true">
@@ -1522,8 +1537,8 @@
     </div>`;
   }
   function renderMemoList(){
-    const defaults = state.memos.filter(m => m.color !== 'pink');
-    const pinks = state.memos.filter(m => m.color === 'pink');
+    const defaults = activeMemos().filter(m => m.color !== 'pink');
+    const pinks = activeMemos().filter(m => m.color === 'pink');
     const isNarrow = window.innerWidth <= 680;
     const newBtnDefault = `<button type="button" class="memo-new-btn" data-action="new-default" aria-label="새 메모 추가">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
@@ -1551,44 +1566,44 @@
   async function addMemoHandler(){
     const text = todoInput.value.trim();
     if(!text) return;
-    state.memos.unshift({ id: genId(), text, createdAt: new Date().toISOString() });
+    activeMemos().unshift({ id: genId(), text, createdAt: new Date().toISOString() });
     todoInput.value = '';
-    await persistMemos();
+    await persistActiveMemos();
     renderMemoList();
   }
   async function quickAddMemo(){
     const memo = { id: genId(), text: '', createdAt: new Date().toISOString() };
-    state.memos.unshift(memo);
-    await persistMemos();
+    activeMemos().unshift(memo);
+    await persistActiveMemos();
     renderMemoList();
     const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
     if(cardEl) startEditMemo(memo.id, cardEl);
   }
   async function quickAddPinkMemo(){
     const memo = { id: genId(), text: '', color: 'pink', createdAt: new Date().toISOString() };
-    state.memos.unshift(memo);
-    await persistMemos();
+    activeMemos().unshift(memo);
+    await persistActiveMemos();
     renderMemoList();
     const cardEl = todoList.querySelector(`[data-id="${memo.id}"]`);
     if(cardEl) startEditMemo(memo.id, cardEl);
   }
   let memoResizeTimer = null;
   window.addEventListener('resize', () => {
-    if(state.mode !== 'memo') return;
+    if(state.mode !== 'memo' && state.mode !== 'memo2') return;
     clearTimeout(memoResizeTimer);
     memoResizeTimer = setTimeout(renderMemoList, 150);
   });
   async function deleteMemo(id, cardEl){
     if(cardEl) cardEl.classList.add('removing');
     const finish = async () => {
-      state.memos = state.memos.filter(m => m.id !== id);
-      await persistMemos();
+      setActiveMemos(activeMemos().filter(m => m.id !== id));
+      await persistActiveMemos();
       renderMemoList();
     };
     if(cardEl){ setTimeout(finish, 180); } else { finish(); }
   }
   function startEditMemo(id, cardEl){
-    const m = state.memos.find(x => x.id === id);
+    const m = activeMemos().find(x => x.id === id);
     const textEl = cardEl.querySelector('.todo-text');
     if(!m || !textEl || cardEl.querySelector('.memo-edit-textarea')) return;
     const textarea = document.createElement('textarea');
@@ -1603,7 +1618,7 @@
       finished = true;
       const newText = textarea.value.trim();
       if(newText) m.text = newText;
-      await persistMemos();
+      await persistActiveMemos();
       renderMemoList();
     };
     const cancel = () => {
@@ -1759,14 +1774,15 @@
     if(!card || !dragMemoId || card.dataset.id === dragMemoId) return;
     e.preventDefault();
     const targetId = card.dataset.id;
-    const fromIdx = state.memos.findIndex(m => m.id === dragMemoId);
-    const toIdx = state.memos.findIndex(m => m.id === targetId);
+    const memos = activeMemos();
+    const fromIdx = memos.findIndex(m => m.id === dragMemoId);
+    const toIdx = memos.findIndex(m => m.id === targetId);
     if(fromIdx === -1 || toIdx === -1) return;
-    const [moved] = state.memos.splice(fromIdx, 1);
-    const newToIdx = state.memos.findIndex(m => m.id === targetId);
-    state.memos.splice(newToIdx, 0, moved);
+    const [moved] = memos.splice(fromIdx, 1);
+    const newToIdx = memos.findIndex(m => m.id === targetId);
+    memos.splice(newToIdx, 0, moved);
     dragMemoId = null;
-    await persistMemos();
+    await persistActiveMemos();
     renderMemoList();
   });
 
@@ -2060,7 +2076,7 @@
     state.mode = btn.dataset.cat;
     goalTabs.querySelectorAll('.goal-tab').forEach(b => b.classList.toggle('active', b === btn));
 
-    if(state.mode === 'memo'){
+    if(state.mode === 'memo' || state.mode === 'memo2'){
       todayPanel.classList.add('memo-active');
       colorRow.style.display = 'none';
       datePickInput.style.display = 'none';
@@ -2598,7 +2614,10 @@
         if(t.text.toLowerCase().includes(q)) todoMatches.push({ ...t, dateKey: key });
       });
     }
-    const memoMatches = state.memos.filter(m => m.text.toLowerCase().includes(q));
+    const memoMatches = [
+      ...state.memos.filter(m => m.text.toLowerCase().includes(q)).map(m => ({ ...m, _tab: 'memo' })),
+      ...state.memos2.filter(m => m.text.toLowerCase().includes(q)).map(m => ({ ...m, _tab: 'memo2' }))
+    ];
     const goalMatches = state.goals.filter(g => g.text.toLowerCase().includes(q));
 
     if(todoMatches.length === 0 && memoMatches.length === 0 && goalMatches.length === 0){
@@ -2616,9 +2635,9 @@
     }
     if(memoMatches.length){
       html += `<div class="search-result-group-label">메모 (${memoMatches.length})</div>`;
-      html += memoMatches.map(m => `<button type="button" class="search-result-item" data-type="memo" data-id="${m.id}">
+      html += memoMatches.map(m => `<button type="button" class="search-result-item" data-type="memo" data-id="${m.id}" data-tab="${m._tab}">
         <span class="search-result-text">${escapeHtml(m.text)}</span>
-        <span class="search-result-meta">${formatTimestamp(m.createdAt)}</span>
+        <span class="search-result-meta">${m._tab === 'memo2' ? '메모2 · ' : ''}${formatTimestamp(m.createdAt)}</span>
       </button>`).join('');
     }
     if(goalMatches.length){
@@ -2647,7 +2666,8 @@
       selectDate(item.dataset.key);
       todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if(type === 'memo'){
-      goalTabs.querySelector('.goal-tab[data-cat="memo"]').click();
+      const tab = item.dataset.tab === 'memo2' ? 'memo2' : 'memo';
+      goalTabs.querySelector(`.goal-tab[data-cat="${tab}"]`).click();
       todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } else if(type === 'goal'){
       const cat = item.dataset.cat === 'work' ? 'work' : 'heart';
