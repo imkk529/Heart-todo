@@ -576,8 +576,13 @@
   .todo-card.done .checkbox{ background:var(--heart); border-color:var(--heart); }
   .todo-card.done .checkbox .check-icon{ opacity:1; transform:scale(1); }
   .checkbox.pop{ animation:pop .35s ease; }
-  .todo-text{ font-size:14.5px; line-height:1.5; }
+  .todo-text{ font-size:14.5px; line-height:1.5; white-space:pre-wrap; word-break:break-word; }
   .todo-card.done .todo-text{ text-decoration:line-through; opacity:.55; }
+  .todo-edit-textarea{
+    width:100%; border:none; outline:1px dashed var(--heart-soft); border-radius:4px;
+    padding:1px 4px; margin:-1px -4px; background:transparent; resize:vertical;
+    font-family:'Noto Sans KR',sans-serif; min-height:22px;
+  }
   .todo-text[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
   .todo-notes-toggle{
     display:flex; align-items:center; gap:5px; background:none; border:none; cursor:pointer;
@@ -910,6 +915,24 @@
   const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, orange:4, green:5, gray:6 };
   const COMPANY_COLORS = ['green', 'orange', 'gray'];
   let selectedColor = 'black';
+  document.addEventListener('input', e => {
+    const el = e.target;
+    const isTextInput = el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && (el.type === 'text' || el.type === 'password'));
+    if(!isTextInput) return;
+    const pos = el.selectionStart;
+    if(pos == null) return;
+    const value = el.value;
+    const before = value.slice(0, pos);
+    if(before.endsWith('->')){
+      const newBefore = before.slice(0, -2) + '→';
+      el.value = newBefore + value.slice(pos);
+      el.setSelectionRange(newBefore.length, newBefore.length);
+    } else if(before.endsWith('=>')){
+      const newBefore = before.slice(0, -2) + '⇒';
+      el.value = newBefore + value.slice(pos);
+      el.setSelectionRange(newBefore.length, newBefore.length);
+    }
+  });
   let todoArchiveOpen = false;
   let goalArchiveOpen = false;
 
@@ -1875,7 +1898,7 @@
     const textEl = cardEl.querySelector('.todo-text');
     const topEl = cardEl.querySelector('.todo-top');
     const timestampEl = topEl.querySelector('.timestamp');
-    if(!item || !textEl || textEl.getAttribute('contenteditable') === 'true') return;
+    if(!item || !textEl || cardEl.querySelector('.todo-edit-textarea')) return;
 
     let currentColor = item.color || 'black';
     timestampEl.style.display = 'none';
@@ -1886,49 +1909,47 @@
       `<button type="button" class="edit-color-swatch ${c === currentColor ? 'active' : ''}" data-color="${c}" style="color:${COLOR_MAP[c]}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg></button>`
     ).join('');
     topEl.appendChild(picker);
+
+    const textarea = document.createElement('textarea');
+    textarea.className = 'todo-text todo-edit-textarea';
+    textarea.value = item.text;
+    textarea.style.color = COLOR_MAP[currentColor];
+    textEl.replaceWith(textarea);
+    textarea.focus();
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+
     picker.querySelectorAll('.edit-color-swatch').forEach(btn => {
       btn.addEventListener('mousedown', ev => ev.preventDefault());
       btn.addEventListener('click', () => {
         currentColor = btn.dataset.color;
-        textEl.style.color = COLOR_MAP[currentColor];
+        textarea.style.color = COLOR_MAP[currentColor];
         picker.querySelectorAll('.edit-color-swatch').forEach(b => b.classList.toggle('active', b === btn));
       });
     });
 
-    textEl.setAttribute('contenteditable', 'true');
-    textEl.focus();
-    const range = document.createRange();
-    range.selectNodeContents(textEl);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-
-    const onKeydown = ev => {
-      if(ev.key === 'Enter'){ ev.preventDefault(); textEl.blur(); }
-      else if(ev.key === 'Escape'){ textEl.textContent = item.text; textEl.style.color = COLOR_MAP[item.color] || COLOR_MAP.black; textEl.blur(); }
-    };
-    const onBlur = async () => {
-      textEl.removeAttribute('contenteditable');
-      textEl.removeEventListener('keydown', onKeydown);
-      textEl.removeEventListener('blur', onBlur);
-      picker.remove();
-      timestampEl.style.display = '';
-      const newText = textEl.textContent.trim();
+    let finished = false;
+    const finish = async () => {
+      if(finished) return;
+      finished = true;
+      const newText = textarea.value.trim();
       const textChanged = !!newText && newText !== item.text;
       const colorChanged = currentColor !== (item.color || 'black');
       if(textChanged) item.text = newText;
       if(colorChanged) item.color = currentColor;
       if(textChanged || colorChanged){
         await persistDay(key, todos.slice());
-        renderTodoList();
         renderCalendar();
-      } else {
-        textEl.textContent = item.text;
-        textEl.style.color = COLOR_MAP[item.color] || COLOR_MAP.black;
       }
+      renderTodoList();
     };
-    textEl.addEventListener('keydown', onKeydown);
-    textEl.addEventListener('blur', onBlur);
+    const cancel = () => {
+      finished = true;
+      renderTodoList();
+    };
+    textarea.addEventListener('blur', finish);
+    textarea.addEventListener('keydown', ev => {
+      if(ev.key === 'Escape'){ ev.preventDefault(); cancel(); }
+    });
   }
 
   // ---- long-term goals ----
