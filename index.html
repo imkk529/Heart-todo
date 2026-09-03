@@ -475,7 +475,10 @@
   .habit-grid{ display:grid; grid-template-columns:repeat(14, 16px); gap:3px; }
   .habit-cell{
     width:16px; height:16px; border-radius:3px; background:#e8e2e5; border:none; cursor:pointer; padding:0;
+    display:flex; align-items:center; justify-content:center;
   }
+  .habit-cell.done{ background:none; }
+  .habit-cell svg{ width:100%; height:100%; }
   .habit-cell.is-today{ box-shadow:0 0 0 1.5px #9b9b9b; }
   .habit-cell:hover{ opacity:.8; }
   .memo-new-btns-row{ display:flex; gap:8px; margin-bottom:10px; }
@@ -1652,7 +1655,7 @@
   }
 
   // ---- habits ----
-  const HABIT_COLOR = '#3b6fe0';
+  const HABIT_COLOR = '#fce4ee';
   async function loadHabits(){
     const raw = await getItem('habits');
     state.habits = raw ? JSON.parse(raw) : [];
@@ -1692,7 +1695,8 @@
     const cellsHtml = days.map(key => {
       const done = !!log[key];
       const isToday = key === todayKeyStr;
-      return `<button type="button" class="habit-cell ${done ? 'done' : ''} ${isToday ? 'is-today' : ''}" data-habit-id="${h.id}" data-date="${key}" style="${done ? `background:${h.color};` : ''}" aria-label="${key}"></button>`;
+      const heartIcon = done ? `<svg viewBox="0 0 24 24" fill="#fce4ee" stroke="#ef5da8" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>` : '';
+      return `<button type="button" class="habit-cell ${done ? 'done' : ''} ${isToday ? 'is-today' : ''}" data-habit-id="${h.id}" data-date="${key}" aria-label="${key}">${heartIcon}</button>`;
     }).join('');
     return `<div class="habit-card" data-id="${h.id}">
       <div class="habit-card-head">
