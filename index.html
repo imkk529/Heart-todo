@@ -461,7 +461,6 @@
   .habit-card-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .habit-color-dot{ width:10px; height:10px; border-radius:50%; flex:0 0 auto; }
   .habit-name{ font-size:14px; font-weight:700; color:var(--ink); }
-  .habit-streak{ font-size:12px; color:var(--ink-soft); margin-left:auto; }
   .habit-delete-btn{
     background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:16px;
     line-height:1; padding:0 2px; flex:0 0 auto;
@@ -469,11 +468,20 @@
   .habit-delete-btn:hover{ color:var(--heart); }
   .habit-edit-btn{
     background:none; border:none; color:var(--ink-faint); cursor:pointer; padding:0 2px; flex:0 0 auto;
-    display:flex; align-items:center; justify-content:center;
+    display:flex; align-items:center; justify-content:center; margin-left:auto;
   }
   .habit-edit-btn svg{ width:13px; height:13px; }
   .habit-edit-btn:hover{ color:var(--ink-soft); }
   .habit-name[contenteditable="true"]{ outline:1px dashed var(--heart-soft); border-radius:4px; padding:1px 4px; margin:-1px -4px; }
+  .habit-segment{ margin-bottom:12px; }
+  .habit-segment:last-child{ margin-bottom:0; }
+  .habit-segment-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+  .habit-created{ font-size:11px; color:var(--ink-faint); }
+  .habit-segment-delete-btn{
+    background:none; border:none; color:var(--ink-faint); cursor:pointer; font-size:13px;
+    line-height:1; padding:0 2px; flex:0 0 auto;
+  }
+  .habit-segment-delete-btn:hover{ color:var(--heart); }
   .habit-grid{ display:grid; grid-template-columns:repeat(14, 16px); gap:3px; }
   .habit-cell{
     width:16px; height:16px; border-radius:3px; background:#e8e2e5; border:none; cursor:pointer; padding:0;
@@ -481,6 +489,10 @@
   }
   .habit-cell.done{ background:none; }
   .habit-cell svg{ width:100%; height:100%; }
+  .habit-cell-day{
+    font-size:8px; line-height:1; font-weight:600; color:var(--ink-soft); opacity:.7;
+    font-family:'Noto Sans KR', sans-serif; pointer-events:none; user-select:none;
+  }
   .habit-cell.is-today{ box-shadow:0 0 0 1.5px #9b9b9b; }
   .habit-cell:hover{ opacity:.8; }
   .memo-new-btns-row{ display:flex; gap:8px; margin-bottom:10px; }
@@ -1699,12 +1711,14 @@
   async function persistHabitLogs(){
     await setItem('habit-logs', JSON.stringify(state.habitLogs));
   }
-  function habitLast28Days(){
+  function habitMonthDays(h){
+    const base = h.createdAt ? new Date(h.createdAt) : new Date();
+    const year = base.getFullYear();
+    const month = base.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
     const days = [];
-    const today = new Date();
-    for(let i = 27; i >= 0; i--){
-      const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() - i);
-      days.push(dateKey(d));
+    for(let i = 1; i <= daysInMonth; i++){
+      days.push(dateKey(new Date(year, month, i)));
     }
     return days;
   }
@@ -1718,28 +1732,58 @@
     }
     return streak;
   }
-  function renderHabitCard(h){
-    const days = habitLast28Days();
+  function groupHabits(){
+    const map = new Map();
+    const order = [];
+    state.habits.forEach(h => {
+      const key = h.name.trim().toLowerCase();
+      if(!map.has(key)){ map.set(key, []); order.push(key); }
+      map.get(key).push(h);
+    });
+    return order.map(key => ({ key, members: map.get(key) }));
+  }
+  function renderHabitSegment(h, showDelete){
+    const days = habitMonthDays(h);
     const log = state.habitLogs[h.id] || {};
     const todayKeyStr = dateKey(new Date());
     const streak = computeHabitStreak(h.id);
-    const cellsHtml = days.map(key => {
+    const cellsHtml = days.map((key, idx) => {
       const done = !!log[key];
       const isToday = key === todayKeyStr;
-      const heartIcon = done ? `<svg viewBox="0 0 24 24" fill="#fce4ee" stroke="#ef5da8" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>` : '';
-      return `<button type="button" class="habit-cell ${done ? 'done' : ''} ${isToday ? 'is-today' : ''}" data-habit-id="${h.id}" data-date="${key}" aria-label="${key}">${heartIcon}</button>`;
+      const dayNum = idx + 1;
+      const cellContent = done
+        ? `<svg viewBox="0 0 24 24" fill="#fce4ee" stroke="#ef5da8" stroke-width="1.5"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>`
+        : `<span class="habit-cell-day">${dayNum}</span>`;
+      return `<button type="button" class="habit-cell ${done ? 'done' : ''} ${isToday ? 'is-today' : ''}" data-habit-id="${h.id}" data-date="${key}" aria-label="${key}">${cellContent}</button>`;
     }).join('');
-    return `<div class="habit-card" data-id="${h.id}">
+    const created = h.createdAt ? new Date(h.createdAt) : null;
+    const createdLabel = created ? `${created.getFullYear()}년 ${created.getMonth()+1}월 ${created.getDate()}일 시작` : '';
+    const totalCount = Object.values(log).filter(Boolean).length;
+    const streakLabel = streak > 0 ? ` · ${streak}일 연속` : '';
+    const totalLabel = ` · 총 ${totalCount}개`;
+    return `<div class="habit-segment" data-habit-id="${h.id}">
+      <div class="habit-segment-head">
+        <span class="habit-created">${createdLabel}${streakLabel}${totalLabel}</span>
+        ${showDelete ? `<button type="button" class="habit-segment-delete-btn" data-action="delete-habit" data-habit-id="${h.id}" aria-label="이 기록 삭제">×</button>` : ''}
+      </div>
+      <div class="habit-grid">${cellsHtml}</div>
+    </div>`;
+  }
+  function renderHabitCard(group){
+    const { key, members } = group;
+    const first = members[0];
+    const multi = members.length > 1;
+    const segmentsHtml = members.map(h => renderHabitSegment(h, multi)).join('');
+    return `<div class="habit-card" data-group="${escapeHtml(key)}">
       <div class="habit-card-head">
-        <span class="habit-color-dot" style="background:${h.color};"></span>
-        <span class="habit-name">${escapeHtml(h.name)}</span>
-        <span class="habit-streak">${streak > 0 ? `${streak}일 연속` : ''}</span>
+        <span class="habit-color-dot" style="background:${first.color};"></span>
+        <span class="habit-name">${escapeHtml(first.name)}</span>
         <button type="button" class="habit-edit-btn" data-action="edit-habit" aria-label="습관 이름 수정">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
         </button>
-        <button type="button" class="habit-delete-btn" data-action="delete-habit" aria-label="습관 삭제">×</button>
+        ${!multi ? `<button type="button" class="habit-delete-btn" data-action="delete-habit" data-habit-id="${first.id}" aria-label="습관 삭제">×</button>` : ''}
       </div>
-      <div class="habit-grid">${cellsHtml}</div>
+      ${segmentsHtml}
     </div>`;
   }
   function renderHabitList(){
@@ -1747,7 +1791,7 @@
       todoList.innerHTML = `<div class="empty-state">아직 만든 습관이 없어요.<br>위에 적고 하트를 눌러 추가해보세요</div>`;
       return;
     }
-    todoList.innerHTML = `<div class="habit-list">${state.habits.map(renderHabitCard).join('')}</div>`;
+    todoList.innerHTML = `<div class="habit-list">${groupHabits().map(renderHabitCard).join('')}</div>`;
   }
   async function addHabitHandler(){
     const text = todoInput.value.trim();
@@ -1772,10 +1816,11 @@
     await persistHabitLogs();
     renderHabitList();
   }
-  function startEditHabitName(habitId, cardEl){
-    const h = state.habits.find(x => x.id === habitId);
+  function startEditHabitName(groupKey, cardEl){
+    const members = state.habits.filter(x => x.name.trim().toLowerCase() === groupKey);
     const nameEl = cardEl.querySelector('.habit-name');
-    if(!h || !nameEl || nameEl.getAttribute('contenteditable') === 'true') return;
+    if(!members.length || !nameEl || nameEl.getAttribute('contenteditable') === 'true') return;
+    const originalName = members[0].name;
     nameEl.setAttribute('contenteditable', 'true');
     nameEl.focus();
     const range = document.createRange();
@@ -1785,19 +1830,19 @@
     sel.addRange(range);
     const onKeydown = ev => {
       if(ev.key === 'Enter'){ ev.preventDefault(); nameEl.blur(); }
-      else if(ev.key === 'Escape'){ nameEl.textContent = h.name; nameEl.blur(); }
+      else if(ev.key === 'Escape'){ nameEl.textContent = originalName; nameEl.blur(); }
     };
     const onBlur = async () => {
       nameEl.removeAttribute('contenteditable');
       nameEl.removeEventListener('keydown', onKeydown);
       nameEl.removeEventListener('blur', onBlur);
       const newName = nameEl.textContent.trim();
-      if(newName && newName !== h.name){
-        h.name = newName;
+      if(newName && newName.toLowerCase() !== groupKey){
+        members.forEach(h => { h.name = newName; });
         await persistHabits();
         renderHabitList();
       } else {
-        nameEl.textContent = h.name;
+        nameEl.textContent = originalName;
       }
     };
     nameEl.addEventListener('keydown', onKeydown);
@@ -1844,14 +1889,14 @@
   todoList.addEventListener('click', e => {
     const cell = e.target.closest('.habit-cell');
     if(cell){ toggleHabitDay(cell.dataset.habitId, cell.dataset.date); return; }
-    if(e.target.closest('[data-action="delete-habit"]')){
-      const card = e.target.closest('.habit-card');
-      deleteHabit(card.dataset.id);
+    const delBtn = e.target.closest('[data-action="delete-habit"]');
+    if(delBtn){
+      deleteHabit(delBtn.dataset.habitId);
       return;
     }
     if(e.target.closest('[data-action="edit-habit"]')){
       const card = e.target.closest('.habit-card');
-      startEditHabitName(card.dataset.id, card);
+      startEditHabitName(card.dataset.group, card);
       return;
     }
   });
