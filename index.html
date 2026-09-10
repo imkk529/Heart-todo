@@ -1464,6 +1464,31 @@
     renderTodoList();
   }
 
+  async function migrateIndexIfNeeded(){
+    const keys = Object.keys(state.index);
+    const needsMigration = keys.some(k => state.index[k] && state.index[k].companyTotal === undefined);
+    if(!needsMigration) return false;
+    for(const key of keys){
+      const todos = await ensureLoaded(key);
+      if(todos.length === 0){ delete state.index[key]; continue; }
+      const pinkItems = todos.filter(t => t.color === 'pink');
+      const orangeItems = todos.filter(t => t.color === 'orange');
+      const purpleItems = todos.filter(t => t.color === 'purple');
+      const companyItems = todos.filter(t => COMPANY_COLORS.includes(t.color));
+      const personalItems = todos.filter(t => !COMPANY_COLORS.includes(t.color));
+      state.index[key] = {
+        total: todos.length, done: todos.filter(t => t.done).length,
+        companyTotal: companyItems.length, companyDone: companyItems.filter(t => t.done).length,
+        personalTotal: personalItems.length, personalDone: personalItems.filter(t => t.done).length,
+        pinkTexts: pinkItems.map(t => t.text),
+        orangeTexts: orangeItems.map(t => t.text),
+        purpleTexts: purpleItems.map(t => t.text)
+      };
+    }
+    await setItem('todo-index', JSON.stringify(state.index));
+    return true;
+  }
+
   async function persistDay(key, todos){
     state.todosCache[key] = todos;
     await setItem('todos:' + key, JSON.stringify(todos));
@@ -2796,6 +2821,7 @@
     if(savedBg){ applyHeroBackground(savedBg); }
     state.index = savedIndex ? JSON.parse(savedIndex) : {};
     await loadRecurring();
+    await migrateIndexIfNeeded();
     renderCalendar();
     loadDay(state.selectedKey);
     renderWeekly();
