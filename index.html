@@ -183,6 +183,9 @@
   .tips summary::before{ content:'▶ '; color:var(--ink-soft); font-size:11px; }
   .tips[open] summary::before{ content:'▼ '; }
   .tips p{ font-size:13px; color:var(--ink-soft); margin:6px 2px 0 14px; line-height:1.7; max-width:300px; }
+  .tips-item-wide[open]{ flex-basis:100%; }
+  .tips-item-wide p{ max-width:none; white-space:nowrap; }
+  .guide-line{ display:block; }
   .backup-btn{
     margin-top:6px; margin-right:6px;
     background:#fbeef1; color:var(--heart); border:none; border-radius:999px;
@@ -340,6 +343,36 @@
     max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
   .day-cell.is-selected .day-purple-label{ color:#6b3fa0; }
+  .day-urgent-label{
+    font-size:9px; line-height:1.15; color:#2b2b2b; font-weight:700;
+    max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    border-radius:3px; padding:0 3px;
+  }
+  .day-urgentred-label{
+    font-size:9px; line-height:1.15; color:#e0334f; font-weight:700;
+    max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    border-radius:3px; padding:0 3px;
+  }
+  .day-urgentblue-label{
+    font-size:9px; line-height:1.15; color:#3b6fe0; font-weight:700;
+    max-width:92%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    border-radius:3px; padding:0 3px;
+  }
+  .day-pink-label, .day-orange-label, .day-purple-label, .day-urgent-label, .day-urgentred-label, .day-urgentblue-label{ cursor:grab; }
+  .day-pink-label.dragging, .day-orange-label.dragging, .day-purple-label.dragging, .day-urgent-label.dragging, .day-urgentred-label.dragging, .day-urgentblue-label.dragging{ opacity:.35; }
+  .day-urgent-label.label-join-prev, .day-urgentred-label.label-join-prev, .day-urgentblue-label.label-join-prev,
+  .day-urgent-label.label-join-next, .day-urgentred-label.label-join-next, .day-urgentblue-label.label-join-next{
+    align-self:stretch; width:auto; max-width:none; box-sizing:border-box; text-align:center;
+  }
+  .day-urgent-label.label-join-prev, .day-urgentred-label.label-join-prev, .day-urgentblue-label.label-join-prev{
+    border-top-left-radius:0; border-bottom-left-radius:0;
+    margin-left:-3px;
+  }
+  .day-urgent-label.label-join-next, .day-urgentred-label.label-join-next, .day-urgentblue-label.label-join-next{
+    border-top-right-radius:0; border-bottom-right-radius:0;
+    margin-right:-3px;
+  }
+  .day-cell.drag-over{ outline:2px dashed var(--heart); outline-offset:-2px; background:#fff0f5; }
 
   /* ---------- Weekly ---------- */
   .weekly-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:12px; }
@@ -378,7 +411,7 @@
   .stats-streak-num{ font-size:18px; color:var(--heart); }
   .stats-color-row{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
   .stats-color-dot{ width:9px; height:9px; border-radius:50%; flex:0 0 auto; }
-  .stats-color-label{ font-size:12.5px; color:var(--ink-soft); width:32px; flex:0 0 auto; }
+  .stats-color-label{ font-size:12.5px; color:var(--ink-soft); min-width:32px; flex:0 0 auto; white-space:nowrap; }
   .stats-color-bar{ flex:1; height:8px; border-radius:4px; background:#e8e2e5; overflow:hidden; }
   .stats-color-fill{ height:100%; border-radius:4px; transition:width .3s ease; }
   .stats-color-pct{ font-size:11px; color:var(--ink-faint); flex:0 0 auto; white-space:nowrap; }
@@ -423,6 +456,7 @@
   .goal-tab.active[data-cat="habit"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-tab.active[data-cat="memo"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-tab.active[data-cat="memo2"]{ background:#fce4ee; color:var(--ink-soft); }
+  .goal-tab.active[data-cat="drawing"]{ background:#fce4ee; color:var(--ink-soft); }
   .goal-reminder{ display:flex; flex-direction:column; gap:4px; grid-area:reminder; }
   .goal-reminder:not(:empty){ margin-bottom:0; padding:9px 12px; border-radius:12px; background:#fdf3f7; }
   .goal-reminder.mode-work:not(:empty){ background:#f0f8f2; }
@@ -456,6 +490,28 @@
   .todo-card.memo-pink{ background:#fce4ee; }
   .memo-new-btn:active{ transform:scale(.96); }
   .memo-columns{ display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
+  .drawing-date-group{ margin-bottom:18px; }
+  .drawing-date-toggle{
+    display:flex; align-items:center; gap:6px; width:100%; margin:0 0 8px;
+    background:none; border:none; cursor:pointer; padding:2px; text-align:left;
+  }
+  .drawing-date-toggle .archive-chevron{ width:14px; height:14px; flex:0 0 14px; transition:transform .2s ease; color:var(--ink-faint); }
+  .drawing-date-toggle.is-collapsed .archive-chevron{ transform:rotate(-90deg); }
+  .drawing-date-heading{ font-size:13px; font-weight:700; color:var(--ink-soft); margin:0; }
+  .drawing-date-items.is-collapsed{ display:none; }
+  .drawing-record-card{ background:var(--card); border-radius:12px; padding:12px 14px; margin-bottom:8px; }
+  .drawing-record-top{ display:flex; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px; }
+  .drawing-record-number{ font-size:13.5px; font-weight:700; color:var(--ink); background:#fce4ee; border-radius:6px; padding:2px 8px; }
+  .drawing-record-text{ font-size:12.5px; color:var(--ink-soft); }
+  .drawing-record-assignee{ font-size:11.5px; color:var(--ink-faint); margin-left:auto; }
+  .drawing-record-fields{ display:flex; flex-wrap:wrap; gap:10px; }
+  .drawing-record-field{ display:flex; flex-direction:column; gap:3px; font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; flex:1 1 120px; min-width:100px; }
+  .drawing-record-field-wide{ flex:2 1 200px; }
+  .drawing-record-input{
+    border:1.5px solid #e4dfe3; border-radius:7px; padding:6px 9px; font-size:12.5px;
+    font-family:'Noto Sans KR',sans-serif; color:var(--ink); outline:none; background:#fff;
+  }
+  .drawing-record-input:focus{ border-color:var(--heart-soft); }
   .habit-list{ display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
   .habit-card{ background:var(--card); border-radius:12px; padding:14px; }
   .habit-card-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
@@ -510,17 +566,21 @@
   .todo-card[data-memo="1"] .timestamp{ font-size:12.5px; }
   .day-count{ font-size:12px; color:var(--ink-soft); }
 
-  .color-row{ display:flex; align-items:center; gap:9px; margin-bottom:10px; }
+  .color-row{ display:flex; align-items:center; gap:9px; margin-bottom:10px; flex-wrap:wrap; }
   .color-row-label{ font-size:12px; color:var(--ink-faint); margin-right:2px; }
   .color-swatch{
     width:26px; height:26px; border-radius:50%; border:none; background:none; cursor:pointer; padding:4px;
     display:flex; align-items:center; justify-content:center;
+    box-sizing:border-box;
+    flex:0 0 26px;
     box-shadow:0 0 0 2px transparent;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .color-swatch svg{ width:100%; height:100%; }
+  .color-swatch svg{ width:100%; height:100%; flex:0 0 auto; }
   .color-swatch:hover{ transform:scale(1.1); }
   .color-swatch.active{ box-shadow:0 0 0 2px var(--ink-faint); }
+  .color-swatch.is-urgent-swatch{ background:#fff3a0; }
+  .color-swatch.is-urgent-swatch.active{ box-shadow:0 0 0 2px #e6c84a; }
 
   .add-row{ display:flex; align-items:center; gap:8px; margin-bottom:16px; }
   .add-row input{
@@ -547,6 +607,7 @@
     padding:12px 68px 12px 14px;
     transition:background .35s ease;
   }
+  .todo-card.todo-card-urgent{ background:#fff3a0; }
   .todo-card.done{ background:#fce4ee; }
   .todo-card.removing{ opacity:0; transform:scale(.92); transition:opacity .18s ease, transform .18s ease; }
 
@@ -622,6 +683,108 @@
     outline:none; resize:vertical; box-sizing:border-box;
   }
   .todo-notes-input:focus{ border-color:var(--heart-soft); }
+  .todo-assignee-row{
+    display:flex; align-items:center; gap:5px; padding:4px 0 0 26px;
+  }
+  .todo-assignee-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
+  .todo-assignee-input{
+    width:100%; max-width:140px; border:none; outline:none; background:transparent;
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    padding:2px 4px; border-radius:4px;
+  }
+  .todo-assignee-input::placeholder{ color:var(--ink-faint); }
+  .todo-assignee-input:focus{ background:#fbeef1; }
+  .todo-receive-row{
+    display:flex; align-items:center; gap:5px; padding:2px 0 0 26px;
+  }
+  .todo-receive-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
+  .todo-receive-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+  .todo-receive-input{
+    border:none; outline:none; background:transparent;
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    padding:2px 4px; border-radius:4px; max-width:124px;
+  }
+  .todo-receive-input:focus{ background:#fbeef1; }
+  .todo-vendor-row{
+    display:flex; align-items:center; gap:5px; padding:2px 0 0 26px;
+  }
+  .todo-vendor-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
+  .todo-vendor-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+  .todo-vendor-input{
+    border:none; outline:none; background:transparent; flex:1 1 100px;
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    padding:2px 4px; border-radius:4px; max-width:140px;
+  }
+  .todo-vendor-input::placeholder{ color:var(--ink-faint); }
+  .todo-vendor-input:focus{ background:#fbeef1; }
+  .todo-po-row{
+    display:flex; align-items:center; gap:5px; padding:2px 0 0 26px;
+  }
+  .todo-po-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
+  .todo-po-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+  .todo-po-input{
+    border:none; outline:none; background:transparent; flex:1 1 100px;
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    padding:2px 4px; border-radius:4px; max-width:140px;
+  }
+  .todo-po-input::placeholder{ color:var(--ink-faint); }
+  .todo-po-input:focus{ background:#fbeef1; }
+  .todo-drawing-row{
+    display:flex; align-items:center; gap:5px; padding:2px 0 0 26px;
+  }
+  .todo-drawing-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
+  .todo-drawing-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+  .todo-drawing-chips{
+    display:flex; align-items:center; flex-wrap:wrap; gap:4px; padding:3px 0 0 26px;
+  }
+  .drawing-chip{
+    display:inline-flex; align-items:center; gap:3px; background:#f3f0f2; color:var(--ink-soft);
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; border-radius:999px; padding:2px 4px 2px 9px;
+    line-height:1.4;
+  }
+  .drawing-chip-remove{
+    background:none; border:none; cursor:pointer; color:var(--ink-faint); font-size:12px;
+    line-height:1; padding:2px 4px; border-radius:50%;
+  }
+  .drawing-chip-remove:hover{ color:var(--heart); background:#fce4ee; }
+  .todo-drawing-input{
+    border:none; outline:none; background:transparent; flex:1 1 90px; min-width:90px;
+    font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
+    padding:2px 4px; border-radius:4px;
+  }
+  .todo-drawing-input::placeholder{ color:var(--ink-faint); }
+  .todo-highlight-row{
+    display:flex; align-items:center; gap:6px; padding:4px 0 0 26px;
+  }
+  .todo-highlight-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
+  .highlight-swatch{
+    width:15px; height:15px; border-radius:50%; border:1.5px solid transparent; cursor:pointer; padding:0;
+  }
+  .highlight-swatch.is-active{ border-color:var(--ink-soft); }
+  .recur-highlight-row{ padding:0; margin-bottom:10px; }
+  .recur-highlight-row .todo-highlight-label{ color:var(--ink-soft); }
+  .todo-drawing-input:focus{ background:#fbeef1; }
+  .todo-card-urgent .todo-assignee-icon,
+  .todo-card-urgent .todo-receive-icon,
+  .todo-card-urgent .todo-receive-label,
+  .todo-card-urgent .todo-vendor-icon,
+  .todo-card-urgent .todo-vendor-label,
+  .todo-card-urgent .todo-po-icon,
+  .todo-card-urgent .todo-po-label,
+  .todo-card-urgent .todo-drawing-icon,
+  .todo-card-urgent .todo-drawing-label,
+  .todo-card-urgent .todo-highlight-label{ color:#2b2b2b; }
+  .todo-card-urgent .todo-assignee-input,
+  .todo-card-urgent .todo-receive-input,
+  .todo-card-urgent .todo-vendor-input,
+  .todo-card-urgent .todo-po-input,
+  .todo-card-urgent .todo-drawing-input{ color:#2b2b2b; }
+  .todo-card-urgent .todo-assignee-input::placeholder,
+  .todo-card-urgent .todo-receive-input::placeholder,
+  .todo-card-urgent .todo-vendor-input::placeholder,
+  .todo-card-urgent .todo-po-input::placeholder,
+  .todo-card-urgent .todo-drawing-input::placeholder{ color:#6b6672; }
+  .todo-card-urgent .drawing-chip{ color:#2b2b2b; background:rgba(255,255,255,.55); }
   .goal-dday-badge{
     font-size:10.5px; font-weight:700; color:var(--heart); background:#fce4ee;
     padding:2px 8px; border-radius:999px; margin-left:auto;
@@ -665,15 +828,18 @@
     color:var(--heart); display:flex; align-items:center; justify-content:center; padding:0;
   }
   .goal-subtask-add-btn svg{ width:100%; height:100%; }
-  .edit-color-row{ display:flex; align-items:center; gap:6px; margin-left:auto; }
+  .edit-color-row{ display:flex; align-items:center; gap:6px; margin-left:auto; flex-wrap:wrap; }
   .edit-color-swatch{
     width:18px; height:18px; border:none; background:none; padding:1px; border-radius:50%;
-    cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 auto;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; flex:0 0 18px;
+    box-sizing:border-box;
     box-shadow:0 0 0 2px transparent; transition:box-shadow .15s ease, transform .15s ease;
   }
   .edit-color-swatch svg{ width:100%; height:100%; }
   .edit-color-swatch:hover{ transform:scale(1.1); }
   .edit-color-swatch.active{ box-shadow:0 0 0 2px var(--ink-faint); }
+  .edit-color-swatch.is-urgent-swatch{ background:#fff3a0; }
+  .edit-color-swatch.is-urgent-swatch.active{ background:#fff3a0; box-shadow:0 0 0 2px #e6c84a; }
 
   .archive-toggle-btn{
     display:flex; align-items:center; gap:6px; width:100%; margin-top:8px;
@@ -738,6 +904,7 @@
       <button type="button" class="goal-tab" data-cat="habit">습관</button>
       <button type="button" class="goal-tab" data-cat="memo">메모</button>
       <button type="button" class="goal-tab" data-cat="memo2">메모2</button>
+      <button type="button" class="goal-tab" data-cat="drawing">도면번호 정리</button>
     </div>
     <div class="title-row">
       <h1 class="title" id="titleEl" contenteditable="true" spellcheck="false">일정</h1>
@@ -765,17 +932,20 @@
           <button type="button" id="ghTokenClearBtn" class="backup-btn">연결 해제</button>
         </p>
       </details>
-      <details class="tips-item">
+      <details class="tips-item tips-item-wide">
         <summary>색상 가이드</summary>
-        <p>
-          <strong style="color:#ef5da8">핑크</strong> 진짜 중요한 약속<br>
-          <strong style="color:#e0334f">빨강</strong> 오늘·올해 가장 중요한 일 / 목표·커리어·버킷리스트 관련 / 급하지 않아도 중요한 일<br>
-          <strong style="color:#3b6fe0">파랑</strong> 매일 가져갈 습관 (운동, 독서, 일기, 명상 등) — 목표와 직접 관련 없어도 놓치면 안 되는 것들<br>
-          <strong style="color:#2b2b2b">검정</strong> 빨강·파랑 제외 나머지 / 가장 덜 중요한 일 / 내일로 미뤄도 괜찮은 일 (설거지, 빨래, 관공서 방문 등)<br>
-          <strong style="color:#2f9e44">초록</strong> 회사 업무<br>
-          <strong style="color:#e67e22">주황</strong> 회사 마감일 체크용<br>
-          <strong style="color:#9b9b9b">회색</strong> 회사 서브업무<br>
-          <strong style="color:#9b6bd1">보라</strong> 가공물 도착일
+        <p id="colorGuideBody">
+          <span class="guide-line" data-color="pink"><strong style="color:#ef5da8">핑크</strong> 진짜 중요한 약속</span>
+          <span class="guide-line" data-color="red"><strong style="color:#e0334f">빨강</strong> 오늘·올해 가장 중요한 일 / 목표·커리어·버킷리스트 관련 / 급하지 않아도 중요한 일</span>
+          <span class="guide-line" data-color="blue"><strong style="color:#3b6fe0">파랑</strong> 매일 가져갈 습관 (운동, 독서, 일기, 명상 등) — 목표와 직접 관련 없어도 놓치면 안 되는 것들</span>
+          <span class="guide-line" data-color="black"><strong style="color:#2b2b2b">검정</strong> 빨강·파랑 제외 나머지 / 가장 덜 중요한 일 / 내일로 미뤄도 괜찮은 일 (설거지, 빨래, 관공서 방문 등)</span>
+          <span class="guide-line" data-color="green"><strong style="color:#2f9e44">초록</strong> 회사 사무 업무 (구매요청서, 연구비카드, 지출결의서 등)</span>
+          <span class="guide-line" data-color="gray"><strong style="color:#9b9b9b">회색</strong> 회사 업무 (도서, 상품권 싸인 등 협력 관련 요청)</span>
+          <span class="guide-line" data-color="purple"><strong style="color:#9b6bd1">보라</strong> 회의 일정</span>
+          <span class="guide-line" data-color="urgent"><strong style="color:#2b2b2b;background:#fff3a0;padding:0 3px;border-radius:3px;">도면</strong> 도면 관련 일정</span>
+          <span class="guide-line" data-color="urgentRed"><strong style="color:#e0334f;background:#fff3a0;padding:0 3px;border-radius:3px;">도면 출도일</strong> 도면 출도일</span>
+          <span class="guide-line" data-color="urgentBlue"><strong style="color:#3b6fe0;background:#fff3a0;padding:0 3px;border-radius:3px;">가공물 수령일</strong> 가공물 수령일</span>
+          <span class="guide-line" data-color="urgent" style="color:var(--ink-faint);font-size:11px;">도면/도면 출도일/가공물 수령일의 하이라이트 색은 항목마다 빨·주·노·초·파·남·보 중 골라 바꿀 수 있어요 (각 항목 카드 하단)</span>
         </p>
       </details>
     </div>
@@ -801,10 +971,12 @@
         <button type="button" class="color-swatch" data-color="red" style="color:#e0334f" aria-label="빨강" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="blue" style="color:#3b6fe0" aria-label="파랑" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch active" data-color="black" style="color:#2b2b2b" aria-label="검정" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" title="회사 업무" aria-label="초록 (업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="orange" style="color:#e67e22" title="회사 마감일" aria-label="주황 (마감일)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="gray" style="color:#9b9b9b" title="회사 서브업무" aria-label="회색 (서브업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="purple" style="color:#9b6bd1" title="가공물 도착일" aria-label="보라 (도착일)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" title="회사 사무 업무" aria-label="초록 (사무 업무)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="gray" style="color:#9b9b9b" title="회사 업무 (협력 요청)" aria-label="회색 (협력 요청)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="purple" style="color:#9b6bd1" title="회의 일정" aria-label="보라 (회의 일정)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgent" style="color:#2b2b2b" title="도면" aria-label="도면 (검정 + 노랑 하이라이트)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgentRed" style="color:#e0334f" title="도면 출도일" aria-label="도면 출도일 (빨강 + 노랑 하이라이트)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgentBlue" style="color:#3b6fe0" title="가공물 수령일" aria-label="가공물 수령일 (파랑 + 노랑 하이라이트)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
       </div>
       <div class="add-row" id="todoAddRow">
         <input type="text" id="todoInput" placeholder="오늘 할 일을 적어보세요" maxlength="120">
@@ -899,9 +1071,14 @@
         <button type="button" class="color-swatch" data-color="blue" style="color:#3b6fe0" aria-label="파랑" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch active" data-color="black" style="color:#2b2b2b" aria-label="검정" aria-pressed="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="green" style="color:#2f9e44" aria-label="초록" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="orange" style="color:#e67e22" aria-label="주황" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
         <button type="button" class="color-swatch" data-color="gray" style="color:#9b9b9b" aria-label="회색" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
-        <button type="button" class="color-swatch" data-color="purple" style="color:#9b6bd1" aria-label="보라" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch" data-color="purple" style="color:#9b6bd1" aria-label="보라 (회의 일정)" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgent" style="color:#2b2b2b" aria-label="도면" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgentRed" style="color:#e0334f" aria-label="도면 출도일" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+        <button type="button" class="color-swatch is-urgent-swatch" data-color="urgentBlue" style="color:#3b6fe0" aria-label="가공물 수령일" aria-pressed="false"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></button>
+      </div>
+      <div class="todo-highlight-row recur-highlight-row" id="recurHighlightRow" style="display:none;">
+        <span class="todo-highlight-label">하이라이트</span>
       </div>
       <div class="recur-weekday-row" id="recurWeekdayRow">
         <button type="button" class="recur-weekday-btn recur-daily-btn" id="recurDailyBtn">매일</button>
@@ -938,9 +1115,26 @@
   const HEART_PATH = 'M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z';
   const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
   const WEEKDAYS = ['일','월','화','수','목','금','토'];
-  const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', orange:'#e67e22', gray:'#9b9b9b', purple:'#9b6bd1' };
-  const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, orange:4, green:5, purple:6, gray:7 };
-  const COMPANY_COLORS = ['green', 'orange', 'gray', 'purple'];
+  const COLOR_MAP = { black:'#2b2b2b', red:'#e0334f', blue:'#3b6fe0', pink:'#ef5da8', green:'#2f9e44', gray:'#9b9b9b', purple:'#9b6bd1', urgent:'#2b2b2b', urgentRed:'#e0334f', urgentBlue:'#3b6fe0' };
+  const COLOR_ORDER = { pink:0, red:1, blue:2, black:3, green:5, purple:6, gray:7, urgent:8, urgentRed:9, urgentBlue:10 };
+  const COMPANY_COLORS = ['green', 'gray', 'purple', 'urgent', 'urgentRed', 'urgentBlue'];
+  const URGENT_HIGHLIGHT = '#fff3a0';
+  const URGENT_COLORS = ['urgent', 'urgentRed', 'urgentBlue'];
+  const HIGHLIGHT_COLORS = {
+    red:    { bg:'#ffd3d3', selected:'#ff9e9e' },
+    orange: { bg:'#ffdfb0', selected:'#ffc166' },
+    yellow: { bg:'#fff3a0', selected:'#ffe066' },
+    green:  { bg:'#d2f0c4', selected:'#a3e08c' },
+    blue:   { bg:'#cfe3fb', selected:'#a2c8f7' },
+    navy:   { bg:'#d3d1f6', selected:'#aaa5ec' },
+    purple: { bg:'#ecd6f5', selected:'#dcaaf0' }
+  };
+  const HIGHLIGHT_ORDER = ['red', 'orange', 'yellow', 'green', 'blue', 'navy', 'purple'];
+  const HIGHLIGHT_LABELS = { red:'빨강', orange:'주황', yellow:'노랑', green:'초록', blue:'파랑', navy:'남색', purple:'보라' };
+  function highlightBg(t, selected){
+    const hc = HIGHLIGHT_COLORS[t && t.highlightColor] || HIGHLIGHT_COLORS.yellow;
+    return selected ? hc.selected : hc.bg;
+  }
   let selectedColor = 'black';
   document.addEventListener('input', e => {
     const el = e.target;
@@ -962,6 +1156,7 @@
   });
   let todoArchiveOpen = false;
   let goalArchiveOpen = false;
+  let drawingCollapsedDates = new Set();
 
   const el = id => document.getElementById(id);
   const hero = document.querySelector('.hero');
@@ -1005,6 +1200,7 @@
   const datePickInput = el('datePickInput');
   const goalInput = el('goalInput'), goalAddBtn = el('goalAddBtn'), goalList = el('goalList');
   const recurColorRow = el('recurColorRow'), recurWeekdayRow = el('recurWeekdayRow'), recurDailyBtn = el('recurDailyBtn');
+  const recurHighlightRow = el('recurHighlightRow');
   const recurStartDate = el('recurStartDate'), recurEndDate = el('recurEndDate'), recurNoEnd = el('recurNoEnd');
   const recurInput = el('recurInput'), recurAddBtn = el('recurAddBtn'), recurList = el('recurList');
   const goalReminder = el('goalReminder');
@@ -1016,6 +1212,7 @@
   const goalsPanelEl = document.querySelector('.goals-panel');
   const recurPanelEl = document.querySelector('.recur-panel');
   const colorRow = el('colorRow');
+  const colorGuideBody = el('colorGuideBody');
   const weeklyGrid = el('weeklyGrid'), weeklyRange = el('weeklyRange');
   const weeklyReflect = el('weeklyReflect');
 
@@ -1164,13 +1361,16 @@
     return cells;
   }
 
+  const JOIN_LABEL_CLASSES = ['day-urgent-label', 'day-urgentred-label', 'day-urgentblue-label'];
+
   function renderCalendar(){
     monthLabel.textContent = `${state.viewYear}년 ${state.viewMonth+1}월`;
     const cells = buildCalendarDays(state.viewYear, state.viewMonth);
     const todayKey = dateKey(new Date());
     const showPersonalLabels = state.mode !== 'work';
     const showCompanyLabels = state.mode !== 'personal';
-    calendarGrid.innerHTML = cells.map(d => {
+
+    const dayInfos = cells.map(d => {
       const key = dateKey(d);
       const isOther = d.getMonth() !== state.viewMonth;
       const idx = state.index[key];
@@ -1189,12 +1389,32 @@
         d.getDay() === 0 ? 'dow-sun' : d.getDay() === 6 ? 'dow-sat' : ''
       ].join(' ');
       const labelTexts = [
-        ...(showPersonalLabels ? ((idx && idx.pinkTexts) || []) : []).map(t => ({ text: t, cls: 'day-pink-label' })),
-        ...(showCompanyLabels ? ((idx && idx.orangeTexts) || []) : []).map(t => ({ text: t, cls: 'day-orange-label' })),
-        ...(showCompanyLabels ? ((idx && idx.purpleTexts) || []) : []).map(t => ({ text: t, cls: 'day-purple-label' }))
+        ...(showPersonalLabels ? ((idx && idx.pinkTexts) || []) : []).map(t => ({ id: t.id, text: t.text, cls: 'day-pink-label', recurringId: t.recurringId || null })),
+        ...(showCompanyLabels ? ((idx && idx.purpleTexts) || []) : []).map(t => ({ id: t.id, text: t.text, cls: 'day-purple-label', recurringId: t.recurringId || null })),
+        ...(showCompanyLabels ? ((idx && idx.urgentTexts) || []) : []).map(t => ({ id: t.id, text: t.text, cls: 'day-urgent-label', recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        ...(showCompanyLabels ? ((idx && idx.urgentRedTexts) || []) : []).map(t => ({ id: t.id, text: t.text, cls: 'day-urgentred-label', recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        ...(showCompanyLabels ? ((idx && idx.urgentBlueTexts) || []) : []).map(t => ({ id: t.id, text: t.text, cls: 'day-urgentblue-label', recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' }))
       ];
+      return { d, key, dotClass, classes, labelTexts, isSelected: key === state.selectedKey };
+    });
+
+    calendarGrid.innerHTML = dayInfos.map((info, i) => {
+      const { d, key, dotClass, classes, labelTexts, isSelected } = info;
+      const col = i % 7;
+      const prevInfo = col > 0 ? dayInfos[i-1] : null;
+      const nextInfo = col < 6 ? dayInfos[i+1] : null;
       const indicator = labelTexts.length
-        ? labelTexts.map(l => `<span class="${l.cls}">${escapeHtml(l.text)}</span>`).join('')
+        ? labelTexts.map(l => {
+            let joinCls = '';
+            if(JOIN_LABEL_CLASSES.includes(l.cls) && l.recurringId){
+              const joinsPrev = prevInfo && prevInfo.labelTexts.some(o => o.cls === l.cls && o.recurringId === l.recurringId);
+              const joinsNext = nextInfo && nextInfo.labelTexts.some(o => o.cls === l.cls && o.recurringId === l.recurringId);
+              if(joinsPrev) joinCls += ' label-join-prev';
+              if(joinsNext) joinCls += ' label-join-next';
+            }
+            const bgStyle = JOIN_LABEL_CLASSES.includes(l.cls) ? ` style="background:${highlightBg(l, isSelected)}"` : '';
+            return `<span class="${l.cls}${joinCls}" draggable="true" data-todo-id="${l.id}" data-source-key="${key}"${bgStyle}>${escapeHtml(l.text)}</span>`;
+          }).join('')
         : `<span class="day-dot ${dotClass}">♥</span>`;
       return `<button type="button" class="day-cell ${classes}" data-key="${key}">
         <span class="day-num">${d.getDate()}</span>
@@ -1223,12 +1443,52 @@
     todayPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  const COLOR_LABELS = { pink:'핑크', red:'빨강', blue:'파랑', black:'검정', green:'초록', orange:'주황', gray:'회색' };
+  // ---- calendar label drag-and-drop (move a todo to another date) ----
+  let dragTodoId = null, dragSourceKey = null;
+  calendarGrid.addEventListener('dragstart', e => {
+    const label = e.target.closest('[data-todo-id]');
+    if(!label) return;
+    dragTodoId = label.dataset.todoId;
+    dragSourceKey = label.dataset.sourceKey;
+    label.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  calendarGrid.addEventListener('dragend', e => {
+    const label = e.target.closest('[data-todo-id]');
+    if(label) label.classList.remove('dragging');
+    dragTodoId = null;
+    dragSourceKey = null;
+    calendarGrid.querySelectorAll('.day-cell.drag-over').forEach(c => c.classList.remove('drag-over'));
+  });
+  calendarGrid.addEventListener('dragover', e => {
+    const cell = e.target.closest('.day-cell');
+    if(!cell || !dragTodoId || cell.dataset.key === dragSourceKey) return;
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    cell.classList.add('drag-over');
+  });
+  calendarGrid.addEventListener('dragleave', e => {
+    const cell = e.target.closest('.day-cell');
+    if(cell) cell.classList.remove('drag-over');
+  });
+  calendarGrid.addEventListener('drop', async e => {
+    const cell = e.target.closest('.day-cell');
+    if(!cell || !dragTodoId || cell.dataset.key === dragSourceKey) return;
+    e.preventDefault();
+    cell.classList.remove('drag-over');
+    const targetKey = cell.dataset.key;
+    const todoId = dragTodoId, sourceKey = dragSourceKey;
+    dragTodoId = null;
+    dragSourceKey = null;
+    await moveTodoToDate(sourceKey, todoId, targetKey);
+  });
+
+  const COLOR_LABELS = { pink:'핑크', red:'빨강', blue:'파랑', black:'검정', green:'초록', gray:'회색', purple:'보라', urgent:'도면', urgentRed:'도면 출도일', urgentBlue:'가공물 수령일' };
   async function computeMonthlyStats(){
     const year = state.viewYear, month = state.viewMonth;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const colorTotals = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0 };
-    const colorDones = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0 };
+    const colorTotals = { pink:0, red:0, blue:0, black:0, green:0, gray:0, purple:0, urgent:0, urgentRed:0, urgentBlue:0 };
+    const colorDones = { pink:0, red:0, blue:0, black:0, green:0, gray:0, purple:0, urgent:0, urgentRed:0, urgentBlue:0 };
     for(let d = 1; d <= daysInMonth; d++){
       const key = `${year}-${pad(month + 1)}-${pad(d)}`;
       const todos = await ensureLoaded(key);
@@ -1341,7 +1601,10 @@
   function renderTodoCard(t){
     const colorHex = COLOR_MAP[t.color] || COLOR_MAP.black;
     const hasNotes = !!(t.notes && t.notes.trim());
-    return `<div class="todo-card ${t.done ? 'done' : ''}" data-id="${t.id}">
+    const isCompanyItem = COMPANY_COLORS.includes(t.color);
+    const isUrgentItem = URGENT_COLORS.includes(t.color);
+    const cardStyle = isUrgentItem ? ` style="background:${highlightBg(t, false)}"` : '';
+    return `<div class="todo-card ${t.done ? 'done' : ''} ${isUrgentItem ? 'todo-card-urgent' : ''}" data-id="${t.id}"${cardStyle}>
       <button class="edit-btn" data-action="edit" aria-label="수정">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
       </button>
@@ -1356,6 +1619,37 @@
         <button type="button" class="checkbox" data-action="toggle" aria-label="완료 체크"><span class="check-icon">${CHECK_SVG}</span></button>
         <span class="todo-text" style="color:${colorHex}">${escapeHtml(t.text)}</span>
       </div>
+      ${isCompanyItem ? `<div class="todo-assignee-row">
+        <svg class="todo-assignee-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <input type="text" class="todo-assignee-input" placeholder="담당자" value="${escapeHtml(t.assignee || '')}" maxlength="20">
+      </div>` : ''}
+      ${isUrgentItem ? `<div class="todo-receive-row">
+        <svg class="todo-receive-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="todo-receive-label">가공물 수령일</span>
+        <input type="date" class="todo-receive-input" value="${escapeHtml(t.receiveDate || '')}">
+      </div>` : ''}
+      ${isUrgentItem ? `<div class="todo-vendor-row">
+        <svg class="todo-vendor-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6"/></svg>
+        <span class="todo-vendor-label">업체 이름</span>
+        <input type="text" class="todo-vendor-input" placeholder="업체 이름 입력" value="${escapeHtml(t.vendorName || '')}" maxlength="30">
+      </div>` : ''}
+      ${isUrgentItem ? `<div class="todo-po-row">
+        <svg class="todo-po-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="todo-po-label">발주서 번호</span>
+        <input type="text" class="todo-po-input" placeholder="발주서 번호 입력" value="${escapeHtml(t.poNumber || '')}" maxlength="30">
+      </div>` : ''}
+      ${isUrgentItem ? `<div class="todo-drawing-row">
+        <svg class="todo-drawing-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span class="todo-drawing-label">도면 번호</span>
+      </div>
+      <div class="todo-drawing-chips">
+        ${(t.drawingNumbers || []).map((dn, idx) => `<span class="drawing-chip">${escapeHtml(typeof dn === 'string' ? dn : ((dn && dn.number) || ''))}<button type="button" class="drawing-chip-remove" data-action="remove-drawing" data-index="${idx}" aria-label="도면 번호 삭제">×</button></span>`).join('')}
+        <input type="text" class="todo-drawing-input" placeholder="도면 번호 입력 후 Enter" maxlength="30">
+      </div>` : ''}
+      ${isUrgentItem ? `<div class="todo-highlight-row">
+        <span class="todo-highlight-label">하이라이트</span>
+        ${HIGHLIGHT_ORDER.map(hc => `<button type="button" class="highlight-swatch ${(t.highlightColor || 'yellow') === hc ? 'is-active' : ''}" data-action="set-highlight" data-highlight="${hc}" style="background:${HIGHLIGHT_COLORS[hc].bg}" aria-label="${HIGHLIGHT_LABELS[hc]} 하이라이트" title="${HIGHLIGHT_LABELS[hc]}"></button>`).join('')}
+      </div>` : ''}
       <button type="button" class="todo-notes-toggle ${hasNotes ? 'has-notes' : ''}" data-action="toggle-notes">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
         ${hasNotes ? '메모 보기' : '메모 추가 (회의 내용 등)'}
@@ -1444,7 +1738,7 @@
       if(key < t.startDate) return;
       if(t.endDate && key > t.endDate) return;
       if(todos.some(x => x.recurringId === t.id)) return;
-      todos.push({ id: genId(), text: t.text, done:false, color: t.color, recurringId: t.id, createdAt: new Date(y, m-1, d, 9, 0, 0).toISOString() });
+      todos.push({ id: genId(), text: t.text, done:false, color: t.color, recurringId: t.id, highlightColor: t.highlightColor || 'yellow', createdAt: new Date(y, m-1, d, 9, 0, 0).toISOString() });
       changed = true;
     });
 
@@ -1466,23 +1760,30 @@
 
   async function migrateIndexIfNeeded(){
     const keys = Object.keys(state.index);
-    const needsMigration = keys.some(k => state.index[k] && state.index[k].companyTotal === undefined);
+    const needsMigration = keys.some(k => state.index[k] && (state.index[k].companyTotal === undefined || state.index[k].labelV2 === undefined || state.index[k].labelV3 === undefined || state.index[k].labelV4 === undefined));
     if(!needsMigration) return false;
     for(const key of keys){
       const todos = await ensureLoaded(key);
       if(todos.length === 0){ delete state.index[key]; continue; }
       const pinkItems = todos.filter(t => t.color === 'pink');
-      const orangeItems = todos.filter(t => t.color === 'orange');
       const purpleItems = todos.filter(t => t.color === 'purple');
+      const urgentItems = todos.filter(t => t.color === 'urgent');
+      const urgentRedItems = todos.filter(t => t.color === 'urgentRed');
+      const urgentBlueItems = todos.filter(t => t.color === 'urgentBlue');
       const companyItems = todos.filter(t => COMPANY_COLORS.includes(t.color));
       const personalItems = todos.filter(t => !COMPANY_COLORS.includes(t.color));
       state.index[key] = {
         total: todos.length, done: todos.filter(t => t.done).length,
         companyTotal: companyItems.length, companyDone: companyItems.filter(t => t.done).length,
         personalTotal: personalItems.length, personalDone: personalItems.filter(t => t.done).length,
-        pinkTexts: pinkItems.map(t => t.text),
-        orangeTexts: orangeItems.map(t => t.text),
-        purpleTexts: purpleItems.map(t => t.text)
+        pinkTexts: pinkItems.map(t => ({ id: t.id, text: t.text })),
+        purpleTexts: purpleItems.map(t => ({ id: t.id, text: t.text })),
+        urgentTexts: urgentItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        urgentRedTexts: urgentRedItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        urgentBlueTexts: urgentBlueItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        labelV2: true,
+        labelV3: true,
+        labelV4: true
       };
     }
     await setItem('todo-index', JSON.stringify(state.index));
@@ -1495,23 +1796,45 @@
     if(todos.length === 0){ delete state.index[key]; }
     else {
       const pinkItems = todos.filter(t => t.color === 'pink');
-      const orangeItems = todos.filter(t => t.color === 'orange');
       const purpleItems = todos.filter(t => t.color === 'purple');
+      const urgentItems = todos.filter(t => t.color === 'urgent');
+      const urgentRedItems = todos.filter(t => t.color === 'urgentRed');
+      const urgentBlueItems = todos.filter(t => t.color === 'urgentBlue');
       const companyItems = todos.filter(t => COMPANY_COLORS.includes(t.color));
       const personalItems = todos.filter(t => !COMPANY_COLORS.includes(t.color));
       state.index[key] = {
         total: todos.length, done: todos.filter(t => t.done).length,
         companyTotal: companyItems.length, companyDone: companyItems.filter(t => t.done).length,
         personalTotal: personalItems.length, personalDone: personalItems.filter(t => t.done).length,
-        pinkTexts: pinkItems.map(t => t.text),
-        orangeTexts: orangeItems.map(t => t.text),
-        purpleTexts: purpleItems.map(t => t.text)
+        pinkTexts: pinkItems.map(t => ({ id: t.id, text: t.text })),
+        purpleTexts: purpleItems.map(t => ({ id: t.id, text: t.text })),
+        urgentTexts: urgentItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        urgentRedTexts: urgentRedItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        urgentBlueTexts: urgentBlueItems.map(t => ({ id: t.id, text: t.text, recurringId: t.recurringId || null, highlightColor: t.highlightColor || 'yellow' })),
+        labelV2: true,
+        labelV3: true,
+        labelV4: true
       };
     }
     await setItem('todo-index', JSON.stringify(state.index));
     renderCalendar();
     renderWeekly();
     renderStats();
+  }
+
+  async function moveTodoToDate(sourceKey, todoId, targetKey){
+    if(!sourceKey || !targetKey || sourceKey === targetKey) return;
+    const sourceTodos = (await ensureLoaded(sourceKey)).slice();
+    const idx = sourceTodos.findIndex(t => t.id === todoId);
+    if(idx === -1) return;
+    const [moved] = sourceTodos.splice(idx, 1);
+    await persistDay(sourceKey, sourceTodos);
+    const targetTodos = (await ensureLoaded(targetKey)).slice();
+    targetTodos.push(moved);
+    await persistDay(targetKey, targetTodos);
+    if(state.selectedKey === sourceKey || state.selectedKey === targetKey){
+      renderTodoList();
+    }
   }
 
   function getWeekDates(key){
@@ -1542,14 +1865,14 @@
       const classes = [isSelected ? 'is-selected' : '', isToday ? 'is-today' : ''].join(' ');
       const weekendClass = d.getDay() === 0 ? 'wk-sun' : d.getDay() === 6 ? 'wk-sat' : '';
 
-      const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, orange:0, gray:0, purple:0 };
+      const dayDoneCounts = { pink:0, red:0, blue:0, black:0, green:0, gray:0, purple:0, urgent:0, urgentRed:0, urgentBlue:0 };
       todos.forEach(t => {
         if(t.done){
           const c = COLOR_MAP[t.color] ? t.color : 'black';
           dayDoneCounts[c]++;
         }
       });
-      const statsHtml = ['pink','red','blue','black','green','orange','gray','purple']
+      const statsHtml = ['pink','red','blue','black','green','gray','purple','urgent','urgentRed','urgentBlue']
         .filter(c => dayDoneCounts[c] > 0)
         .map(c => `<span class="wk-day-count"><span class="wk-day-count-dot" style="background:${COLOR_MAP[c]}"></span>${dayDoneCounts[c]}</span>`)
         .join('');
@@ -1794,6 +2117,172 @@
       <div class="habit-grid">${cellsHtml}</div>
     </div>`;
   }
+  // ---- 도면번호 정리 (aggregated drawing-number ledger, pulled from 도면 출도일 items) ----
+  async function collectDrawingRecords(){
+    const prefix = LOCAL_PREFIX + 'todos:';
+    const records = [];
+    for(let i = 0; i < window.localStorage.length; i++){
+      const k = window.localStorage.key(i);
+      if(!k || !k.startsWith(prefix)) continue;
+      const dk = k.slice(prefix.length);
+      let todos = state.todosCache[dk];
+      if(!todos){
+        const raw = window.localStorage.getItem(k);
+        todos = raw ? JSON.parse(raw) : [];
+      }
+      todos.forEach(t => {
+        if(t.color !== 'urgentRed') return;
+        if(!Array.isArray(t.drawingNumbers) || t.drawingNumbers.length === 0) return;
+        t.drawingNumbers.forEach((d, idx) => {
+          const obj = typeof d === 'string' ? { number: d } : (d || {});
+          records.push({
+            dateKey: dk, todoId: t.id, idx,
+            text: t.text, assignee: t.assignee || '',
+            number: obj.number || '', vendor: obj.vendor || t.vendorName || '', orderDate: obj.orderDate || '',
+            poNumber: obj.poNumber || t.poNumber || '', remarks: obj.remarks || ''
+          });
+        });
+      });
+    }
+    records.sort((a, b) => b.dateKey.localeCompare(a.dateKey) || a.idx - b.idx);
+    return records;
+  }
+
+  async function updateDrawingRecordField(dateKeyStr, todoId, idx, field, value){
+    const raw = window.localStorage.getItem(LOCAL_PREFIX + 'todos:' + dateKeyStr);
+    const todos = (state.todosCache[dateKeyStr] || (raw ? JSON.parse(raw) : [])).slice();
+    const item = todos.find(t => t.id === todoId);
+    if(!item || !Array.isArray(item.drawingNumbers) || !item.drawingNumbers[idx]) return;
+    const cur = item.drawingNumbers[idx];
+    const obj = typeof cur === 'string' ? { number: cur } : { ...cur };
+    obj[field] = value;
+    item.drawingNumbers = item.drawingNumbers.slice();
+    item.drawingNumbers[idx] = obj;
+    // 도면번호 정리에서 입력한 업체정보/발주서 번호를 데일리 카드에도 그대로 반영(기존 값이 있어도 덮어씀)
+    if(field === 'vendor' && value){
+      item.vendorName = value;
+    }
+    if(field === 'poNumber' && value){
+      item.poNumber = value;
+    }
+    await persistDay(dateKeyStr, todos);
+  }
+
+  function extractOrderDateFromPoNumber(poStr){
+    if(!poStr) return null;
+    const match = poStr.trim().match(/^(\d{6})/);
+    if(!match) return null;
+    const yy = Number(match[1].slice(0, 2));
+    const mm = Number(match[1].slice(2, 4));
+    const dd = Number(match[1].slice(4, 6));
+    if(mm < 1 || mm > 12 || dd < 1 || dd > 31) return null;
+    const year = 2000 + yy;
+    const mmStr = String(mm).padStart(2, '0');
+    const ddStr = String(dd).padStart(2, '0');
+    return `${year}-${mmStr}-${ddStr}`;
+  }
+
+  function drawingDateLabel(dk){
+    const [y, m, d] = dk.split('-').map(Number);
+    const wd = WEEKDAYS[new Date(y, m-1, d).getDay()];
+    return `${y}년 ${m}월 ${d}일 ${wd}요일`;
+  }
+
+  async function renderDrawingRecords(){
+    const records = await collectDrawingRecords();
+    if(records.length === 0){
+      todoList.innerHTML = `<div class="empty-state">아직 도면 출도일 항목에 등록된 도면 번호가 없어요.<br>회사 탭에서 도면 출도일 항목에 도면 번호를 추가해보세요.</div>`;
+      return;
+    }
+    const groups = [];
+    let lastKey = null;
+    records.forEach(r => {
+      if(r.dateKey !== lastKey){
+        groups.push({ dateKey: r.dateKey, items: [] });
+        lastKey = r.dateKey;
+      }
+      groups[groups.length - 1].items.push(r);
+    });
+    todoList.innerHTML = groups.map(g => {
+      const collapsed = drawingCollapsedDates.has(g.dateKey);
+      return `
+      <div class="drawing-date-group">
+        <button type="button" class="drawing-date-toggle${collapsed ? ' is-collapsed' : ''}" data-action="toggle-drawing-date" data-date="${g.dateKey}">
+          <svg class="archive-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <span class="drawing-date-heading">${drawingDateLabel(g.dateKey)} (${g.items.length})</span>
+        </button>
+        <div class="drawing-date-items${collapsed ? ' is-collapsed' : ''}" data-date="${g.dateKey}">
+        ${g.items.map(r => `
+          <div class="drawing-record-card" data-date="${g.dateKey}" data-todo-id="${r.todoId}" data-idx="${r.idx}">
+            <div class="drawing-record-top">
+              <span class="drawing-record-number">${escapeHtml(r.number)}</span>
+              <span class="drawing-record-text">${escapeHtml(r.text)}</span>
+              ${r.assignee ? `<span class="drawing-record-assignee">담당 ${escapeHtml(r.assignee)}</span>` : ''}
+            </div>
+            <div class="drawing-record-fields">
+              <label class="drawing-record-field">
+                <span>업체정보</span>
+                <input type="text" class="drawing-record-input" data-field="vendor" value="${escapeHtml(r.vendor)}" placeholder="업체명 입력">
+              </label>
+              <label class="drawing-record-field">
+                <span>발주일</span>
+                <input type="date" class="drawing-record-input" data-field="orderDate" value="${escapeHtml(r.orderDate)}">
+              </label>
+              <label class="drawing-record-field">
+                <span>발주서 번호</span>
+                <input type="text" class="drawing-record-input" data-field="poNumber" value="${escapeHtml(r.poNumber)}" placeholder="발주서 번호 입력">
+              </label>
+              <label class="drawing-record-field drawing-record-field-wide">
+                <span>비고</span>
+                <input type="text" class="drawing-record-input" data-field="remarks" value="${escapeHtml(r.remarks)}" placeholder="비고 입력">
+              </label>
+            </div>
+          </div>
+        `).join('')}
+        </div>
+      </div>
+    `;
+    }).join('');
+  }
+
+  todoList.addEventListener('click', e => {
+    const toggleBtn = e.target.closest('[data-action="toggle-drawing-date"]');
+    if(!toggleBtn) return;
+    const dateKey = toggleBtn.dataset.date;
+    const items = todoList.querySelector(`.drawing-date-items[data-date="${dateKey}"]`);
+    const willCollapse = !toggleBtn.classList.contains('is-collapsed');
+    toggleBtn.classList.toggle('is-collapsed', willCollapse);
+    if(items) items.classList.toggle('is-collapsed', willCollapse);
+    if(willCollapse) drawingCollapsedDates.add(dateKey); else drawingCollapsedDates.delete(dateKey);
+  });
+
+  todoList.addEventListener('focusout', async e => {
+    const input = e.target.closest('.drawing-record-input');
+    if(!input) return;
+    const card = input.closest('.drawing-record-card');
+    if(!card) return;
+    const field = input.dataset.field;
+    const value = input.value.trim();
+    await updateDrawingRecordField(card.dataset.date, card.dataset.todoId, Number(card.dataset.idx), field, value);
+    if(field === 'poNumber'){
+      const autoDate = extractOrderDateFromPoNumber(value);
+      if(autoDate){
+        const orderDateInput = card.querySelector('.drawing-record-input[data-field="orderDate"]');
+        if(orderDateInput && orderDateInput.value !== autoDate){
+          orderDateInput.value = autoDate;
+          await updateDrawingRecordField(card.dataset.date, card.dataset.todoId, Number(card.dataset.idx), 'orderDate', autoDate);
+        }
+      }
+    }
+  });
+  todoList.addEventListener('change', async e => {
+    const input = e.target.closest('.drawing-record-input[data-field="orderDate"]');
+    if(!input) return;
+    const card = input.closest('.drawing-record-card');
+    if(!card) return;
+    await updateDrawingRecordField(card.dataset.date, card.dataset.todoId, Number(card.dataset.idx), 'orderDate', input.value);
+  });
+
   function renderHabitCard(group){
     const { key, members } = group;
     const first = members[0];
@@ -2018,18 +2507,145 @@
       body.style.display = isHidden ? 'block' : 'none';
       if(isHidden) body.querySelector('.todo-notes-input').focus();
     }
+    else if(e.target.closest('[data-action="remove-drawing"]')){
+      (async () => {
+        const btn = e.target.closest('[data-action="remove-drawing"]');
+        const idx = Number(btn.dataset.index);
+        const key = state.selectedKey;
+        const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+        const item = todos.find(t => t.id === id);
+        if(!item || !Array.isArray(item.drawingNumbers)) return;
+        item.drawingNumbers = item.drawingNumbers.filter((_, i) => i !== idx);
+        await persistDay(key, todos);
+        renderTodoList();
+      })();
+    }
+    else if(e.target.closest('[data-action="set-highlight"]')){
+      (async () => {
+        const btn = e.target.closest('[data-action="set-highlight"]');
+        const hc = btn.dataset.highlight;
+        if(!HIGHLIGHT_COLORS[hc]) return;
+        const key = state.selectedKey;
+        const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+        const item = todos.find(t => t.id === id);
+        if(!item) return;
+        item.highlightColor = hc;
+        await persistDay(key, todos);
+        renderTodoList();
+        renderCalendar();
+      })();
+    }
   });
   todoList.addEventListener('focusout', async e => {
-    const input = e.target.closest('.todo-notes-input');
-    if(!input) return;
-    const card = input.closest('.todo-card');
+    const notesInput = e.target.closest('.todo-notes-input');
+    const assigneeInput = e.target.closest('.todo-assignee-input');
+    if(notesInput){
+      const card = notesInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newNotes = notesInput.value.trim();
+      if(newNotes !== (item.notes || '')){
+        item.notes = newNotes;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
+      return;
+    }
+    if(assigneeInput){
+      const card = assigneeInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newAssignee = assigneeInput.value.trim();
+      if(newAssignee !== (item.assignee || '')){
+        item.assignee = newAssignee;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
+      return;
+    }
+    const vendorInput = e.target.closest('.todo-vendor-input');
+    if(vendorInput){
+      const card = vendorInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newVendorName = vendorInput.value.trim();
+      if(newVendorName !== (item.vendorName || '')){
+        item.vendorName = newVendorName;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
+      return;
+    }
+    const poInput = e.target.closest('.todo-po-input');
+    if(poInput){
+      const card = poInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newPoNumber = poInput.value.trim();
+      if(newPoNumber !== (item.poNumber || '')){
+        item.poNumber = newPoNumber;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
+    }
+  });
+  todoList.addEventListener('keydown', async e => {
+    const assigneeInput = e.target.closest('.todo-assignee-input');
+    if(assigneeInput && e.key === 'Enter'){
+      e.preventDefault();
+      assigneeInput.blur();
+      return;
+    }
+    const vendorInput = e.target.closest('.todo-vendor-input');
+    if(vendorInput && e.key === 'Enter'){
+      e.preventDefault();
+      vendorInput.blur();
+      return;
+    }
+    const poInput = e.target.closest('.todo-po-input');
+    if(poInput && e.key === 'Enter'){
+      e.preventDefault();
+      poInput.blur();
+      return;
+    }
+    const drawingInput = e.target.closest('.todo-drawing-input');
+    if(drawingInput && e.key === 'Enter'){
+      e.preventDefault();
+      const newNumber = drawingInput.value.trim();
+      if(!newNumber) return;
+      const card = drawingInput.closest('.todo-card');
+      const id = card.dataset.id;
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === id);
+      if(!item) return;
+      item.drawingNumbers = [...(item.drawingNumbers || []), newNumber];
+      await persistDay(key, todos);
+      renderTodoList();
+      const newCard = todoList.querySelector(`.todo-card[data-id="${id}"]`);
+      const newInput = newCard ? newCard.querySelector('.todo-drawing-input') : null;
+      if(newInput) newInput.focus();
+    }
+  });
+  todoList.addEventListener('change', async e => {
+    const receiveInput = e.target.closest('.todo-receive-input');
+    if(!receiveInput) return;
+    const card = receiveInput.closest('.todo-card');
     const key = state.selectedKey;
     const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
     const item = todos.find(t => t.id === card.dataset.id);
     if(!item) return;
-    const newNotes = input.value.trim();
-    if(newNotes !== (item.notes || '')){
-      item.notes = newNotes;
+    const newReceiveDate = receiveInput.value;
+    if(newReceiveDate !== (item.receiveDate || '')){
+      item.receiveDate = newReceiveDate;
       await persistDay(key, todos);
       renderTodoList();
     }
@@ -2049,8 +2665,9 @@
 
     const picker = document.createElement('div');
     picker.className = 'edit-color-row';
-    picker.innerHTML = ['pink','red','blue','black','green','orange','gray','purple'].map(c =>
-      `<button type="button" class="edit-color-swatch ${c === currentColor ? 'active' : ''}" data-color="${c}" style="color:${COLOR_MAP[c]}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg></button>`
+    const URGENT_COLOR_KEYS = ['urgent', 'urgentRed', 'urgentBlue'];
+    picker.innerHTML = ['pink','red','blue','black','green','gray','purple','urgent','urgentRed','urgentBlue'].map(c =>
+      `<button type="button" class="edit-color-swatch ${c === currentColor ? 'active' : ''} ${URGENT_COLOR_KEYS.includes(c) ? 'is-urgent-swatch' : ''}" data-color="${c}" style="color:${COLOR_MAP[c]}" title="${URGENT_COLOR_KEYS.includes(c) ? COLOR_LABELS[c] : ''}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${HEART_PATH}"/></svg></button>`
     ).join('');
     topEl.appendChild(picker);
 
@@ -2218,6 +2835,23 @@
       renderMemoList();
       return;
     }
+    if(state.mode === 'drawing'){
+      todayPanel.classList.add('memo-active');
+      colorRow.style.display = 'none';
+      datePickInput.style.display = 'none';
+      dayCount.style.display = 'none';
+      dayHeading.textContent = '';
+      todayDayHeading.style.marginBottom = '0';
+      goalReminder.style.display = 'none';
+      el('todoAddRow').style.display = 'none';
+      weeklyPanelEl.style.display = 'none';
+      statsPanelEl.style.display = 'none';
+      calendarPanelEl.style.display = 'none';
+      goalsPanelEl.style.display = 'none';
+      recurPanelEl.style.display = 'none';
+      renderDrawingRecords();
+      return;
+    }
     if(state.mode === 'habit'){
       todayPanel.classList.add('memo-active');
       colorRow.style.display = 'none';
@@ -2260,10 +2894,30 @@
       b.classList.toggle('active', isActive);
       b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
+    recurSelectedColor = state.mode === 'work' ? 'green' : 'black';
+    recurColorRow.querySelectorAll('.color-swatch').forEach(b => {
+      const isCompanyColor = COMPANY_COLORS.includes(b.dataset.color);
+      if(state.mode === 'work') b.style.display = isCompanyColor ? '' : 'none';
+      else if(state.mode === 'personal') b.style.display = isCompanyColor ? 'none' : '';
+      else b.style.display = '';
+      const isActive = b.dataset.color === recurSelectedColor;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    if(typeof updateRecurHighlightUI === 'function') updateRecurHighlightUI();
+    if(colorGuideBody){
+      colorGuideBody.querySelectorAll('.guide-line').forEach(line => {
+        const isCompanyColor = COMPANY_COLORS.includes(line.dataset.color);
+        if(state.mode === 'work') line.style.display = isCompanyColor ? '' : 'none';
+        else if(state.mode === 'personal') line.style.display = isCompanyColor ? 'none' : '';
+        else line.style.display = '';
+      });
+    }
     renderGoalList();
     renderTodoList();
     renderWeekly();
     renderCalendar();
+    renderRecurList();
   });
 
   async function loadGoals(){
@@ -2274,9 +2928,29 @@
 
   // ---- recurring schedule ----
   let recurSelectedColor = 'black';
+  let recurHighlightColor = 'yellow';
   let editingRecurId = null;
   const recurEditingNote = el('recurEditingNote'), recurEditCancelBtn = el('recurEditCancelBtn');
   const WEEKDAY_NAMES = ['일','월','화','수','목','금','토'];
+
+  recurHighlightRow.innerHTML = '<span class="todo-highlight-label">하이라이트</span>' +
+    HIGHLIGHT_ORDER.map(hc => `<button type="button" class="highlight-swatch" data-highlight="${hc}" style="background:${HIGHLIGHT_COLORS[hc].bg}" aria-label="${HIGHLIGHT_LABELS[hc]} 하이라이트" title="${HIGHLIGHT_LABELS[hc]}"></button>`).join('');
+
+  function updateRecurHighlightUI(){
+    const show = URGENT_COLORS.includes(recurSelectedColor);
+    recurHighlightRow.style.display = show ? '' : 'none';
+    recurHighlightRow.querySelectorAll('.highlight-swatch').forEach(b => {
+      b.classList.toggle('is-active', b.dataset.highlight === recurHighlightColor);
+    });
+  }
+  updateRecurHighlightUI();
+
+  recurHighlightRow.addEventListener('click', e => {
+    const btn = e.target.closest('.highlight-swatch');
+    if(!btn) return;
+    recurHighlightColor = btn.dataset.highlight;
+    updateRecurHighlightUI();
+  });
 
   recurColorRow.addEventListener('click', e => {
     const btn = e.target.closest('.color-swatch');
@@ -2287,6 +2961,7 @@
       b.classList.toggle('active', isActive);
       b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
+    updateRecurHighlightUI();
   });
 
   recurWeekdayRow.addEventListener('click', e => {
@@ -2328,7 +3003,9 @@
   }
 
   function renderRecurList(){
-    const visible = state.recurring.filter(t => isTemplateActiveOn(t, state.selectedKey));
+    let visible = state.recurring.filter(t => isTemplateActiveOn(t, state.selectedKey));
+    if(state.mode === 'work') visible = visible.filter(t => COMPANY_COLORS.includes(t.color));
+    else if(state.mode === 'personal') visible = visible.filter(t => !COMPANY_COLORS.includes(t.color));
     if(visible.length === 0){
       recurList.innerHTML = `<div class="empty-state">이 날짜에 해당하는 반복 일정이 없어요.</div>`;
       return;
@@ -2352,12 +3029,14 @@
     recurEditingNote.style.display = 'none';
     recurInput.value = '';
     recurWeekdayRow.querySelectorAll('.recur-weekday-btn.active').forEach(b => b.classList.remove('active'));
-    recurSelectedColor = 'black';
+    recurSelectedColor = state.mode === 'work' ? 'green' : 'black';
     recurColorRow.querySelectorAll('.color-swatch').forEach(b => {
-      const isActive = b.dataset.color === 'black';
+      const isActive = b.dataset.color === recurSelectedColor;
       b.classList.toggle('active', isActive);
       b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
+    recurHighlightColor = 'yellow';
+    updateRecurHighlightUI();
     recurStartDate.value = state.selectedKey;
     recurNoEnd.checked = true;
     recurEndDate.value = '';
@@ -2389,7 +3068,7 @@
       if(shouldRemove){
         todos.splice(idx, 1);
       } else {
-        todos[idx] = { ...todos[idx], text: template.text, color: template.color };
+        todos[idx] = { ...todos[idx], text: template.text, color: template.color, highlightColor: template.highlightColor || 'yellow' };
       }
       state.todosCache[dk] = todos;
       await persistDay(dk, todos);
@@ -2408,11 +3087,11 @@
     if(editingRecurId){
       const t = state.recurring.find(x => x.id === editingRecurId);
       if(t){
-        t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate;
+        t.text = text; t.color = recurSelectedColor; t.days = days; t.startDate = startDate; t.endDate = endDate; t.highlightColor = recurHighlightColor;
         await propagateRecurUpdate(t.id, t);
       }
     } else {
-      state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate });
+      state.recurring.push({ id: genId(), text, color: recurSelectedColor, days, startDate, endDate, highlightColor: recurHighlightColor });
     }
     await persistRecurring();
     resetRecurForm();
@@ -2443,6 +3122,8 @@
         b.classList.toggle('active', isActive);
         b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       });
+      recurHighlightColor = t.highlightColor || 'yellow';
+      updateRecurHighlightUI();
       recurWeekdayRow.querySelectorAll('.recur-weekday-btn[data-day]').forEach(b => {
         b.classList.toggle('active', t.days.includes(Number(b.dataset.day)));
       });
