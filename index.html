@@ -699,12 +699,14 @@
   }
   .todo-receive-icon{ width:12px; height:12px; flex:0 0 auto; color:var(--ink-faint); }
   .todo-receive-label{ font-size:11px; color:var(--ink-faint); font-family:'Noto Sans KR',sans-serif; white-space:nowrap; }
-  .todo-receive-input{
+  .todo-receive-input,
+  .todo-expected-input{
     border:none; outline:none; background:transparent;
     font-size:11px; font-family:'Noto Sans KR',sans-serif; color:var(--ink-soft);
     padding:2px 4px; border-radius:4px; max-width:124px;
   }
-  .todo-receive-input:focus{ background:#fbeef1; }
+  .todo-receive-input:focus,
+  .todo-expected-input:focus{ background:#fbeef1; }
   .todo-vendor-row{
     display:flex; align-items:center; gap:5px; padding:2px 0 0 26px;
   }
@@ -776,11 +778,13 @@
   .todo-card-urgent .todo-highlight-label{ color:#2b2b2b; }
   .todo-card-urgent .todo-assignee-input,
   .todo-card-urgent .todo-receive-input,
+  .todo-card-urgent .todo-expected-input,
   .todo-card-urgent .todo-vendor-input,
   .todo-card-urgent .todo-po-input,
   .todo-card-urgent .todo-drawing-input{ color:#2b2b2b; }
   .todo-card-urgent .todo-assignee-input::placeholder,
   .todo-card-urgent .todo-receive-input::placeholder,
+  .todo-card-urgent .todo-expected-input::placeholder,
   .todo-card-urgent .todo-vendor-input::placeholder,
   .todo-card-urgent .todo-po-input::placeholder,
   .todo-card-urgent .todo-drawing-input::placeholder{ color:#6b6672; }
@@ -1625,7 +1629,12 @@
       </div>` : ''}
       ${isUrgentItem ? `<div class="todo-receive-row">
         <svg class="todo-receive-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <span class="todo-receive-label">가공물 수령일</span>
+        <span class="todo-receive-label">도착 예정일</span>
+        <input type="date" class="todo-expected-input" value="${escapeHtml(t.expectedReceiveDate || '')}">
+      </div>
+      <div class="todo-receive-row">
+        <svg class="todo-receive-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="todo-receive-label">도착일</span>
         <input type="date" class="todo-receive-input" value="${escapeHtml(t.receiveDate || '')}">
       </div>` : ''}
       ${isUrgentItem ? `<div class="todo-vendor-row">
@@ -2637,17 +2646,33 @@
   });
   todoList.addEventListener('change', async e => {
     const receiveInput = e.target.closest('.todo-receive-input');
-    if(!receiveInput) return;
-    const card = receiveInput.closest('.todo-card');
-    const key = state.selectedKey;
-    const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
-    const item = todos.find(t => t.id === card.dataset.id);
-    if(!item) return;
-    const newReceiveDate = receiveInput.value;
-    if(newReceiveDate !== (item.receiveDate || '')){
-      item.receiveDate = newReceiveDate;
-      await persistDay(key, todos);
-      renderTodoList();
+    if(receiveInput){
+      const card = receiveInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newReceiveDate = receiveInput.value;
+      if(newReceiveDate !== (item.receiveDate || '')){
+        item.receiveDate = newReceiveDate;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
+      return;
+    }
+    const expectedInput = e.target.closest('.todo-expected-input');
+    if(expectedInput){
+      const card = expectedInput.closest('.todo-card');
+      const key = state.selectedKey;
+      const todos = state.todosCache[key] ? state.todosCache[key].slice() : [];
+      const item = todos.find(t => t.id === card.dataset.id);
+      if(!item) return;
+      const newExpectedDate = expectedInput.value;
+      if(newExpectedDate !== (item.expectedReceiveDate || '')){
+        item.expectedReceiveDate = newExpectedDate;
+        await persistDay(key, todos);
+        renderTodoList();
+      }
     }
   });
 
